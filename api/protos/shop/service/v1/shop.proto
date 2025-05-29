@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package shop.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+import "pagination/v1/pagination.proto";
+
+// 商店服务
+service ShopService {
+  rpc Buy(BuyRequest) returns (BuyResponse) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "购买商品",
+      description: "通过商品ID和数量购买商品"
+    };
+  }
+
+  rpc TestTransaction(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "测试事务",
+      description: "测试事务处理"
+    };
+    option (google.api.http) = {
+      get: "/test/transaction"
+    };
+  }
+}
+
+message BuyRequest {
+  int64 user_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "用户ID"},
+    json_name = "userId"
+  ]; // 用户ID
+
+  int64 product_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "商品ID"},
+    json_name = "productId"
+  ]; // 商品ID
+
+  int32 quantity = 3 [
+    (gnostic.openapi.v3.property) = {description: "购买数量"},
+    json_name = "quantity"
+  ]; // 购买数量
+}
+
+message BuyResponse {
+  bool success = 1 [
+    (gnostic.openapi.v3.property) = {description: "购买是否成功"},
+    json_name = "success"
+  ]; // 购买是否成功
+
+  string message = 2 [
+    (gnostic.openapi.v3.property) = {description: "购买结果消息"},
+    json_name = "message"
+  ]; // 购买结果消息
+}

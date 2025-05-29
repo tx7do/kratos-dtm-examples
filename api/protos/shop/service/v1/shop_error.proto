@@ -1,0 +1,137 @@
+syntax = "proto3";
+
+package shop.service.v1;
+
+import "errors/errors.proto";
+
+enum ShopErrorReason {
+    option (errors.default_code) = 500;
+
+    // 400
+    BAD_REQUEST = 0 [(errors.code) = 400];
+
+    // 401
+    UNAUTHORIZED = 100 [(errors.code) = 401];
+
+    // 402
+    PAYMENT_REQUIRED = 200 [(errors.code) = 402];
+
+    // 403
+    FORBIDDEN = 300 [(errors.code) = 403];
+
+    // 404
+    NOT_FOUND = 400 [(errors.code) = 404];
+
+    // 405
+    METHOD_NOT_ALLOWED = 500 [(errors.code) = 405];
+
+    // 406
+    NOT_ACCEPTABLE = 600 [(errors.code) = 406];
+
+    // 407
+    PROXY_AUTHENTICATION_REQUIRED = 700 [(errors.code) = 407];
+
+    // 408
+    REQUEST_TIMEOUT = 800 [(errors.code) = 408];
+
+    // 409
+    CONFLICT = 900 [(errors.code) = 409];
+
+    // 410
+    GONE = 1000 [(errors.code) = 410];
+
+    // 411
+    LENGTH_REQUIRED = 1010 [(errors.code) = 411];
+
+    // 412
+    PRECONDITION_FAILED = 1020 [(errors.code) = 412];
+
+    // 413
+    PAYLOAD_TOO_LARGE = 1030 [(errors.code) = 413];
+
+    // 414
+    URI_TOO_LONG = 1040 [(errors.code) = 414];
+
+    // 415
+    UNSUPPORTED_MEDIA_TYPE = 1050 [(errors.code) = 415];
+
+    // 416
+    RANGE_NOT_SATISFIABLE = 1060 [(errors.code) = 416];
+
+    // 417
+    EXPECTATION_FAILED = 1070 [(errors.code) = 417];
+
+    // 418
+    IM_A_TEAPOT = 1080 [(errors.code) = 418];
+
+    // 421
+    MISDIRECTED_REQUEST = 1090 [(errors.code) = 421];
+
+    // 422
+    UNPROCESSABLE_ENTITY = 1100 [(errors.code) = 422];
+
+    // 423
+    LOCKED = 1110 [(errors.code) = 423];
+
+    // 424
+    FAILED_DEPENDENCY = 1120 [(errors.code) = 424];
+
+    // 425
+    TOO_EARLY = 1130 [(errors.code) = 425];
+
+    // 426
+    UPGRADE_REQUIRED = 1140 [(errors.code) = 426];
+
+    // 428
+    PRECONDITION_REQUIRED = 1150 [(errors.code) = 428];
+
+    // 429
+    TOO_MANY_REQUESTS = 1160 [(errors.code) = 429];
+
+    // 431
+    REQUEST_HEADER_FIELDS_TOO_LARGE = 1170 [(errors.code) = 431];
+
+    // 451
+    UNAVAILABLE_FOR_LEGAL_REASONS = 1180 [(errors.code) = 451];
+
+
+    // 500
+    INTERNAL_SERVER_ERROR = 2000  [(errors.code) = 500];
+
+    // 501
+    NOT_IMPLEMENTED = 2100 [(errors.code) = 501];
+
+    // 502
+    BAD_GATEWAY = 2200 [(errors.code) = 502];
+
+    // 503
+    SERVICE_UNAVAILABLE = 2300 [(errors.code) = 503];
+
+    // 504
+    GATEWAY_TIMEOUT = 2400 [(errors.code) = 504];
+
+    // 505
+    HTTP_VERSION_NOT_SUPPORTED = 2500 [(errors.code) = 505];
+
+    // 506
+    VARIANT_ALSO_NEGOTIATES = 2600 [(errors.code) = 506];
+
+    // 507
+    INSUFFICIENT_STORAGE = 2700 [(errors.code) = 507];
+
+    // 508
+    LOOP_DETECTED = 2800 [(errors.code) = 508];
+
+    // 510
+    NOT_EXTENDED = 2900 [(errors.code) = 510];
+
+    // 511
+    NETWORK_AUTHENTICATION_REQUIRED = 3000 [(errors.code) = 511];
+
+
+    // 598
+    NETWORK_READ_TIMEOUT_ERROR = 3100 [(errors.code) = 598];
+
+    // 599
+    NETWORK_CONNECT_TIMEOUT_ERROR = 3200 [(errors.code) = 599];
+}

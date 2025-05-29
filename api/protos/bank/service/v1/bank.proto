@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package bank.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "pagination/v1/pagination.proto";
+
+// 银行服务
+service BankService {
+  rpc TransIn(TransferRequest) returns (TransferResponse);
+  rpc TransOut(TransferRequest) returns (TransferResponse);
+}
+
+message TransferRequest {
+  int64 amount = 1 [
+    (gnostic.openapi.v3.property) = {description: "存取金额"},
+    json_name = "amount"
+  ]; // 存取金额
+
+  int64 user_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "用户ID"},
+    json_name = "userId"
+  ]; // 用户ID
+}
+message TransferResponse {
+
+}
