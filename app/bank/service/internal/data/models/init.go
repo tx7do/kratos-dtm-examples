@@ -7,6 +7,7 @@ func init() {
 }
 
 func registerMigrates() {
+	migrates = append(migrates, &Account{})
 }
 
 func GetMigrates() []interface{} {
