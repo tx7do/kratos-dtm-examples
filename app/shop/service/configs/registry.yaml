@@ -1,5 +1,5 @@
 registry:
-  type: "etcd"
+  type: "consul"
 
   consul:
     address: "localhost:8500"

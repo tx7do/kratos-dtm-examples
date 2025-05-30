@@ -1,4 +1,4 @@
 ﻿MicroService:
   Driver: 'dtm-driver-kratos' # name of the driver to handle register/discover
-  Target: 'etcd://127.0.0.1:2379/dtmservice' # register dtm server to this url
-  EndPoint: 'grpc://localhost:36790'
+  Target: 'consul://127.0.0.1:8500/dtmservice' # register dtm server to this url
+  EndPoint: 'grpc://127.0.0.1:36790'
