@@ -5,7 +5,12 @@
 ### Docker部署
 
 ```shell
-docker run -itd --name dtm -p 36789:36789 -p 36790:36790 yedf/dtm:latest
+docker run -itd \
+  --name dtm \
+  -p 36789:36789 \
+  -p 36790:36790 \
+  -e \
+  yedf/dtm:latest
 ```
 
 ## 二进制安装
@@ -19,7 +24,7 @@ brew install dtm
 ### go install 安装
 
 ```shell
-go install github.com/dtm-labs/dtm@latest
+go install github.com/dtm-labs/dtm@main
 ```
 
 ## 运行DTM服务

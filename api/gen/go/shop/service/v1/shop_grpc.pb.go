@@ -20,10 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ShopService_Buy_FullMethodName      = "/shop.service.v1.ShopService/Buy"
-	ShopService_TestTP_FullMethodName   = "/shop.service.v1.ShopService/TestTP"
-	ShopService_TestTCC_FullMethodName  = "/shop.service.v1.ShopService/TestTCC"
-	ShopService_TestSAGA_FullMethodName = "/shop.service.v1.ShopService/TestSAGA"
+	ShopService_Buy_FullMethodName          = "/shop.service.v1.ShopService/Buy"
+	ShopService_TestTP_FullMethodName       = "/shop.service.v1.ShopService/TestTP"
+	ShopService_TestTCC_FullMethodName      = "/shop.service.v1.ShopService/TestTCC"
+	ShopService_TestSAGA_FullMethodName     = "/shop.service.v1.ShopService/TestSAGA"
+	ShopService_TestXA_FullMethodName       = "/shop.service.v1.ShopService/TestXA"
+	ShopService_TestWorkFlow_FullMethodName = "/shop.service.v1.ShopService/TestWorkFlow"
 )
 
 // ShopServiceClient is the client API for ShopService service.
@@ -33,9 +35,16 @@ const (
 // 商店服务
 type ShopServiceClient interface {
 	Buy(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
+	// 二阶段消息
 	TestTP(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// TCC
 	TestTCC(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// SAGA
 	TestSAGA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// XA
+	TestXA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 工作流Workflow
+	TestWorkFlow(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type shopServiceClient struct {
@@ -86,6 +95,26 @@ func (c *shopServiceClient) TestSAGA(ctx context.Context, in *emptypb.Empty, opt
 	return out, nil
 }
 
+func (c *shopServiceClient) TestXA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ShopService_TestXA_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopServiceClient) TestWorkFlow(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, ShopService_TestWorkFlow_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ShopServiceServer is the server API for ShopService service.
 // All implementations must embed UnimplementedShopServiceServer
 // for forward compatibility.
@@ -93,9 +122,16 @@ func (c *shopServiceClient) TestSAGA(ctx context.Context, in *emptypb.Empty, opt
 // 商店服务
 type ShopServiceServer interface {
 	Buy(context.Context, *BuyRequest) (*BuyResponse, error)
+	// 二阶段消息
 	TestTP(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// TCC
 	TestTCC(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// SAGA
 	TestSAGA(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// XA
+	TestXA(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// 工作流Workflow
+	TestWorkFlow(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	mustEmbedUnimplementedShopServiceServer()
 }
 
@@ -117,6 +153,12 @@ func (UnimplementedShopServiceServer) TestTCC(context.Context, *emptypb.Empty) (
 }
 func (UnimplementedShopServiceServer) TestSAGA(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestSAGA not implemented")
+}
+func (UnimplementedShopServiceServer) TestXA(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestXA not implemented")
+}
+func (UnimplementedShopServiceServer) TestWorkFlow(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestWorkFlow not implemented")
 }
 func (UnimplementedShopServiceServer) mustEmbedUnimplementedShopServiceServer() {}
 func (UnimplementedShopServiceServer) testEmbeddedByValue()                     {}
@@ -211,6 +253,42 @@ func _ShopService_TestSAGA_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ShopService_TestXA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).TestXA(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopService_TestXA_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).TestXA(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShopService_TestWorkFlow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).TestWorkFlow(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopService_TestWorkFlow_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).TestWorkFlow(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ShopService_ServiceDesc is the grpc.ServiceDesc for ShopService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -233,6 +311,14 @@ var ShopService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TestSAGA",
 			Handler:    _ShopService_TestSAGA_Handler,
+		},
+		{
+			MethodName: "TestXA",
+			Handler:    _ShopService_TestXA_Handler,
+		},
+		{
+			MethodName: "TestWorkFlow",
+			Handler:    _ShopService_TestWorkFlow_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

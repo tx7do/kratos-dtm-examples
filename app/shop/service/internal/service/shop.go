@@ -2,10 +2,8 @@ package service
 
 import (
 	"context"
-	"github.com/dtm-labs/client/dtmcli"
+
 	"github.com/dtm-labs/client/dtmgrpc"
-	"github.com/go-resty/resty/v2"
-	"github.com/google/uuid"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -53,7 +51,7 @@ func (s *ShopService) TestTP(_ context.Context, _ *emptypb.Empty) (*emptypb.Empt
 	err := m.Submit()
 	if err != nil {
 		s.log.Errorf("failed to submit transaction: %v", err)
-		return nil, err
+		return nil, bankV1.ErrorInternalServerError(err.Error())
 	}
 
 	return &emptypb.Empty{}, nil
@@ -62,39 +60,52 @@ func (s *ShopService) TestTP(_ context.Context, _ *emptypb.Empty) (*emptypb.Empt
 func (s *ShopService) TestTCC(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
-	err := dtmcli.TccGlobalTransaction(dtmServer, gid, func(tcc *dtmcli.Tcc) (*resty.Response, error) {
-		resp, err := tcc.CallBranch(
+	s.log.Infof("testTCC %s", gid)
+
+	err := dtmgrpc.TccGlobalTransaction(dtmServer, gid, func(tcc *dtmgrpc.TccGrpc) error {
+		err := tcc.CallBranch(
 			&bankV1.TransactionRequest{Amount: 30},
 			bankServer+bankV1.BankService_TryDeduct_FullMethodName,
 			bankServer+bankV1.BankService_ConfirmDeduct_FullMethodName,
 			bankServer+bankV1.BankService_CancelDeduct_FullMethodName,
+			&bankV1.TransactionResponse{},
 		)
 		if err != nil {
 			s.log.Errorf("failed to call branch for deduct: %v", err)
-			return resp, err
+			return bankV1.ErrorInternalServerError(err.Error())
 		}
-		return resp, nil
+		return nil
 	})
 	if err != nil {
 		s.log.Errorf("failed to submit transaction: %v", err)
-		return nil, err
+		return nil, bankV1.ErrorInternalServerError(err.Error())
 	}
 
 	return &emptypb.Empty{}, nil
 }
 
 func (s *ShopService) TestSAGA(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	gid := dtmgrpc.MustGenGid(dtmServer)
+
 	req := &bankV1.TransactionRequest{Amount: 30}
 
-	saga := dtmcli.NewSaga(dtmServer, uuid.New().String()).
+	saga := dtmgrpc.NewSagaGrpc(dtmServer, gid).
 		Add(bankServer+bankV1.BankService_Deduct_FullMethodName, bankServer+bankV1.BankService_Refund_FullMethodName, req).
 		Add(bankServer+bankV1.BankService_Transfer_FullMethodName, bankServer+bankV1.BankService_ReverseTransfer_FullMethodName, req)
-	// 提交saga事务，dtm会完成所有的子事务/回滚所有的子事务
+
 	err := saga.Submit()
 	if err != nil {
 		s.log.Errorf("failed to submit transaction: %v", err)
-		return nil, err
+		return nil, bankV1.ErrorInternalServerError(err.Error())
 	}
 
+	return &emptypb.Empty{}, nil
+}
+
+func (s *ShopService) TestXA(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, nil
+}
+
+func (s *ShopService) TestWorkFlow(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, nil
 }

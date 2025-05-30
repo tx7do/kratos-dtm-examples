@@ -17,21 +17,38 @@ service ShopService {
     };
   }
 
+  // 二阶段消息
   rpc TestTP(google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       get: "/test/tp"
     };
   }
 
+  // TCC
   rpc TestTCC(google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       get: "/test/tcc"
     };
   }
 
+  // SAGA
   rpc TestSAGA(google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       get: "/test/saga"
+    };
+  }
+
+  // XA
+  rpc TestXA(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      get: "/test/xa"
+    };
+  }
+
+  // 工作流Workflow
+  rpc TestWorkFlow(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      get: "/test/wf"
     };
   }
 }

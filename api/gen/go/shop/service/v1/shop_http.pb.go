@@ -23,11 +23,20 @@ const _ = http.SupportPackageIsVersion1
 const OperationShopServiceTestSAGA = "/shop.service.v1.ShopService/TestSAGA"
 const OperationShopServiceTestTCC = "/shop.service.v1.ShopService/TestTCC"
 const OperationShopServiceTestTP = "/shop.service.v1.ShopService/TestTP"
+const OperationShopServiceTestWorkFlow = "/shop.service.v1.ShopService/TestWorkFlow"
+const OperationShopServiceTestXA = "/shop.service.v1.ShopService/TestXA"
 
 type ShopServiceHTTPServer interface {
+	// TestSAGA SAGA
 	TestSAGA(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// TestTCC TCC
 	TestTCC(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// TestTP 二阶段消息
 	TestTP(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// TestWorkFlow 工作流Workflow
+	TestWorkFlow(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// TestXA XA
+	TestXA(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 }
 
 func RegisterShopServiceHTTPServer(s *http.Server, srv ShopServiceHTTPServer) {
@@ -35,6 +44,8 @@ func RegisterShopServiceHTTPServer(s *http.Server, srv ShopServiceHTTPServer) {
 	r.GET("/test/tp", _ShopService_TestTP0_HTTP_Handler(srv))
 	r.GET("/test/tcc", _ShopService_TestTCC0_HTTP_Handler(srv))
 	r.GET("/test/saga", _ShopService_TestSAGA0_HTTP_Handler(srv))
+	r.GET("/test/xa", _ShopService_TestXA0_HTTP_Handler(srv))
+	r.GET("/test/wf", _ShopService_TestWorkFlow0_HTTP_Handler(srv))
 }
 
 func _ShopService_TestTP0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
@@ -94,10 +105,50 @@ func _ShopService_TestSAGA0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx htt
 	}
 }
 
+func _ShopService_TestXA0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopServiceTestXA)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.TestXA(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ShopService_TestWorkFlow0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopServiceTestWorkFlow)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.TestWorkFlow(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ShopServiceHTTPClient interface {
 	TestSAGA(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	TestTCC(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	TestTP(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	TestWorkFlow(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	TestXA(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
 
 type ShopServiceHTTPClientImpl struct {
@@ -139,6 +190,32 @@ func (c *ShopServiceHTTPClientImpl) TestTP(ctx context.Context, in *emptypb.Empt
 	pattern := "/test/tp"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestTP))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopServiceHTTPClientImpl) TestWorkFlow(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/test/wf"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlow))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopServiceHTTPClientImpl) TestXA(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/test/xa"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopServiceTestXA))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
