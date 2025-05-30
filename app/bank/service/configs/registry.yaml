@@ -1,8 +1,8 @@
 registry:
-  type: "consul"
+  type: "etcd"
 
   consul:
-    address: "localhost:8500"
+    address: "127.0.0.1:8500"
     scheme: "http"
     heartbeat: false
     health_check: false

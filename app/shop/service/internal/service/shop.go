@@ -6,34 +6,33 @@ import (
 	"github.com/dtm-labs/client/dtmgrpc"
 
 	"github.com/go-kratos/kratos/v2/log"
-	"github.com/go-kratos/kratos/v2/registry"
-	"github.com/go-kratos/kratos/v2/transport/grpc/resolver/discovery"
-
-	"google.golang.org/grpc/resolver"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	"kratos-dtm-examples/app/shop/service/internal/data"
 
 	bankV1 "kratos-dtm-examples/api/gen/go/bank/service/v1"
 	shopV1 "kratos-dtm-examples/api/gen/go/shop/service/v1"
 
-	_ "github.com/dtm-labs/driver-kratos"
+	"kratos-dtm-examples/pkg/service"
 )
 
-const (
-	dtmServer  = "discovery:///dtmservice"
-	bankServer = "discovery:///bank-service"
+var (
+	dtmServer  = service.MakeDiscoveryAddress(service.DTMService)
+	bankServer = service.MakeDiscoveryAddress(service.BankService)
 )
 
 type ShopService struct {
 	shopV1.UnimplementedShopServiceServer
 
 	log *log.Helper
+
+	bankServiceClient bankV1.BankServiceClient
 }
 
-func NewShopService(logger log.Logger, rr registry.Discovery) *ShopService {
-	resolver.Register(discovery.NewBuilder(rr, discovery.WithInsecure(true)))
-
+func NewShopService(logger log.Logger, _ *data.Data, bankServiceClient bankV1.BankServiceClient) *ShopService {
 	return &ShopService{
-		log: log.NewHelper(log.With(logger, "module", "shop/service/shop-service")),
+		log:               log.NewHelper(log.With(logger, "module", "shop/service/shop-service")),
+		bankServiceClient: bankServiceClient,
 	}
 }
 
@@ -43,7 +42,6 @@ func (s *ShopService) Buy(_ context.Context, req *shopV1.BuyRequest) (*shopV1.Bu
 }
 
 func (s *ShopService) TestTransaction(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
-
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
 	m := dtmgrpc.NewMsgGrpc(dtmServer, gid).

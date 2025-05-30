@@ -10,8 +10,6 @@ import (
 	"github.com/tx7do/go-utils/trans"
 	"github.com/tx7do/kratos-bootstrap/bootstrap"
 
-	_ "github.com/dtm-labs/driver-kratos"
-
 	"kratos-dtm-examples/pkg/service"
 )
 

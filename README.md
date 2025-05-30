@@ -29,7 +29,7 @@ go install github.com/dtm-labs/dtm@latest
 ```yaml
 MicroService:
  Driver: 'dtm-driver-kratos' # name of the driver to handle register/discover
- Target: 'etcd://127.0.0.1:2379/dtmservice' # register dtm server to this url
+ Target: 'etcd://127.0.0.1:2379/dtm-service' # register dtm server to this url
  EndPoint: 'grpc://127.0.0.1:36790'
 ```
 
@@ -39,7 +39,7 @@ MicroService:
 #  dtm: conf.yml
 MicroService:
  Driver: 'dtm-driver-kratos' # name of the driver to handle register/discover
- Target: 'consul://127.0.0.1:8500/dtmservice' # register dtm server to this url
+ Target: 'consul://127.0.0.1:8500/dtm-service' # register dtm server to this url
  EndPoint: 'grpc://127.0.0.1:36790'
 ```
 
