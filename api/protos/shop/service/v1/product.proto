@@ -17,6 +17,28 @@ service ProductService {
   }
 }
 
+message Product {
+  int64 id = 1 [
+    (gnostic.openapi.v3.property) = {description: "商品ID"},
+    json_name = "id"
+  ]; // 商品ID
+
+  string name = 2 [
+    (gnostic.openapi.v3.property) = {description: "商品名称"},
+    json_name = "name"
+  ]; // 商品名称
+
+  string description = 3 [
+    (gnostic.openapi.v3.property) = {description: "商品描述"},
+    json_name = "description"
+  ]; // 商品描述
+
+  int32 stock = 4 [
+    (gnostic.openapi.v3.property) = {description: "商品库存"},
+    json_name = "stock"
+  ]; // 商品库存
+}
+
 message DecreaseStockRequest {
   int64 product_id = 1 [
     (gnostic.openapi.v3.property) = {description: "商品ID"},
