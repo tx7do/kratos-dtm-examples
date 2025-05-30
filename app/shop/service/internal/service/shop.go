@@ -103,6 +103,24 @@ func (s *ShopService) TestSAGA(_ context.Context, _ *emptypb.Empty) (*emptypb.Em
 }
 
 func (s *ShopService) TestXA(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	gid := dtmgrpc.MustGenGid(dtmServer)
+
+	err := dtmgrpc.XaGlobalTransaction(dtmServer, gid, func(xa *dtmgrpc.XaGrpc) error {
+		if err := xa.CallBranch(
+			&bankV1.TransactionRequest{Amount: 30},
+			bankServer+bankV1.BankService_Deduct_FullMethodName,
+			&bankV1.TransactionResponse{},
+		); err != nil {
+			s.log.Errorf("failed to call branch for transOutXa: %v", err)
+			return err
+		}
+		return nil
+	})
+	if err != nil {
+		s.log.Errorf("failed to submit transaction: %v", err)
+		return nil, bankV1.ErrorInternalServerError(err.Error())
+	}
+
 	return &emptypb.Empty{}, nil
 }
 

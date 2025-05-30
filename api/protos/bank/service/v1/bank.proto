@@ -12,10 +12,17 @@ service BankService {
   // 查询账户信息
   rpc GetAccount(GetAccountRequest) returns (Account) {}
 
+
   // 转入
   rpc TransIn(TransferRequest) returns (TransferResponse);
   // 转出
   rpc TransOut(TransferRequest) returns (TransferResponse);
+
+  
+  // 转入
+  rpc TransInXA(TransferRequest) returns (TransferResponse);
+  // 转出
+  rpc TransOutXA(TransferRequest) returns (TransferResponse);
 
 
   // Try阶段：预扣款，冻结金额

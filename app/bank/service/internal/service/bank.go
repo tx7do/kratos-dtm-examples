@@ -36,6 +36,16 @@ func (s *BankService) TransOut(ctx context.Context, req *bankV1.TransferRequest)
 	return &bankV1.TransferResponse{}, nil
 }
 
+func (s *BankService) TransInXA(ctx context.Context, req *bankV1.TransferRequest) (*bankV1.TransferResponse, error) {
+	s.log.Infof("transfer in %d cents from %s to %s", req.Amount, req.FromAccountId, req.ToAccountId)
+	return &bankV1.TransferResponse{}, nil
+}
+
+func (s *BankService) TransOutXA(ctx context.Context, req *bankV1.TransferRequest) (*bankV1.TransferResponse, error) {
+	s.log.Infof("transfer out %d cents from %s to %s", req.Amount, req.FromAccountId, req.ToAccountId)
+	return &bankV1.TransferResponse{}, nil
+}
+
 // TryDeduct TCC - Try阶段：预扣款，冻结金额
 func (s *BankService) TryDeduct(ctx context.Context, req *bankV1.TransactionRequest) (*bankV1.TransactionResponse, error) {
 	s.log.Infof("try deduct %d cents from %s", req.Amount, req.AccountId)

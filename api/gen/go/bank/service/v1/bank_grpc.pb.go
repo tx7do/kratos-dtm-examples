@@ -23,6 +23,8 @@ const (
 	BankService_GetAccount_FullMethodName      = "/bank.service.v1.BankService/GetAccount"
 	BankService_TransIn_FullMethodName         = "/bank.service.v1.BankService/TransIn"
 	BankService_TransOut_FullMethodName        = "/bank.service.v1.BankService/TransOut"
+	BankService_TransInXA_FullMethodName       = "/bank.service.v1.BankService/TransInXA"
+	BankService_TransOutXA_FullMethodName      = "/bank.service.v1.BankService/TransOutXA"
 	BankService_TryDeduct_FullMethodName       = "/bank.service.v1.BankService/TryDeduct"
 	BankService_ConfirmDeduct_FullMethodName   = "/bank.service.v1.BankService/ConfirmDeduct"
 	BankService_CancelDeduct_FullMethodName    = "/bank.service.v1.BankService/CancelDeduct"
@@ -44,6 +46,10 @@ type BankServiceClient interface {
 	TransIn(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
 	// 转出
 	TransOut(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
+	// 转入
+	TransInXA(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
+	// 转出
+	TransOutXA(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
 	// Try阶段：预扣款，冻结金额
 	TryDeduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
 	// Confirm阶段：确认扣款，实际扣除已冻结金额
@@ -92,6 +98,26 @@ func (c *bankServiceClient) TransOut(ctx context.Context, in *TransferRequest, o
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(TransferResponse)
 	err := c.cc.Invoke(ctx, BankService_TransOut_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bankServiceClient) TransInXA(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransferResponse)
+	err := c.cc.Invoke(ctx, BankService_TransInXA_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bankServiceClient) TransOutXA(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransferResponse)
+	err := c.cc.Invoke(ctx, BankService_TransOutXA_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -180,6 +206,10 @@ type BankServiceServer interface {
 	TransIn(context.Context, *TransferRequest) (*TransferResponse, error)
 	// 转出
 	TransOut(context.Context, *TransferRequest) (*TransferResponse, error)
+	// 转入
+	TransInXA(context.Context, *TransferRequest) (*TransferResponse, error)
+	// 转出
+	TransOutXA(context.Context, *TransferRequest) (*TransferResponse, error)
 	// Try阶段：预扣款，冻结金额
 	TryDeduct(context.Context, *TransactionRequest) (*TransactionResponse, error)
 	// Confirm阶段：确认扣款，实际扣除已冻结金额
@@ -212,6 +242,12 @@ func (UnimplementedBankServiceServer) TransIn(context.Context, *TransferRequest)
 }
 func (UnimplementedBankServiceServer) TransOut(context.Context, *TransferRequest) (*TransferResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TransOut not implemented")
+}
+func (UnimplementedBankServiceServer) TransInXA(context.Context, *TransferRequest) (*TransferResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransInXA not implemented")
+}
+func (UnimplementedBankServiceServer) TransOutXA(context.Context, *TransferRequest) (*TransferResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TransOutXA not implemented")
 }
 func (UnimplementedBankServiceServer) TryDeduct(context.Context, *TransactionRequest) (*TransactionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TryDeduct not implemented")
@@ -305,6 +341,42 @@ func _BankService_TransOut_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BankServiceServer).TransOut(ctx, req.(*TransferRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BankService_TransInXA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransferRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).TransInXA(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_TransInXA_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).TransInXA(ctx, req.(*TransferRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BankService_TransOutXA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransferRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).TransOutXA(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_TransOutXA_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).TransOutXA(ctx, req.(*TransferRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -453,6 +525,14 @@ var BankService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "TransOut",
 			Handler:    _BankService_TransOut_Handler,
+		},
+		{
+			MethodName: "TransInXA",
+			Handler:    _BankService_TransInXA_Handler,
+		},
+		{
+			MethodName: "TransOutXA",
+			Handler:    _BankService_TransOutXA_Handler,
 		},
 		{
 			MethodName: "TryDeduct",
