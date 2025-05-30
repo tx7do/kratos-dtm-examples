@@ -9,7 +9,9 @@ docker run -itd \
   --name dtm \
   -p 36789:36789 \
   -p 36790:36790 \
-  -e \
+  -e MICRO_SERVICE_DRIVER="dtm-driver-kratos" \
+  -e MICRO_SERVICE_TARGET="etcd://127.0.0.1:2379/dtmservice" \
+  -e MICRO_SERVICE_END_POINT="grpc://127.0.0.1:36790" \
   yedf/dtm:latest
 ```
 
