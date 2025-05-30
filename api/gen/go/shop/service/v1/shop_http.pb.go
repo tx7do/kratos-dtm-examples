@@ -20,26 +20,70 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationShopServiceTestTransaction = "/shop.service.v1.ShopService/TestTransaction"
+const OperationShopServiceTestSAGA = "/shop.service.v1.ShopService/TestSAGA"
+const OperationShopServiceTestTCC = "/shop.service.v1.ShopService/TestTCC"
+const OperationShopServiceTestTP = "/shop.service.v1.ShopService/TestTP"
 
 type ShopServiceHTTPServer interface {
-	TestTransaction(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	TestSAGA(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	TestTCC(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	TestTP(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 }
 
 func RegisterShopServiceHTTPServer(s *http.Server, srv ShopServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/test/transaction", _ShopService_TestTransaction0_HTTP_Handler(srv))
+	r.GET("/test/tp", _ShopService_TestTP0_HTTP_Handler(srv))
+	r.GET("/test/tcc", _ShopService_TestTCC0_HTTP_Handler(srv))
+	r.GET("/test/saga", _ShopService_TestSAGA0_HTTP_Handler(srv))
 }
 
-func _ShopService_TestTransaction0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+func _ShopService_TestTP0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationShopServiceTestTransaction)
+		http.SetOperation(ctx, OperationShopServiceTestTP)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.TestTransaction(ctx, req.(*emptypb.Empty))
+			return srv.TestTP(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ShopService_TestTCC0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopServiceTestTCC)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.TestTCC(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ShopService_TestSAGA0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopServiceTestSAGA)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.TestSAGA(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -51,7 +95,9 @@ func _ShopService_TestTransaction0_HTTP_Handler(srv ShopServiceHTTPServer) func(
 }
 
 type ShopServiceHTTPClient interface {
-	TestTransaction(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	TestSAGA(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	TestTCC(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	TestTP(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
 
 type ShopServiceHTTPClientImpl struct {
@@ -62,11 +108,37 @@ func NewShopServiceHTTPClient(client *http.Client) ShopServiceHTTPClient {
 	return &ShopServiceHTTPClientImpl{client}
 }
 
-func (c *ShopServiceHTTPClientImpl) TestTransaction(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+func (c *ShopServiceHTTPClientImpl) TestSAGA(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/test/transaction"
+	pattern := "/test/saga"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationShopServiceTestTransaction))
+	opts = append(opts, http.Operation(OperationShopServiceTestSAGA))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopServiceHTTPClientImpl) TestTCC(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/test/tcc"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopServiceTestTCC))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopServiceHTTPClientImpl) TestTP(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/test/tp"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopServiceTestTP))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

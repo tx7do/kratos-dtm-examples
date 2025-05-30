@@ -17,13 +17,21 @@ service ShopService {
     };
   }
 
-  rpc TestTransaction(google.protobuf.Empty) returns (google.protobuf.Empty) {
-    option (gnostic.openapi.v3.operation) = {
-      summary: "测试事务",
-      description: "测试事务处理"
-    };
+  rpc TestTP(google.protobuf.Empty) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      get: "/test/transaction"
+      get: "/test/tp"
+    };
+  }
+
+  rpc TestTCC(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      get: "/test/tcc"
+    };
+  }
+
+  rpc TestSAGA(google.protobuf.Empty) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      get: "/test/saga"
     };
   }
 }

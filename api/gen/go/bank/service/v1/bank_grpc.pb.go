@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,8 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	BankService_TransIn_FullMethodName  = "/bank.service.v1.BankService/TransIn"
-	BankService_TransOut_FullMethodName = "/bank.service.v1.BankService/TransOut"
+	BankService_GetAccount_FullMethodName      = "/bank.service.v1.BankService/GetAccount"
+	BankService_TransIn_FullMethodName         = "/bank.service.v1.BankService/TransIn"
+	BankService_TransOut_FullMethodName        = "/bank.service.v1.BankService/TransOut"
+	BankService_TryDeduct_FullMethodName       = "/bank.service.v1.BankService/TryDeduct"
+	BankService_ConfirmDeduct_FullMethodName   = "/bank.service.v1.BankService/ConfirmDeduct"
+	BankService_CancelDeduct_FullMethodName    = "/bank.service.v1.BankService/CancelDeduct"
+	BankService_Deduct_FullMethodName          = "/bank.service.v1.BankService/Deduct"
+	BankService_Refund_FullMethodName          = "/bank.service.v1.BankService/Refund"
+	BankService_Transfer_FullMethodName        = "/bank.service.v1.BankService/Transfer"
+	BankService_ReverseTransfer_FullMethodName = "/bank.service.v1.BankService/ReverseTransfer"
 )
 
 // BankServiceClient is the client API for BankService service.
@@ -29,8 +38,26 @@ const (
 //
 // 银行服务
 type BankServiceClient interface {
+	// 查询账户信息
+	GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*Account, error)
+	// 转入
 	TransIn(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
+	// 转出
 	TransOut(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
+	// Try阶段：预扣款，冻结金额
+	TryDeduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
+	// Confirm阶段：确认扣款，实际扣除已冻结金额
+	ConfirmDeduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Cancel阶段：取消扣款，解冻已冻结金额
+	CancelDeduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// 扣款操作（SAGA正向操作）
+	Deduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
+	// 退款操作（SAGA补偿操作）
+	Refund(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error)
+	// 转账操作（SAGA正向操作）
+	Transfer(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
+	// 转账回滚操作（SAGA补偿操作）
+	ReverseTransfer(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error)
 }
 
 type bankServiceClient struct {
@@ -39,6 +66,16 @@ type bankServiceClient struct {
 
 func NewBankServiceClient(cc grpc.ClientConnInterface) BankServiceClient {
 	return &bankServiceClient{cc}
+}
+
+func (c *bankServiceClient) GetAccount(ctx context.Context, in *GetAccountRequest, opts ...grpc.CallOption) (*Account, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Account)
+	err := c.cc.Invoke(ctx, BankService_GetAccount_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *bankServiceClient) TransIn(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error) {
@@ -61,14 +98,102 @@ func (c *bankServiceClient) TransOut(ctx context.Context, in *TransferRequest, o
 	return out, nil
 }
 
+func (c *bankServiceClient) TryDeduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransactionResponse)
+	err := c.cc.Invoke(ctx, BankService_TryDeduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bankServiceClient) ConfirmDeduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, BankService_ConfirmDeduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bankServiceClient) CancelDeduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, BankService_CancelDeduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bankServiceClient) Deduct(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransactionResponse)
+	err := c.cc.Invoke(ctx, BankService_Deduct_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bankServiceClient) Refund(ctx context.Context, in *TransactionRequest, opts ...grpc.CallOption) (*TransactionResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransactionResponse)
+	err := c.cc.Invoke(ctx, BankService_Refund_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bankServiceClient) Transfer(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransferResponse)
+	err := c.cc.Invoke(ctx, BankService_Transfer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *bankServiceClient) ReverseTransfer(ctx context.Context, in *TransferRequest, opts ...grpc.CallOption) (*TransferResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(TransferResponse)
+	err := c.cc.Invoke(ctx, BankService_ReverseTransfer_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BankServiceServer is the server API for BankService service.
 // All implementations must embed UnimplementedBankServiceServer
 // for forward compatibility.
 //
 // 银行服务
 type BankServiceServer interface {
+	// 查询账户信息
+	GetAccount(context.Context, *GetAccountRequest) (*Account, error)
+	// 转入
 	TransIn(context.Context, *TransferRequest) (*TransferResponse, error)
+	// 转出
 	TransOut(context.Context, *TransferRequest) (*TransferResponse, error)
+	// Try阶段：预扣款，冻结金额
+	TryDeduct(context.Context, *TransactionRequest) (*TransactionResponse, error)
+	// Confirm阶段：确认扣款，实际扣除已冻结金额
+	ConfirmDeduct(context.Context, *TransactionRequest) (*emptypb.Empty, error)
+	// Cancel阶段：取消扣款，解冻已冻结金额
+	CancelDeduct(context.Context, *TransactionRequest) (*emptypb.Empty, error)
+	// 扣款操作（SAGA正向操作）
+	Deduct(context.Context, *TransactionRequest) (*TransactionResponse, error)
+	// 退款操作（SAGA补偿操作）
+	Refund(context.Context, *TransactionRequest) (*TransactionResponse, error)
+	// 转账操作（SAGA正向操作）
+	Transfer(context.Context, *TransferRequest) (*TransferResponse, error)
+	// 转账回滚操作（SAGA补偿操作）
+	ReverseTransfer(context.Context, *TransferRequest) (*TransferResponse, error)
 	mustEmbedUnimplementedBankServiceServer()
 }
 
@@ -79,11 +204,35 @@ type BankServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedBankServiceServer struct{}
 
+func (UnimplementedBankServiceServer) GetAccount(context.Context, *GetAccountRequest) (*Account, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccount not implemented")
+}
 func (UnimplementedBankServiceServer) TransIn(context.Context, *TransferRequest) (*TransferResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TransIn not implemented")
 }
 func (UnimplementedBankServiceServer) TransOut(context.Context, *TransferRequest) (*TransferResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TransOut not implemented")
+}
+func (UnimplementedBankServiceServer) TryDeduct(context.Context, *TransactionRequest) (*TransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TryDeduct not implemented")
+}
+func (UnimplementedBankServiceServer) ConfirmDeduct(context.Context, *TransactionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ConfirmDeduct not implemented")
+}
+func (UnimplementedBankServiceServer) CancelDeduct(context.Context, *TransactionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CancelDeduct not implemented")
+}
+func (UnimplementedBankServiceServer) Deduct(context.Context, *TransactionRequest) (*TransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Deduct not implemented")
+}
+func (UnimplementedBankServiceServer) Refund(context.Context, *TransactionRequest) (*TransactionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Refund not implemented")
+}
+func (UnimplementedBankServiceServer) Transfer(context.Context, *TransferRequest) (*TransferResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Transfer not implemented")
+}
+func (UnimplementedBankServiceServer) ReverseTransfer(context.Context, *TransferRequest) (*TransferResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReverseTransfer not implemented")
 }
 func (UnimplementedBankServiceServer) mustEmbedUnimplementedBankServiceServer() {}
 func (UnimplementedBankServiceServer) testEmbeddedByValue()                     {}
@@ -104,6 +253,24 @@ func RegisterBankServiceServer(s grpc.ServiceRegistrar, srv BankServiceServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&BankService_ServiceDesc, srv)
+}
+
+func _BankService_GetAccount_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).GetAccount(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_GetAccount_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).GetAccount(ctx, req.(*GetAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _BankService_TransIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -142,6 +309,132 @@ func _BankService_TransOut_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _BankService_TryDeduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).TryDeduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_TryDeduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).TryDeduct(ctx, req.(*TransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BankService_ConfirmDeduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).ConfirmDeduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_ConfirmDeduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).ConfirmDeduct(ctx, req.(*TransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BankService_CancelDeduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).CancelDeduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_CancelDeduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).CancelDeduct(ctx, req.(*TransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BankService_Deduct_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).Deduct(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_Deduct_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).Deduct(ctx, req.(*TransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BankService_Refund_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransactionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).Refund(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_Refund_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).Refund(ctx, req.(*TransactionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BankService_Transfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransferRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).Transfer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_Transfer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).Transfer(ctx, req.(*TransferRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BankService_ReverseTransfer_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(TransferRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BankServiceServer).ReverseTransfer(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: BankService_ReverseTransfer_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BankServiceServer).ReverseTransfer(ctx, req.(*TransferRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // BankService_ServiceDesc is the grpc.ServiceDesc for BankService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -150,12 +443,44 @@ var BankService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*BankServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "GetAccount",
+			Handler:    _BankService_GetAccount_Handler,
+		},
+		{
 			MethodName: "TransIn",
 			Handler:    _BankService_TransIn_Handler,
 		},
 		{
 			MethodName: "TransOut",
 			Handler:    _BankService_TransOut_Handler,
+		},
+		{
+			MethodName: "TryDeduct",
+			Handler:    _BankService_TryDeduct_Handler,
+		},
+		{
+			MethodName: "ConfirmDeduct",
+			Handler:    _BankService_ConfirmDeduct_Handler,
+		},
+		{
+			MethodName: "CancelDeduct",
+			Handler:    _BankService_CancelDeduct_Handler,
+		},
+		{
+			MethodName: "Deduct",
+			Handler:    _BankService_Deduct_Handler,
+		},
+		{
+			MethodName: "Refund",
+			Handler:    _BankService_Refund_Handler,
+		},
+		{
+			MethodName: "Transfer",
+			Handler:    _BankService_Transfer_Handler,
+		},
+		{
+			MethodName: "ReverseTransfer",
+			Handler:    _BankService_ReverseTransfer_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
