@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/dtm-labs/client/dtmgrpc"
-
 	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -167,5 +166,12 @@ func (s *ShopService) TestXA(_ context.Context, req *shopV1.BuyRequest) (*shopV1
 }
 
 func (s *ShopService) TestWorkFlow(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
-	return &shopV1.BuyResponse{}, nil
+	gid := dtmgrpc.MustGenGid(dtmServer)
+
+	s.log.Infof("开始工作流事务，GID: %s", gid)
+
+	//workflow.InitGrpc(dtmServer, shopServer, gsvr)
+
+	s.log.Infof("工作流事务提交成功，GID: %s", gid)
+	return &shopV1.BuyResponse{Success: true}, nil
 }
