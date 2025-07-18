@@ -16,8 +16,9 @@ import (
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(
 	cfg *conf.Bootstrap, logger log.Logger,
-	shopService *service.ShopService,
-	productService *service.ProductService,
+	stockService *service.StockService,
+	orderService *service.OrderService,
+	paymentService *service.PaymentService,
 ) *grpc.Server {
 	if cfg == nil || cfg.Server == nil || cfg.Server.Grpc == nil {
 		return nil
@@ -28,8 +29,9 @@ func NewGRPCServer(
 		logging.Server(logger),
 	)
 
-	shopV1.RegisterShopServiceServer(srv, shopService)
-	shopV1.RegisterProductServiceServer(srv, productService)
+	shopV1.RegisterStockServiceServer(srv, stockService)
+	shopV1.RegisterOrderServiceServer(srv, orderService)
+	shopV1.RegisterPaymentServiceServer(srv, paymentService)
 
 	return srv
 }

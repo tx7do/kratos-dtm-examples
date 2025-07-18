@@ -1,0 +1,70 @@
+﻿syntax = "proto3";
+
+package shop.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+
+import "pagination/v1/pagination.proto";
+
+// 支付服务
+service PaymentService {
+  rpc TryMakePayment(TryMakePaymentRequest) returns (TryMakePaymentResponse) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "尝试支付",
+      description: "预留支付资源，进入 Try 阶段"
+    };
+  }
+
+  rpc ConfirmMakePayment(ConfirmMakePaymentRequest) returns (google.protobuf.Empty) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "确认支付",
+      description: "确认支付，进入 Confirm 阶段"
+    };
+  }
+
+  rpc CancelMakePayment(CancelMakePaymentRequest) returns (google.protobuf.Empty) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "取消支付",
+      description: "释放支付资源，进入 Cancel 阶段"
+    };
+  }
+}
+
+message TryMakePaymentRequest {
+  int64 user_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "用户ID"},
+    json_name = "userId"
+  ]; // 用户ID
+
+  double amount = 2 [
+    (gnostic.openapi.v3.property) = {description: "支付金额"},
+    json_name = "amount"
+  ]; // 支付金额
+}
+
+message TryMakePaymentResponse {
+  bool success = 1 [
+    (gnostic.openapi.v3.property) = {description: "尝试是否成功"},
+    json_name = "success"
+  ]; // 尝试是否成功
+
+  string message = 2 [
+    (gnostic.openapi.v3.property) = {description: "操作结果消息"},
+    json_name = "message"
+  ]; // 操作结果消息
+}
+
+message ConfirmMakePaymentRequest {
+  int64 payment_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "支付ID"},
+    json_name = "paymentId"
+  ]; // 支付ID
+}
+
+message CancelMakePaymentRequest {
+  int64 payment_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "支付ID"},
+    json_name = "paymentId"
+  ]; // 支付ID
+}

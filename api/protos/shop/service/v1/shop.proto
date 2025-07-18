@@ -18,35 +18,35 @@ service ShopService {
   }
 
   // 二阶段消息
-  rpc TestTP(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc TestTP(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
       get: "/test/tp"
     };
   }
 
   // TCC
-  rpc TestTCC(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc TestTCC(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
       get: "/test/tcc"
     };
   }
 
   // SAGA
-  rpc TestSAGA(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc TestSAGA(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
       get: "/test/saga"
     };
   }
 
   // XA
-  rpc TestXA(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc TestXA(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
       get: "/test/xa"
     };
   }
 
   // 工作流Workflow
-  rpc TestWorkFlow(google.protobuf.Empty) returns (google.protobuf.Empty) {
+  rpc TestWorkFlow(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
       get: "/test/wf"
     };
@@ -54,12 +54,12 @@ service ShopService {
 }
 
 message BuyRequest {
-  int64 user_id = 1 [
+  uint32 user_id = 1 [
     (gnostic.openapi.v3.property) = {description: "用户ID"},
     json_name = "userId"
   ]; // 用户ID
 
-  int64 product_id = 2 [
+  uint32 product_id = 2 [
     (gnostic.openapi.v3.property) = {description: "商品ID"},
     json_name = "productId"
   ]; // 商品ID

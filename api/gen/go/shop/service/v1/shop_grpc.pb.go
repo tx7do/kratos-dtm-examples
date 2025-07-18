@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -36,15 +35,15 @@ const (
 type ShopServiceClient interface {
 	Buy(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// 二阶段消息
-	TestTP(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	TestTP(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// TCC
-	TestTCC(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	TestTCC(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// SAGA
-	TestSAGA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	TestSAGA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// XA
-	TestXA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	TestXA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// 工作流Workflow
-	TestWorkFlow(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	TestWorkFlow(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 }
 
 type shopServiceClient struct {
@@ -65,9 +64,9 @@ func (c *shopServiceClient) Buy(ctx context.Context, in *BuyRequest, opts ...grp
 	return out, nil
 }
 
-func (c *shopServiceClient) TestTP(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *shopServiceClient) TestTP(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(BuyResponse)
 	err := c.cc.Invoke(ctx, ShopService_TestTP_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -75,9 +74,9 @@ func (c *shopServiceClient) TestTP(ctx context.Context, in *emptypb.Empty, opts 
 	return out, nil
 }
 
-func (c *shopServiceClient) TestTCC(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *shopServiceClient) TestTCC(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(BuyResponse)
 	err := c.cc.Invoke(ctx, ShopService_TestTCC_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -85,9 +84,9 @@ func (c *shopServiceClient) TestTCC(ctx context.Context, in *emptypb.Empty, opts
 	return out, nil
 }
 
-func (c *shopServiceClient) TestSAGA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *shopServiceClient) TestSAGA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(BuyResponse)
 	err := c.cc.Invoke(ctx, ShopService_TestSAGA_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -95,9 +94,9 @@ func (c *shopServiceClient) TestSAGA(ctx context.Context, in *emptypb.Empty, opt
 	return out, nil
 }
 
-func (c *shopServiceClient) TestXA(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *shopServiceClient) TestXA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(BuyResponse)
 	err := c.cc.Invoke(ctx, ShopService_TestXA_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -105,9 +104,9 @@ func (c *shopServiceClient) TestXA(ctx context.Context, in *emptypb.Empty, opts 
 	return out, nil
 }
 
-func (c *shopServiceClient) TestWorkFlow(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *shopServiceClient) TestWorkFlow(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(BuyResponse)
 	err := c.cc.Invoke(ctx, ShopService_TestWorkFlow_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -123,15 +122,15 @@ func (c *shopServiceClient) TestWorkFlow(ctx context.Context, in *emptypb.Empty,
 type ShopServiceServer interface {
 	Buy(context.Context, *BuyRequest) (*BuyResponse, error)
 	// 二阶段消息
-	TestTP(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	TestTP(context.Context, *BuyRequest) (*BuyResponse, error)
 	// TCC
-	TestTCC(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	TestTCC(context.Context, *BuyRequest) (*BuyResponse, error)
 	// SAGA
-	TestSAGA(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	TestSAGA(context.Context, *BuyRequest) (*BuyResponse, error)
 	// XA
-	TestXA(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	TestXA(context.Context, *BuyRequest) (*BuyResponse, error)
 	// 工作流Workflow
-	TestWorkFlow(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	TestWorkFlow(context.Context, *BuyRequest) (*BuyResponse, error)
 	mustEmbedUnimplementedShopServiceServer()
 }
 
@@ -145,19 +144,19 @@ type UnimplementedShopServiceServer struct{}
 func (UnimplementedShopServiceServer) Buy(context.Context, *BuyRequest) (*BuyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Buy not implemented")
 }
-func (UnimplementedShopServiceServer) TestTP(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedShopServiceServer) TestTP(context.Context, *BuyRequest) (*BuyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestTP not implemented")
 }
-func (UnimplementedShopServiceServer) TestTCC(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedShopServiceServer) TestTCC(context.Context, *BuyRequest) (*BuyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestTCC not implemented")
 }
-func (UnimplementedShopServiceServer) TestSAGA(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedShopServiceServer) TestSAGA(context.Context, *BuyRequest) (*BuyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestSAGA not implemented")
 }
-func (UnimplementedShopServiceServer) TestXA(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedShopServiceServer) TestXA(context.Context, *BuyRequest) (*BuyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestXA not implemented")
 }
-func (UnimplementedShopServiceServer) TestWorkFlow(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+func (UnimplementedShopServiceServer) TestWorkFlow(context.Context, *BuyRequest) (*BuyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestWorkFlow not implemented")
 }
 func (UnimplementedShopServiceServer) mustEmbedUnimplementedShopServiceServer() {}
@@ -200,7 +199,7 @@ func _ShopService_Buy_Handler(srv interface{}, ctx context.Context, dec func(int
 }
 
 func _ShopService_TestTP_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(BuyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -212,13 +211,13 @@ func _ShopService_TestTP_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: ShopService_TestTP_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShopServiceServer).TestTP(ctx, req.(*emptypb.Empty))
+		return srv.(ShopServiceServer).TestTP(ctx, req.(*BuyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ShopService_TestTCC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(BuyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -230,13 +229,13 @@ func _ShopService_TestTCC_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: ShopService_TestTCC_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShopServiceServer).TestTCC(ctx, req.(*emptypb.Empty))
+		return srv.(ShopServiceServer).TestTCC(ctx, req.(*BuyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ShopService_TestSAGA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(BuyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -248,13 +247,13 @@ func _ShopService_TestSAGA_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: ShopService_TestSAGA_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShopServiceServer).TestSAGA(ctx, req.(*emptypb.Empty))
+		return srv.(ShopServiceServer).TestSAGA(ctx, req.(*BuyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ShopService_TestXA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(BuyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -266,13 +265,13 @@ func _ShopService_TestXA_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: ShopService_TestXA_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShopServiceServer).TestXA(ctx, req.(*emptypb.Empty))
+		return srv.(ShopServiceServer).TestXA(ctx, req.(*BuyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _ShopService_TestWorkFlow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+	in := new(BuyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -284,7 +283,7 @@ func _ShopService_TestWorkFlow_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: ShopService_TestWorkFlow_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShopServiceServer).TestWorkFlow(ctx, req.(*emptypb.Empty))
+		return srv.(ShopServiceServer).TestWorkFlow(ctx, req.(*BuyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

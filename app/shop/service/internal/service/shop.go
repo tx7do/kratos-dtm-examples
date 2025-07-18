@@ -8,9 +8,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/protobuf/types/known/emptypb"
 
-	"kratos-dtm-examples/app/shop/service/internal/data"
-
-	bankV1 "kratos-dtm-examples/api/gen/go/bank/service/v1"
 	shopV1 "kratos-dtm-examples/api/gen/go/shop/service/v1"
 
 	"kratos-dtm-examples/pkg/service"
@@ -18,21 +15,18 @@ import (
 
 var (
 	dtmServer  = service.MakeDiscoveryAddress(service.DTMService)
-	bankServer = service.MakeDiscoveryAddress(service.BankService)
+	shopServer = service.MakeDiscoveryAddress(service.ShopService)
 )
 
 type ShopService struct {
 	shopV1.UnimplementedShopServiceServer
 
 	log *log.Helper
-
-	bankServiceClient bankV1.BankServiceClient
 }
 
-func NewShopService(logger log.Logger, _ *data.Data, bankServiceClient bankV1.BankServiceClient) *ShopService {
+func NewShopService(logger log.Logger) *ShopService {
 	return &ShopService{
-		log:               log.NewHelper(log.With(logger, "module", "shop/service/shop-service")),
-		bankServiceClient: bankServiceClient,
+		log: log.NewHelper(log.With(logger, "module", "shop/service/shop-service")),
 	}
 }
 
@@ -41,89 +35,137 @@ func (s *ShopService) Buy(_ context.Context, req *shopV1.BuyRequest) (*shopV1.Bu
 	return &shopV1.BuyResponse{}, nil
 }
 
-func (s *ShopService) TestTP(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (s *ShopService) TestTP(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
-	m := dtmgrpc.NewMsgGrpc(dtmServer, gid).
-		Add(bankServer+bankV1.BankService_TransOut_FullMethodName, &bankV1.TransferRequest{Amount: 30, FromAccountId: "from", ToAccountId: "to"}).
-		Add(bankServer+bankV1.BankService_TransIn_FullMethodName, &bankV1.TransferRequest{Amount: 30, FromAccountId: "from", ToAccountId: "to"})
-	m.WaitResult = true
-	err := m.Submit()
-	if err != nil {
-		s.log.Errorf("failed to submit transaction: %v", err)
-		return nil, bankV1.ErrorInternalServerError(err.Error())
+	// 创建消息事务
+	msg := dtmgrpc.NewMsgGrpc(dtmServer, gid).
+		Add(
+			shopServer+shopV1.StockService_DeductStock_FullMethodName,
+			&shopV1.DeductStockRequest{ProductId: req.ProductId, Quantity: req.Quantity},
+		).
+		Add(
+			shopServer+shopV1.OrderService_CreateOrder_FullMethodName,
+			&shopV1.CreateOrderRequest{UserId: req.UserId, ProductId: req.ProductId, Quantity: req.Quantity},
+		)
+
+	msg.WaitResult = true
+
+	// 提交事务
+	if err := msg.Submit(); err != nil {
+		s.log.Errorf("提交购买事务失败: %v", err)
+		return nil, shopV1.ErrorInternalServerError(err.Error())
 	}
 
-	return &emptypb.Empty{}, nil
+	s.log.Infof("购买事务提交成功，GID: %s", gid)
+
+	return &shopV1.BuyResponse{Success: true}, nil
 }
 
-func (s *ShopService) TestTCC(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (s *ShopService) TestTCC(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
-	s.log.Infof("testTCC %s", gid)
+	s.log.Infof("开始 TCC 事务，GID: %s", gid)
 
 	err := dtmgrpc.TccGlobalTransaction(dtmServer, gid, func(tcc *dtmgrpc.TccGrpc) error {
+		// Try 阶段：扣减库存
 		err := tcc.CallBranch(
-			&bankV1.TransactionRequest{Amount: 30},
-			bankServer+bankV1.BankService_TryDeduct_FullMethodName,
-			bankServer+bankV1.BankService_ConfirmDeduct_FullMethodName,
-			bankServer+bankV1.BankService_CancelDeduct_FullMethodName,
-			&bankV1.TransactionResponse{},
+			&shopV1.DeductStockRequest{ProductId: req.ProductId, Quantity: req.Quantity},
+			shopServer+shopV1.StockService_TryDeductStock_FullMethodName,
+			shopServer+shopV1.StockService_ConfirmDeductStock_FullMethodName,
+			shopServer+shopV1.StockService_CancelDeductStock_FullMethodName,
+			&emptypb.Empty{},
 		)
 		if err != nil {
-			s.log.Errorf("failed to call branch for deduct: %v", err)
-			return bankV1.ErrorInternalServerError(err.Error())
+			s.log.Errorf("扣减库存失败: %v", err)
+			return shopV1.ErrorInternalServerError(err.Error())
 		}
+
+		// Try 阶段：创建订单
+		err = tcc.CallBranch(
+			&shopV1.CreateOrderRequest{UserId: req.UserId, ProductId: req.ProductId, Quantity: req.Quantity},
+			shopServer+shopV1.OrderService_TryCreateOrder_FullMethodName,
+			shopServer+shopV1.OrderService_ConfirmCreateOrder_FullMethodName,
+			shopServer+shopV1.OrderService_CancelCreateOrder_FullMethodName,
+			&emptypb.Empty{},
+		)
+		if err != nil {
+			s.log.Errorf("创建订单失败: %v", err)
+			return shopV1.ErrorInternalServerError(err.Error())
+		}
+
 		return nil
 	})
 	if err != nil {
-		s.log.Errorf("failed to submit transaction: %v", err)
-		return nil, bankV1.ErrorInternalServerError(err.Error())
+		s.log.Errorf("TCC 事务提交失败: %v", err)
+		return nil, shopV1.ErrorInternalServerError(err.Error())
 	}
 
-	return &emptypb.Empty{}, nil
+	s.log.Infof("TCC 事务提交成功，GID: %s", gid)
+	return &shopV1.BuyResponse{Success: true}, nil
 }
 
-func (s *ShopService) TestSAGA(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (s *ShopService) TestSAGA(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
-	req := &bankV1.TransactionRequest{Amount: 30}
+	s.log.Infof("开始 SAGA 事务，GID: %s", gid)
 
 	saga := dtmgrpc.NewSagaGrpc(dtmServer, gid).
-		Add(bankServer+bankV1.BankService_Deduct_FullMethodName, bankServer+bankV1.BankService_Refund_FullMethodName, req).
-		Add(bankServer+bankV1.BankService_Transfer_FullMethodName, bankServer+bankV1.BankService_ReverseTransfer_FullMethodName, req)
+		Add(
+			shopServer+shopV1.StockService_DeductStock_FullMethodName,
+			shopServer+shopV1.StockService_RefundStock_FullMethodName,
+			&shopV1.DeductStockRequest{ProductId: req.ProductId, Quantity: req.Quantity},
+		).
+		Add(
+			shopServer+shopV1.OrderService_CreateOrder_FullMethodName,
+			shopServer+shopV1.OrderService_RefundOrder_FullMethodName,
+			&shopV1.CreateOrderRequest{UserId: req.UserId, ProductId: req.ProductId, Quantity: req.Quantity},
+		)
 
-	err := saga.Submit()
-	if err != nil {
-		s.log.Errorf("failed to submit transaction: %v", err)
-		return nil, bankV1.ErrorInternalServerError(err.Error())
+	if err := saga.Submit(); err != nil {
+		s.log.Errorf("SAGA 事务提交失败: %v", err)
+		return nil, shopV1.ErrorInternalServerError(err.Error())
 	}
 
-	return &emptypb.Empty{}, nil
+	s.log.Infof("SAGA 事务提交成功，GID: %s", gid)
+	return &shopV1.BuyResponse{Success: true}, nil
 }
 
-func (s *ShopService) TestXA(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (s *ShopService) TestXA(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
 	err := dtmgrpc.XaGlobalTransaction(dtmServer, gid, func(xa *dtmgrpc.XaGrpc) error {
+		// 扣减库存
 		if err := xa.CallBranch(
-			&bankV1.TransactionRequest{Amount: 30},
-			bankServer+bankV1.BankService_Deduct_FullMethodName,
-			&bankV1.TransactionResponse{},
+			&shopV1.DeductStockRequest{ProductId: req.ProductId, Quantity: req.Quantity},
+			shopServer+shopV1.StockService_DeductStock_FullMethodName,
+			&emptypb.Empty{},
 		); err != nil {
-			s.log.Errorf("failed to call branch for transOutXa: %v", err)
+			s.log.Errorf("扣减库存失败: %v", err)
 			return err
 		}
+
+		// 创建订单
+		if err := xa.CallBranch(
+			&shopV1.CreateOrderRequest{UserId: req.UserId, ProductId: req.ProductId, Quantity: req.Quantity},
+			shopServer+shopV1.OrderService_CreateOrder_FullMethodName,
+			&emptypb.Empty{},
+		); err != nil {
+			s.log.Errorf("创建订单失败: %v", err)
+			return err
+		}
+
 		return nil
 	})
 	if err != nil {
-		s.log.Errorf("failed to submit transaction: %v", err)
-		return nil, bankV1.ErrorInternalServerError(err.Error())
+		s.log.Errorf("XA 事务提交失败: %v", err)
+		return nil, shopV1.ErrorInternalServerError(err.Error())
 	}
 
-	return &emptypb.Empty{}, nil
+	s.log.Infof("XA 事务提交成功，GID: %s", gid)
+	return &shopV1.BuyResponse{Success: true}, nil
 }
 
-func (s *ShopService) TestWorkFlow(_ context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, nil
+func (s *ShopService) TestWorkFlow(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+	return &shopV1.BuyResponse{}, nil
 }

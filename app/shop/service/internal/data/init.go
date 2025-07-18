@@ -8,5 +8,7 @@ var ProviderSet = wire.NewSet(
 	NewDiscovery,
 	NewGormClient,
 
-	NewBankServiceClient,
+	NewOrderRepo,
+	NewProductRepo,
+	NewUserRepo,
 )

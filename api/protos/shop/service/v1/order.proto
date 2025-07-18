@@ -1,0 +1,158 @@
+﻿syntax = "proto3";
+
+package shop.service.v1;
+
+import "gnostic/openapi/v3/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+import "pagination/v1/pagination.proto";
+
+// 订单服务
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (google.protobuf.Empty) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "创建订单",
+      description: "通过订单信息创建订单"
+    };
+  }
+
+  rpc TryCreateOrder(TryCreateOrderRequest) returns (TryCreateOrderResponse) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "尝试创建订单",
+      description: "预留订单资源，进入 Try 阶段"
+    };
+  }
+
+  rpc ConfirmCreateOrder(ConfirmCreateOrderRequest) returns (google.protobuf.Empty) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "确认创建订单",
+      description: "确认订单，进入 Confirm 阶段"
+    };
+  }
+
+  rpc CancelCreateOrder(CancelCreateOrderRequest) returns (google.protobuf.Empty) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "取消创建订单",
+      description: "释放订单资源，进入 Cancel 阶段"
+    };
+  }
+
+  rpc RefundOrder(RefundOrderRequest) returns (RefundOrderResponse) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "取消订单",
+      description: "取消已创建的订单"
+    };
+  }
+}
+
+// 订单
+message Order {
+  uint32 id = 1 [
+    (gnostic.openapi.v3.property) = {description: "订单ID"},
+    json_name = "id"
+  ]; // 订单ID
+
+  uint32 user_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "用户ID"},
+    json_name = "userId"
+  ]; // 用户ID
+
+  uint32 product_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "商品ID"},
+    json_name = "productId"
+  ]; // 商品ID
+
+  int32 quantity = 4 [
+    (gnostic.openapi.v3.property) = {description: "商品数量"},
+    json_name = "quantity"
+  ]; // 商品数量
+
+  double total_price = 5 [
+    (gnostic.openapi.v3.property) = {description: "总价"},
+    json_name = "totalPrice"
+  ]; // 总价
+
+  string status = 6 [
+    (gnostic.openapi.v3.property) = {description: "订单状态"},
+    json_name = "status"
+  ]; // 订单状态
+
+  optional google.protobuf.Timestamp create_time = 200 [json_name = "createTime", (gnostic.openapi.v3.property) = {description: "创建时间"}];// 创建时间
+  optional google.protobuf.Timestamp update_time = 201 [json_name = "updateTime", (gnostic.openapi.v3.property) = {description: "更新时间"}];// 更新时间
+  optional google.protobuf.Timestamp delete_time = 202 [json_name = "deleteTime", (gnostic.openapi.v3.property) = {description: "删除时间"}];// 删除时间
+}
+
+message CreateOrderRequest {
+  uint32 user_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "用户ID"},
+    json_name = "userId"
+  ]; // 用户ID
+
+  uint32 product_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "商品ID"},
+    json_name = "productId"
+  ]; // 商品ID
+
+  int32 quantity = 3 [
+    (gnostic.openapi.v3.property) = {description: "商品数量"},
+    json_name = "quantity"
+  ]; // 商品数量
+}
+
+message TryCreateOrderRequest {
+  int64 user_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "用户ID"},
+    json_name = "userId"
+  ]; // 用户ID
+
+  repeated Order items = 2 [
+    (gnostic.openapi.v3.property) = {description: "订单项列表"},
+    json_name = "items"
+  ]; // 订单项列表
+}
+
+message TryCreateOrderResponse {
+  bool success = 1 [
+    (gnostic.openapi.v3.property) = {description: "尝试是否成功"},
+    json_name = "success"
+  ]; // 尝试是否成功
+
+  string message = 2 [
+    (gnostic.openapi.v3.property) = {description: "操作结果消息"},
+    json_name = "message"
+  ]; // 操作结果消息
+}
+
+message ConfirmCreateOrderRequest {
+  int64 order_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "订单ID"},
+    json_name = "orderId"
+  ]; // 订单ID
+}
+
+message CancelCreateOrderRequest {
+  int64 order_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "订单ID"},
+    json_name = "orderId"
+  ]; // 订单ID
+}
+
+message RefundOrderRequest {
+  int64 order_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "订单ID"},
+    json_name = "orderId"
+  ]; // 订单ID
+}
+
+message RefundOrderResponse {
+  bool success = 1 [
+    (gnostic.openapi.v3.property) = {description: "退款是否成功"},
+    json_name = "success"
+  ]; // 退款是否成功
+
+  string message = 2 [
+    (gnostic.openapi.v3.property) = {description: "退款结果消息"},
+    json_name = "message"
+  ]; // 退款结果消息
+}

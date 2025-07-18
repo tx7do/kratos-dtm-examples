@@ -16,26 +16,20 @@ import (
 	"kratos-dtm-examples/app/shop/service/internal/service"
 )
 
-import (
-	_ "github.com/dtm-labs/driver-kratos"
-)
-
 // Injectors from wire.go:
 
 // initApp init kratos application.
 func initApp(logger log.Logger, registrar registry.Registrar, bootstrap *v1.Bootstrap) (*kratos.App, func(), error) {
-	discovery := data.NewDiscovery(bootstrap)
-	dataData, cleanup, err := data.NewData(logger, discovery)
-	if err != nil {
-		return nil, nil, err
-	}
-	bankServiceClient := data.NewBankServiceClient(discovery, bootstrap)
-	shopService := service.NewShopService(logger, dataData, bankServiceClient)
-	productService := service.NewProductService(logger)
-	grpcServer := server.NewGRPCServer(bootstrap, logger, shopService, productService)
+	db := data.NewGormClient(bootstrap, logger)
+	productRepo := data.NewProductRepo(db)
+	stockService := service.NewStockService(logger, productRepo)
+	orderRepo := data.NewOrderRepo(db)
+	orderService := service.NewOrderService(logger, orderRepo)
+	paymentService := service.NewPaymentService(logger)
+	grpcServer := server.NewGRPCServer(bootstrap, logger, stockService, orderService, paymentService)
+	shopService := service.NewShopService(logger)
 	httpServer := server.NewRestServer(bootstrap, shopService)
 	app := newApp(logger, registrar, grpcServer, httpServer)
 	return app, func() {
-		cleanup()
 	}, nil
 }
