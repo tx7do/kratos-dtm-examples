@@ -31,9 +31,11 @@ type Order struct {
 	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                          // 订单ID
 	UserId        uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                    // 用户ID
 	ProductId     uint32                 `protobuf:"varint,3,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`           // 商品ID
-	Quantity      int32                  `protobuf:"varint,4,opt,name=quantity,proto3" json:"quantity,omitempty"`                              // 商品数量
-	TotalPrice    float64                `protobuf:"fixed64,5,opt,name=total_price,json=totalPrice,proto3" json:"total_price,omitempty"`       // 总价
-	Status        string                 `protobuf:"bytes,6,opt,name=status,proto3" json:"status,omitempty"`                                   // 订单状态
+	RequestId     string                 `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`            // 请求ID
+	OrderNo       string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`                  // 订单号
+	Quantity      int32                  `protobuf:"varint,10,opt,name=quantity,proto3" json:"quantity,omitempty"`                             // 商品数量
+	TotalPrice    float64                `protobuf:"fixed64,11,opt,name=total_price,json=totalPrice,proto3" json:"total_price,omitempty"`      // 总价
+	Status        string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`                                  // 订单状态
 	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,200,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"` // 创建时间
 	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,201,opt,name=update_time,json=updateTime,proto3,oneof" json:"update_time,omitempty"` // 更新时间
 	DeleteTime    *timestamppb.Timestamp `protobuf:"bytes,202,opt,name=delete_time,json=deleteTime,proto3,oneof" json:"delete_time,omitempty"` // 删除时间
@@ -92,6 +94,20 @@ func (x *Order) GetProductId() uint32 {
 	return 0
 }
 
+func (x *Order) GetRequestId() string {
+	if x != nil {
+		return x.RequestId
+	}
+	return ""
+}
+
+func (x *Order) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
 func (x *Order) GetQuantity() int32 {
 	if x != nil {
 		return x.Quantity
@@ -139,6 +155,7 @@ type CreateOrderRequest struct {
 	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`          // 用户ID
 	ProductId     uint32                 `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
 	Quantity      int32                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 商品数量
+	RequestId     string                 `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -192,6 +209,13 @@ func (x *CreateOrderRequest) GetQuantity() int32 {
 		return x.Quantity
 	}
 	return 0
+}
+
+func (x *CreateOrderRequest) GetRequestId() string {
+	if x != nil {
+		return x.RequestId
+	}
+	return ""
 }
 
 type TryCreateOrderRequest struct {
@@ -486,16 +510,20 @@ var File_shop_service_v1_order_proto protoreflect.FileDescriptor
 
 const file_shop_service_v1_order_proto_rawDesc = "" +
 	"\n" +
-	"\x1bshop/service/v1/order.proto\x12\x0fshop.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epagination/v1/pagination.proto\"\xbf\x04\n" +
+	"\x1bshop/service/v1/order.proto\x12\x0fshop.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epagination/v1/pagination.proto\"\x9a\x05\n" +
 	"\x05Order\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b订单IDR\x02id\x12'\n" +
 	"\auser_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12-\n" +
 	"\n" +
-	"product_id\x18\x03 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x12.\n" +
-	"\bquantity\x18\x04 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
-	"\vtotal_price\x18\x05 \x01(\x01B\f\xbaG\t\x92\x02\x06总价R\n" +
+	"product_id\x18\x03 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x12-\n" +
+	"\n" +
+	"request_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\x12*\n" +
+	"\border_no\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\x12.\n" +
+	"\bquantity\x18\n" +
+	" \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
+	"\vtotal_price\x18\v \x01(\x01B\f\xbaG\t\x92\x02\x06总价R\n" +
 	"totalPrice\x12*\n" +
-	"\x06status\x18\x06 \x01(\tB\x12\xbaG\x0f\x92\x02\f订单状态R\x06status\x12U\n" +
+	"\x06status\x18\f \x01(\tB\x12\xbaG\x0f\x92\x02\f订单状态R\x06status\x12U\n" +
 	"\vcreate_time\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\x00R\n" +
 	"createTime\x88\x01\x01\x12U\n" +
 	"\vupdate_time\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x01R\n" +
@@ -504,12 +532,14 @@ const file_shop_service_v1_order_proto_rawDesc = "" +
 	"deleteTime\x88\x01\x01B\x0e\n" +
 	"\f_create_timeB\x0e\n" +
 	"\f_update_timeB\x0e\n" +
-	"\f_delete_time\"\x9c\x01\n" +
+	"\f_delete_time\"\xcb\x01\n" +
 	"\x12CreateOrderRequest\x12'\n" +
 	"\auser_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12-\n" +
 	"\n" +
 	"product_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x12.\n" +
-	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\"\x85\x01\n" +
+	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
+	"\n" +
+	"request_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\x85\x01\n" +
 	"\x15TryCreateOrderRequest\x12'\n" +
 	"\auser_id\x18\x01 \x01(\x03B\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12C\n" +
 	"\x05items\x18\x02 \x03(\v2\x16.shop.service.v1.OrderB\x15\xbaG\x12\x92\x02\x0f订单项列表R\x05items\"\x80\x01\n" +

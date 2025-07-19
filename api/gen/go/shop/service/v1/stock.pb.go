@@ -129,6 +129,7 @@ type DeductStockRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     uint32                 `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
 	Quantity      int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 减少的数量
+	RequestId     string                 `protobuf:"bytes,3,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -175,6 +176,13 @@ func (x *DeductStockRequest) GetQuantity() int32 {
 		return x.Quantity
 	}
 	return 0
+}
+
+func (x *DeductStockRequest) GetRequestId() string {
+	if x != nil {
+		return x.RequestId
+	}
+	return ""
 }
 
 type DeductStockResponse struct {
@@ -568,11 +576,13 @@ const file_shop_service_v1_stock_proto_rawDesc = "" +
 	"deleteTime\x88\x01\x01B\x0e\n" +
 	"\f_create_timeB\x0e\n" +
 	"\f_update_timeB\x0e\n" +
-	"\f_delete_time\"v\n" +
+	"\f_delete_time\"\xa5\x01\n" +
 	"\x12DeductStockRequest\x12-\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x121\n" +
-	"\bquantity\x18\x02 \x01(\x05B\x15\xbaG\x12\x92\x02\x0f减少的数量R\bquantity\"\x83\x01\n" +
+	"\bquantity\x18\x02 \x01(\x05B\x15\xbaG\x12\x92\x02\x0f减少的数量R\bquantity\x12-\n" +
+	"\n" +
+	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\x83\x01\n" +
 	"\x13DeductStockResponse\x128\n" +
 	"\asuccess\x18\x01 \x01(\bB\x1e\xbaG\x1b\x92\x02\x18库存减少是否成功R\asuccess\x122\n" +
 	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage\"\x7f\n" +

@@ -62,6 +62,10 @@ func (m *Order) validate(all bool) error {
 
 	// no validation rules for ProductId
 
+	// no validation rules for RequestId
+
+	// no validation rules for OrderNo
+
 	// no validation rules for Quantity
 
 	// no validation rules for TotalPrice
@@ -271,6 +275,8 @@ func (m *CreateOrderRequest) validate(all bool) error {
 	// no validation rules for ProductId
 
 	// no validation rules for Quantity
+
+	// no validation rules for RequestId
 
 	if len(errors) > 0 {
 		return CreateOrderRequestMultiError(errors)

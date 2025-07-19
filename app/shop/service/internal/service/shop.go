@@ -35,17 +35,30 @@ func (s *ShopService) Buy(_ context.Context, req *shopV1.BuyRequest) (*shopV1.Bu
 }
 
 func (s *ShopService) TestTP(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+	var requestId string
+
 	gid := dtmgrpc.MustGenGid(dtmServer)
+
+	requestId = gid // 使用 gid 作为 request_id
 
 	// 创建消息事务
 	msg := dtmgrpc.NewMsgGrpc(dtmServer, gid).
 		Add(
 			shopServer+shopV1.StockService_DeductStock_FullMethodName,
-			&shopV1.DeductStockRequest{ProductId: req.ProductId, Quantity: req.Quantity},
+			&shopV1.DeductStockRequest{
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
+				RequestId: requestId,
+			},
 		).
 		Add(
 			shopServer+shopV1.OrderService_CreateOrder_FullMethodName,
-			&shopV1.CreateOrderRequest{UserId: req.UserId, ProductId: req.ProductId, Quantity: req.Quantity},
+			&shopV1.CreateOrderRequest{
+				UserId:    req.UserId,
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
+				RequestId: requestId,
+			},
 		)
 
 	msg.WaitResult = true
@@ -62,14 +75,22 @@ func (s *ShopService) TestTP(_ context.Context, req *shopV1.BuyRequest) (*shopV1
 }
 
 func (s *ShopService) TestTCC(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+	var requestId string
+
 	gid := dtmgrpc.MustGenGid(dtmServer)
+
+	requestId = gid // 使用 gid 作为 request_id
 
 	s.log.Infof("开始 TCC 事务，GID: %s", gid)
 
 	err := dtmgrpc.TccGlobalTransaction(dtmServer, gid, func(tcc *dtmgrpc.TccGrpc) error {
 		// Try 阶段：扣减库存
 		err := tcc.CallBranch(
-			&shopV1.DeductStockRequest{ProductId: req.ProductId, Quantity: req.Quantity},
+			&shopV1.DeductStockRequest{
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
+				RequestId: requestId,
+			},
 			shopServer+shopV1.StockService_TryDeductStock_FullMethodName,
 			shopServer+shopV1.StockService_ConfirmDeductStock_FullMethodName,
 			shopServer+shopV1.StockService_CancelDeductStock_FullMethodName,
@@ -82,7 +103,12 @@ func (s *ShopService) TestTCC(_ context.Context, req *shopV1.BuyRequest) (*shopV
 
 		// Try 阶段：创建订单
 		err = tcc.CallBranch(
-			&shopV1.CreateOrderRequest{UserId: req.UserId, ProductId: req.ProductId, Quantity: req.Quantity},
+			&shopV1.CreateOrderRequest{
+				UserId:    req.UserId,
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
+				RequestId: requestId,
+			},
 			shopServer+shopV1.OrderService_TryCreateOrder_FullMethodName,
 			shopServer+shopV1.OrderService_ConfirmCreateOrder_FullMethodName,
 			shopServer+shopV1.OrderService_CancelCreateOrder_FullMethodName,
@@ -105,7 +131,11 @@ func (s *ShopService) TestTCC(_ context.Context, req *shopV1.BuyRequest) (*shopV
 }
 
 func (s *ShopService) TestSAGA(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+	var requestId string
+
 	gid := dtmgrpc.MustGenGid(dtmServer)
+
+	requestId = gid // 使用 gid 作为 request_id
 
 	s.log.Infof("开始 SAGA 事务，GID: %s", gid)
 
@@ -113,12 +143,21 @@ func (s *ShopService) TestSAGA(_ context.Context, req *shopV1.BuyRequest) (*shop
 		Add(
 			shopServer+shopV1.StockService_DeductStock_FullMethodName,
 			shopServer+shopV1.StockService_RefundStock_FullMethodName,
-			&shopV1.DeductStockRequest{ProductId: req.ProductId, Quantity: req.Quantity},
+			&shopV1.DeductStockRequest{
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
+				RequestId: requestId,
+			},
 		).
 		Add(
 			shopServer+shopV1.OrderService_CreateOrder_FullMethodName,
 			shopServer+shopV1.OrderService_RefundOrder_FullMethodName,
-			&shopV1.CreateOrderRequest{UserId: req.UserId, ProductId: req.ProductId, Quantity: req.Quantity},
+			&shopV1.CreateOrderRequest{
+				UserId:    req.UserId,
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
+				RequestId: requestId,
+			},
 		)
 
 	if err := saga.Submit(); err != nil {
@@ -131,7 +170,11 @@ func (s *ShopService) TestSAGA(_ context.Context, req *shopV1.BuyRequest) (*shop
 }
 
 func (s *ShopService) TestXA(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+	var requestId string
+
 	gid := dtmgrpc.MustGenGid(dtmServer)
+
+	requestId = gid // 使用 gid 作为 request_id
 
 	err := dtmgrpc.XaGlobalTransaction(dtmServer, gid, func(xa *dtmgrpc.XaGrpc) error {
 		// 扣减库存
@@ -146,7 +189,12 @@ func (s *ShopService) TestXA(_ context.Context, req *shopV1.BuyRequest) (*shopV1
 
 		// 创建订单
 		if err := xa.CallBranch(
-			&shopV1.CreateOrderRequest{UserId: req.UserId, ProductId: req.ProductId, Quantity: req.Quantity},
+			&shopV1.CreateOrderRequest{
+				UserId:    req.UserId,
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
+				RequestId: requestId,
+			},
 			shopServer+shopV1.OrderService_CreateOrder_FullMethodName,
 			&emptypb.Empty{},
 		); err != nil {

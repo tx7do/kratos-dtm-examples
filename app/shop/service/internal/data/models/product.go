@@ -10,7 +10,6 @@ type Product struct {
 
 	Name        *string        `gorm:"column:name; comment:商品名称"`
 	Description sql.NullString `gorm:"column:description; comment:商品描述"`
-	Stock       int32          `gorm:"column:stock; comment:商品库存"`
 	Price       int64          `gorm:"column:price; comment:商品价格(分)"`
 }
 

@@ -87,6 +87,11 @@ message DeductStockRequest {
     (gnostic.openapi.v3.property) = {description: "减少的数量"},
     json_name = "quantity"
   ]; // 减少的数量
+
+  string request_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "请求ID"},
+    json_name = "requestId"
+  ]; // 请求ID，用于幂等性控制
 }
 
 message DeductStockResponse {

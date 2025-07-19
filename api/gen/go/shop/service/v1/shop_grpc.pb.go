@@ -34,15 +34,15 @@ const (
 // 商店服务
 type ShopServiceClient interface {
 	Buy(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
-	// 二阶段消息
+	// 二阶段消息（Two-Phase Message）
 	TestTP(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
-	// TCC
+	// TCC（Try-Confirm-Cancel）
 	TestTCC(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// SAGA
 	TestSAGA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// XA
 	TestXA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
-	// 工作流Workflow
+	// 工作流事务(Workflow)
 	TestWorkFlow(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 }
 
@@ -121,15 +121,15 @@ func (c *shopServiceClient) TestWorkFlow(ctx context.Context, in *BuyRequest, op
 // 商店服务
 type ShopServiceServer interface {
 	Buy(context.Context, *BuyRequest) (*BuyResponse, error)
-	// 二阶段消息
+	// 二阶段消息（Two-Phase Message）
 	TestTP(context.Context, *BuyRequest) (*BuyResponse, error)
-	// TCC
+	// TCC（Try-Confirm-Cancel）
 	TestTCC(context.Context, *BuyRequest) (*BuyResponse, error)
 	// SAGA
 	TestSAGA(context.Context, *BuyRequest) (*BuyResponse, error)
 	// XA
 	TestXA(context.Context, *BuyRequest) (*BuyResponse, error)
-	// 工作流Workflow
+	// 工作流事务(Workflow)
 	TestWorkFlow(context.Context, *BuyRequest) (*BuyResponse, error)
 	mustEmbedUnimplementedShopServiceServer()
 }

@@ -63,17 +63,27 @@ message Order {
     json_name = "productId"
   ]; // 商品ID
 
-  int32 quantity = 4 [
+  string request_id = 4 [
+    (gnostic.openapi.v3.property) = {description: "请求ID"},
+    json_name = "requestId"
+  ]; // 请求ID
+
+  string order_no = 5 [
+    (gnostic.openapi.v3.property) = {description: "订单号"},
+    json_name = "orderNo"
+  ]; // 订单号
+
+  int32 quantity = 10 [
     (gnostic.openapi.v3.property) = {description: "商品数量"},
     json_name = "quantity"
   ]; // 商品数量
 
-  double total_price = 5 [
+  double total_price = 11 [
     (gnostic.openapi.v3.property) = {description: "总价"},
     json_name = "totalPrice"
   ]; // 总价
 
-  string status = 6 [
+  string status = 12 [
     (gnostic.openapi.v3.property) = {description: "订单状态"},
     json_name = "status"
   ]; // 订单状态
@@ -98,6 +108,11 @@ message CreateOrderRequest {
     (gnostic.openapi.v3.property) = {description: "商品数量"},
     json_name = "quantity"
   ]; // 商品数量
+
+  string request_id = 4 [
+    (gnostic.openapi.v3.property) = {description: "请求ID"},
+    json_name = "requestId"
+  ]; // 请求ID，用于幂等性控制
 }
 
 message TryCreateOrderRequest {

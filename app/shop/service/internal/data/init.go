@@ -11,4 +11,6 @@ var ProviderSet = wire.NewSet(
 	NewOrderRepo,
 	NewProductRepo,
 	NewUserRepo,
+	NewStockDeductionLogRepo,
+	NewStockRepo,
 )

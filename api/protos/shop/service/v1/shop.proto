@@ -17,14 +17,14 @@ service ShopService {
     };
   }
 
-  // 二阶段消息
+  // 二阶段消息（Two-Phase Message）
   rpc TestTP(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
       get: "/test/tp"
     };
   }
 
-  // TCC
+  // TCC（Try-Confirm-Cancel）
   rpc TestTCC(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
       get: "/test/tcc"
@@ -45,7 +45,7 @@ service ShopService {
     };
   }
 
-  // 工作流Workflow
+  // 工作流事务(Workflow)
   rpc TestWorkFlow(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
       get: "/test/wf"

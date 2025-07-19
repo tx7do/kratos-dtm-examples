@@ -28,11 +28,11 @@ const OperationShopServiceTestXA = "/shop.service.v1.ShopService/TestXA"
 type ShopServiceHTTPServer interface {
 	// TestSAGA SAGA
 	TestSAGA(context.Context, *BuyRequest) (*BuyResponse, error)
-	// TestTCC TCC
+	// TestTCC TCC（Try-Confirm-Cancel）
 	TestTCC(context.Context, *BuyRequest) (*BuyResponse, error)
-	// TestTP 二阶段消息
+	// TestTP 二阶段消息（Two-Phase Message）
 	TestTP(context.Context, *BuyRequest) (*BuyResponse, error)
-	// TestWorkFlow 工作流Workflow
+	// TestWorkFlow 工作流事务(Workflow)
 	TestWorkFlow(context.Context, *BuyRequest) (*BuyResponse, error)
 	// TestXA XA
 	TestXA(context.Context, *BuyRequest) (*BuyResponse, error)

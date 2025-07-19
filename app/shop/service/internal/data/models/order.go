@@ -5,8 +5,10 @@ import "gorm.io/gorm"
 type Order struct {
 	gorm.Model
 
-	UserID    uint `gorm:"not null;index"`
-	ProductID uint `gorm:"not null;index"`
+	UserID    uint   `gorm:"not null;index"`                   // 用户ID
+	ProductID uint   `gorm:"not null;index"`                   // 商品ID
+	OrderNo   string `gorm:"type:varchar(50);not null;unique"` // 订单号
+	RequestID string `gorm:"type:varchar(50);not null;unique"` // 请求ID
 
 	Quantity   int     `gorm:"not null"`                  // 商品数量
 	TotalPrice float64 `gorm:"not null"`                  // 总价

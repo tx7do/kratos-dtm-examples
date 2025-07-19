@@ -22,7 +22,9 @@ import (
 func initApp(logger log.Logger, registrar registry.Registrar, bootstrap *v1.Bootstrap) (*kratos.App, func(), error) {
 	db := data.NewGormClient(bootstrap, logger)
 	productRepo := data.NewProductRepo(db)
-	stockService := service.NewStockService(logger, productRepo)
+	stockDeductionLogRepo := data.NewStockDeductionLogRepo(db)
+	stockRepo := data.NewStockRepo(db)
+	stockService := service.NewStockService(logger, productRepo, stockDeductionLogRepo, stockRepo)
 	orderRepo := data.NewOrderRepo(db)
 	orderService := service.NewOrderService(logger, orderRepo)
 	paymentService := service.NewPaymentService(logger)

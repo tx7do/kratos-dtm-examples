@@ -8,10 +8,10 @@ managed:
 
   disable:
     - module: buf.build/googleapis/googleapis
-    - module: 'buf.build/envoyproxy/protoc-gen-validate'
+#    - module: 'buf.build/envoyproxy/protoc-gen-validate'
     - module: 'buf.build/kratos/apis'
     - module: 'buf.build/gnostic/gnostic'
-    - module: 'buf.build/gogo/protobuf'
+#    - module: 'buf.build/gogo/protobuf'
     - module: 'buf.build/tx7do/pagination'
 
   override:

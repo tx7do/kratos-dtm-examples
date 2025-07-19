@@ -4,13 +4,13 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/registry"
 	"github.com/go-kratos/kratos/v2/transport/grpc/resolver/discovery"
+	"github.com/tx7do/kratos-bootstrap/bootstrap"
 
 	"google.golang.org/grpc/resolver"
 
 	_ "github.com/dtm-labs/driver-kratos"
 
 	conf "github.com/tx7do/kratos-bootstrap/api/gen/go/conf/v1"
-	bRegistry "github.com/tx7do/kratos-bootstrap/registry"
 )
 
 // Data .
@@ -34,5 +34,5 @@ func NewData(logger log.Logger, rr registry.Discovery) (*Data, func(), error) {
 }
 
 func NewDiscovery(cfg *conf.Bootstrap) registry.Discovery {
-	return bRegistry.NewDiscovery(cfg.Registry)
+	return bootstrap.NewDiscovery(cfg.Registry)
 }
