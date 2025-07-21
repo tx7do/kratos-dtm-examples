@@ -8,9 +8,9 @@ import (
 type StockDeductionLog struct {
 	gorm.Model
 
-	UserID    uint   `gorm:"not null;index"`                   // 用户ID
-	ProductID uint   `gorm:"not null;index"`                   // 商品ID
-	Quantity  int    `gorm:"not null"`                         // 扣减数量
+	UserID    uint32 `gorm:"not null;index"`                   // 用户ID
+	ProductID uint32 `gorm:"not null;index"`                   // 商品ID
+	Quantity  int32  `gorm:"not null"`                         // 扣减数量
 	RequestID string `gorm:"type:varchar(50);not null;unique"` // 请求ID
 }
 

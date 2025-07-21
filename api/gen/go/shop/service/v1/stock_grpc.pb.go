@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -33,11 +32,11 @@ const (
 //
 // 库存服务
 type StockServiceClient interface {
-	DeductStock(ctx context.Context, in *DeductStockRequest, opts ...grpc.CallOption) (*DeductStockResponse, error)
-	TryDeductStock(ctx context.Context, in *TryDeductStockRequest, opts ...grpc.CallOption) (*TryDeductStockResponse, error)
-	ConfirmDeductStock(ctx context.Context, in *ConfirmDeductStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CancelDeductStock(ctx context.Context, in *CancelDeductStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RefundStock(ctx context.Context, in *RefundStockRequest, opts ...grpc.CallOption) (*RefundStockResponse, error)
+	DeductStock(ctx context.Context, in *DeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
+	TryDeductStock(ctx context.Context, in *TryDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
+	ConfirmDeductStock(ctx context.Context, in *ConfirmDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
+	CancelDeductStock(ctx context.Context, in *CancelDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
+	RefundStock(ctx context.Context, in *RefundStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
 }
 
 type stockServiceClient struct {
@@ -48,9 +47,9 @@ func NewStockServiceClient(cc grpc.ClientConnInterface) StockServiceClient {
 	return &stockServiceClient{cc}
 }
 
-func (c *stockServiceClient) DeductStock(ctx context.Context, in *DeductStockRequest, opts ...grpc.CallOption) (*DeductStockResponse, error) {
+func (c *stockServiceClient) DeductStock(ctx context.Context, in *DeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeductStockResponse)
+	out := new(StockResponse)
 	err := c.cc.Invoke(ctx, StockService_DeductStock_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -58,9 +57,9 @@ func (c *stockServiceClient) DeductStock(ctx context.Context, in *DeductStockReq
 	return out, nil
 }
 
-func (c *stockServiceClient) TryDeductStock(ctx context.Context, in *TryDeductStockRequest, opts ...grpc.CallOption) (*TryDeductStockResponse, error) {
+func (c *stockServiceClient) TryDeductStock(ctx context.Context, in *TryDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TryDeductStockResponse)
+	out := new(StockResponse)
 	err := c.cc.Invoke(ctx, StockService_TryDeductStock_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -68,9 +67,9 @@ func (c *stockServiceClient) TryDeductStock(ctx context.Context, in *TryDeductSt
 	return out, nil
 }
 
-func (c *stockServiceClient) ConfirmDeductStock(ctx context.Context, in *ConfirmDeductStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *stockServiceClient) ConfirmDeductStock(ctx context.Context, in *ConfirmDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(StockResponse)
 	err := c.cc.Invoke(ctx, StockService_ConfirmDeductStock_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -78,9 +77,9 @@ func (c *stockServiceClient) ConfirmDeductStock(ctx context.Context, in *Confirm
 	return out, nil
 }
 
-func (c *stockServiceClient) CancelDeductStock(ctx context.Context, in *CancelDeductStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *stockServiceClient) CancelDeductStock(ctx context.Context, in *CancelDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(StockResponse)
 	err := c.cc.Invoke(ctx, StockService_CancelDeductStock_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -88,9 +87,9 @@ func (c *stockServiceClient) CancelDeductStock(ctx context.Context, in *CancelDe
 	return out, nil
 }
 
-func (c *stockServiceClient) RefundStock(ctx context.Context, in *RefundStockRequest, opts ...grpc.CallOption) (*RefundStockResponse, error) {
+func (c *stockServiceClient) RefundStock(ctx context.Context, in *RefundStockRequest, opts ...grpc.CallOption) (*StockResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RefundStockResponse)
+	out := new(StockResponse)
 	err := c.cc.Invoke(ctx, StockService_RefundStock_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -104,11 +103,11 @@ func (c *stockServiceClient) RefundStock(ctx context.Context, in *RefundStockReq
 //
 // 库存服务
 type StockServiceServer interface {
-	DeductStock(context.Context, *DeductStockRequest) (*DeductStockResponse, error)
-	TryDeductStock(context.Context, *TryDeductStockRequest) (*TryDeductStockResponse, error)
-	ConfirmDeductStock(context.Context, *ConfirmDeductStockRequest) (*emptypb.Empty, error)
-	CancelDeductStock(context.Context, *CancelDeductStockRequest) (*emptypb.Empty, error)
-	RefundStock(context.Context, *RefundStockRequest) (*RefundStockResponse, error)
+	DeductStock(context.Context, *DeductStockRequest) (*StockResponse, error)
+	TryDeductStock(context.Context, *TryDeductStockRequest) (*StockResponse, error)
+	ConfirmDeductStock(context.Context, *ConfirmDeductStockRequest) (*StockResponse, error)
+	CancelDeductStock(context.Context, *CancelDeductStockRequest) (*StockResponse, error)
+	RefundStock(context.Context, *RefundStockRequest) (*StockResponse, error)
 	mustEmbedUnimplementedStockServiceServer()
 }
 
@@ -119,19 +118,19 @@ type StockServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedStockServiceServer struct{}
 
-func (UnimplementedStockServiceServer) DeductStock(context.Context, *DeductStockRequest) (*DeductStockResponse, error) {
+func (UnimplementedStockServiceServer) DeductStock(context.Context, *DeductStockRequest) (*StockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeductStock not implemented")
 }
-func (UnimplementedStockServiceServer) TryDeductStock(context.Context, *TryDeductStockRequest) (*TryDeductStockResponse, error) {
+func (UnimplementedStockServiceServer) TryDeductStock(context.Context, *TryDeductStockRequest) (*StockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TryDeductStock not implemented")
 }
-func (UnimplementedStockServiceServer) ConfirmDeductStock(context.Context, *ConfirmDeductStockRequest) (*emptypb.Empty, error) {
+func (UnimplementedStockServiceServer) ConfirmDeductStock(context.Context, *ConfirmDeductStockRequest) (*StockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmDeductStock not implemented")
 }
-func (UnimplementedStockServiceServer) CancelDeductStock(context.Context, *CancelDeductStockRequest) (*emptypb.Empty, error) {
+func (UnimplementedStockServiceServer) CancelDeductStock(context.Context, *CancelDeductStockRequest) (*StockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelDeductStock not implemented")
 }
-func (UnimplementedStockServiceServer) RefundStock(context.Context, *RefundStockRequest) (*RefundStockResponse, error) {
+func (UnimplementedStockServiceServer) RefundStock(context.Context, *RefundStockRequest) (*StockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefundStock not implemented")
 }
 func (UnimplementedStockServiceServer) mustEmbedUnimplementedStockServiceServer() {}

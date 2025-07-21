@@ -11,7 +11,7 @@ import (
 	_ "github.com/tx7do/kratos-bootstrap/api/gen/go/pagination/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	_ "google.golang.org/protobuf/types/known/emptypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -25,20 +25,76 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+// 订单状态
+type OrderStatus int32
+
+const (
+	OrderStatus_ORDER_STATUS_UNSPECIFIED OrderStatus = 0 // 未指定状态
+	OrderStatus_PENDING                  OrderStatus = 1 // 待处理
+	OrderStatus_CONFIRMED                OrderStatus = 2 // 已确认
+	OrderStatus_CANCELLED                OrderStatus = 3 // 已取消
+	OrderStatus_REFUNDED                 OrderStatus = 4 // 已退款
+)
+
+// Enum value maps for OrderStatus.
+var (
+	OrderStatus_name = map[int32]string{
+		0: "ORDER_STATUS_UNSPECIFIED",
+		1: "PENDING",
+		2: "CONFIRMED",
+		3: "CANCELLED",
+		4: "REFUNDED",
+	}
+	OrderStatus_value = map[string]int32{
+		"ORDER_STATUS_UNSPECIFIED": 0,
+		"PENDING":                  1,
+		"CONFIRMED":                2,
+		"CANCELLED":                3,
+		"REFUNDED":                 4,
+	}
+)
+
+func (x OrderStatus) Enum() *OrderStatus {
+	p := new(OrderStatus)
+	*p = x
+	return p
+}
+
+func (x OrderStatus) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (OrderStatus) Descriptor() protoreflect.EnumDescriptor {
+	return file_shop_service_v1_order_proto_enumTypes[0].Descriptor()
+}
+
+func (OrderStatus) Type() protoreflect.EnumType {
+	return &file_shop_service_v1_order_proto_enumTypes[0]
+}
+
+func (x OrderStatus) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use OrderStatus.Descriptor instead.
+func (OrderStatus) EnumDescriptor() ([]byte, []int) {
+	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{0}
+}
+
 // 订单
 type Order struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                          // 订单ID
-	UserId        uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                    // 用户ID
-	ProductId     uint32                 `protobuf:"varint,3,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`           // 商品ID
-	RequestId     string                 `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`            // 请求ID
-	OrderNo       string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`                  // 订单号
-	Quantity      int32                  `protobuf:"varint,10,opt,name=quantity,proto3" json:"quantity,omitempty"`                             // 商品数量
-	TotalPrice    float64                `protobuf:"fixed64,11,opt,name=total_price,json=totalPrice,proto3" json:"total_price,omitempty"`      // 总价
-	Status        string                 `protobuf:"bytes,12,opt,name=status,proto3" json:"status,omitempty"`                                  // 订单状态
-	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,200,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"` // 创建时间
-	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,201,opt,name=update_time,json=updateTime,proto3,oneof" json:"update_time,omitempty"` // 更新时间
-	DeleteTime    *timestamppb.Timestamp `protobuf:"bytes,202,opt,name=delete_time,json=deleteTime,proto3,oneof" json:"delete_time,omitempty"` // 删除时间
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                           // 订单ID
+	UserId        uint32                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`                     // 用户ID
+	ProductId     uint32                 `protobuf:"varint,3,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`            // 商品ID
+	RequestId     string                 `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`             // 请求ID
+	OrderNo       string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`                   // 订单号
+	Quantity      int32                  `protobuf:"varint,10,opt,name=quantity,proto3" json:"quantity,omitempty"`                              // 商品数量
+	TotalPrice    float64                `protobuf:"fixed64,11,opt,name=total_price,json=totalPrice,proto3" json:"total_price,omitempty"`       // 总价
+	Status        OrderStatus            `protobuf:"varint,12,opt,name=status,proto3,enum=shop.service.v1.OrderStatus" json:"status,omitempty"` // 订单状态
+	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,200,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"`  // 创建时间
+	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,201,opt,name=update_time,json=updateTime,proto3,oneof" json:"update_time,omitempty"`  // 更新时间
+	DeleteTime    *timestamppb.Timestamp `protobuf:"bytes,202,opt,name=delete_time,json=deleteTime,proto3,oneof" json:"delete_time,omitempty"`  // 删除时间
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -122,11 +178,11 @@ func (x *Order) GetTotalPrice() float64 {
 	return 0
 }
 
-func (x *Order) GetStatus() string {
+func (x *Order) GetStatus() OrderStatus {
 	if x != nil {
 		return x.Status
 	}
-	return ""
+	return OrderStatus_ORDER_STATUS_UNSPECIFIED
 }
 
 func (x *Order) GetCreateTime() *timestamppb.Timestamp {
@@ -156,6 +212,7 @@ type CreateOrderRequest struct {
 	ProductId     uint32                 `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
 	Quantity      int32                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 商品数量
 	RequestId     string                 `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
+	OrderNo       string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`        // 订单号，预留订单资源时生成的唯一标识
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -218,10 +275,20 @@ func (x *CreateOrderRequest) GetRequestId() string {
 	return ""
 }
 
+func (x *CreateOrderRequest) GetOrderNo() string {
+	if x != nil {
+		return x.OrderNo
+	}
+	return ""
+}
+
 type TryCreateOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // 用户ID
-	Items         []*Order               `protobuf:"bytes,2,rep,name=items,proto3" json:"items,omitempty"`                  // 订单项列表
+	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`          // 用户ID
+	ProductId     uint32                 `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
+	Quantity      int32                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 商品数量
+	RequestId     string                 `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
+	OrderNo       string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`        // 订单号，预留订单资源时生成的唯一标识
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -256,82 +323,51 @@ func (*TryCreateOrderRequest) Descriptor() ([]byte, []int) {
 	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *TryCreateOrderRequest) GetUserId() int64 {
+func (x *TryCreateOrderRequest) GetUserId() uint32 {
 	if x != nil {
 		return x.UserId
 	}
 	return 0
 }
 
-func (x *TryCreateOrderRequest) GetItems() []*Order {
+func (x *TryCreateOrderRequest) GetProductId() uint32 {
 	if x != nil {
-		return x.Items
+		return x.ProductId
 	}
-	return nil
+	return 0
 }
 
-type TryCreateOrderResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 尝试是否成功
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 操作结果消息
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *TryCreateOrderResponse) Reset() {
-	*x = TryCreateOrderResponse{}
-	mi := &file_shop_service_v1_order_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *TryCreateOrderResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TryCreateOrderResponse) ProtoMessage() {}
-
-func (x *TryCreateOrderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_order_proto_msgTypes[3]
+func (x *TryCreateOrderRequest) GetQuantity() int32 {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
+		return x.Quantity
 	}
-	return mi.MessageOf(x)
+	return 0
 }
 
-// Deprecated: Use TryCreateOrderResponse.ProtoReflect.Descriptor instead.
-func (*TryCreateOrderResponse) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *TryCreateOrderResponse) GetSuccess() bool {
+func (x *TryCreateOrderRequest) GetRequestId() string {
 	if x != nil {
-		return x.Success
+		return x.RequestId
 	}
-	return false
+	return ""
 }
 
-func (x *TryCreateOrderResponse) GetMessage() string {
+func (x *TryCreateOrderRequest) GetOrderNo() string {
 	if x != nil {
-		return x.Message
+		return x.OrderNo
 	}
 	return ""
 }
 
 type ConfirmCreateOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       int64                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"` // 订单ID
+	OrderNo       string                 `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"` // 订单号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *ConfirmCreateOrderRequest) Reset() {
 	*x = ConfirmCreateOrderRequest{}
-	mi := &file_shop_service_v1_order_proto_msgTypes[4]
+	mi := &file_shop_service_v1_order_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -343,7 +379,7 @@ func (x *ConfirmCreateOrderRequest) String() string {
 func (*ConfirmCreateOrderRequest) ProtoMessage() {}
 
 func (x *ConfirmCreateOrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_order_proto_msgTypes[4]
+	mi := &file_shop_service_v1_order_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -356,26 +392,26 @@ func (x *ConfirmCreateOrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfirmCreateOrderRequest.ProtoReflect.Descriptor instead.
 func (*ConfirmCreateOrderRequest) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{4}
+	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *ConfirmCreateOrderRequest) GetOrderId() int64 {
+func (x *ConfirmCreateOrderRequest) GetOrderNo() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderNo
 	}
-	return 0
+	return ""
 }
 
 type CancelCreateOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       int64                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"` // 订单ID
+	OrderNo       string                 `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"` // 订单号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *CancelCreateOrderRequest) Reset() {
 	*x = CancelCreateOrderRequest{}
-	mi := &file_shop_service_v1_order_proto_msgTypes[5]
+	mi := &file_shop_service_v1_order_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -387,7 +423,7 @@ func (x *CancelCreateOrderRequest) String() string {
 func (*CancelCreateOrderRequest) ProtoMessage() {}
 
 func (x *CancelCreateOrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_order_proto_msgTypes[5]
+	mi := &file_shop_service_v1_order_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -400,26 +436,26 @@ func (x *CancelCreateOrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelCreateOrderRequest.ProtoReflect.Descriptor instead.
 func (*CancelCreateOrderRequest) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{5}
+	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *CancelCreateOrderRequest) GetOrderId() int64 {
+func (x *CancelCreateOrderRequest) GetOrderNo() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderNo
 	}
-	return 0
+	return ""
 }
 
 type RefundOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderId       int64                  `protobuf:"varint,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"` // 订单ID
+	OrderNo       string                 `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"` // 订单号
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *RefundOrderRequest) Reset() {
 	*x = RefundOrderRequest{}
-	mi := &file_shop_service_v1_order_proto_msgTypes[6]
+	mi := &file_shop_service_v1_order_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -431,7 +467,7 @@ func (x *RefundOrderRequest) String() string {
 func (*RefundOrderRequest) ProtoMessage() {}
 
 func (x *RefundOrderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_order_proto_msgTypes[6]
+	mi := &file_shop_service_v1_order_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -444,39 +480,39 @@ func (x *RefundOrderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefundOrderRequest.ProtoReflect.Descriptor instead.
 func (*RefundOrderRequest) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{6}
+	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *RefundOrderRequest) GetOrderId() int64 {
+func (x *RefundOrderRequest) GetOrderNo() string {
 	if x != nil {
-		return x.OrderId
+		return x.OrderNo
 	}
-	return 0
+	return ""
 }
 
-type RefundOrderResponse struct {
+type OrderResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 退款是否成功
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 退款结果消息
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 尝试是否成功
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 操作结果消息
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RefundOrderResponse) Reset() {
-	*x = RefundOrderResponse{}
-	mi := &file_shop_service_v1_order_proto_msgTypes[7]
+func (x *OrderResponse) Reset() {
+	*x = OrderResponse{}
+	mi := &file_shop_service_v1_order_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RefundOrderResponse) String() string {
+func (x *OrderResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RefundOrderResponse) ProtoMessage() {}
+func (*OrderResponse) ProtoMessage() {}
 
-func (x *RefundOrderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_order_proto_msgTypes[7]
+func (x *OrderResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_shop_service_v1_order_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -487,19 +523,19 @@ func (x *RefundOrderResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RefundOrderResponse.ProtoReflect.Descriptor instead.
-func (*RefundOrderResponse) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{7}
+// Deprecated: Use OrderResponse.ProtoReflect.Descriptor instead.
+func (*OrderResponse) Descriptor() ([]byte, []int) {
+	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *RefundOrderResponse) GetSuccess() bool {
+func (x *OrderResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *RefundOrderResponse) GetMessage() string {
+func (x *OrderResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
@@ -510,7 +546,7 @@ var File_shop_service_v1_order_proto protoreflect.FileDescriptor
 
 const file_shop_service_v1_order_proto_rawDesc = "" +
 	"\n" +
-	"\x1bshop/service/v1/order.proto\x12\x0fshop.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epagination/v1/pagination.proto\"\x9a\x05\n" +
+	"\x1bshop/service/v1/order.proto\x12\x0fshop.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epagination/v1/pagination.proto\"\xb8\x05\n" +
 	"\x05Order\x12\x1e\n" +
 	"\x02id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b订单IDR\x02id\x12'\n" +
 	"\auser_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12-\n" +
@@ -522,8 +558,8 @@ const file_shop_service_v1_order_proto_rawDesc = "" +
 	"\bquantity\x18\n" +
 	" \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
 	"\vtotal_price\x18\v \x01(\x01B\f\xbaG\t\x92\x02\x06总价R\n" +
-	"totalPrice\x12*\n" +
-	"\x06status\x18\f \x01(\tB\x12\xbaG\x0f\x92\x02\f订单状态R\x06status\x12U\n" +
+	"totalPrice\x12H\n" +
+	"\x06status\x18\f \x01(\x0e2\x1c.shop.service.v1.OrderStatusB\x12\xbaG\x0f\x92\x02\f订单状态R\x06status\x12U\n" +
 	"\vcreate_time\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\x00R\n" +
 	"createTime\x88\x01\x01\x12U\n" +
 	"\vupdate_time\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x01R\n" +
@@ -532,35 +568,44 @@ const file_shop_service_v1_order_proto_rawDesc = "" +
 	"deleteTime\x88\x01\x01B\x0e\n" +
 	"\f_create_timeB\x0e\n" +
 	"\f_update_timeB\x0e\n" +
-	"\f_delete_time\"\xcb\x01\n" +
+	"\f_delete_time\"\xf7\x01\n" +
 	"\x12CreateOrderRequest\x12'\n" +
 	"\auser_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12-\n" +
 	"\n" +
 	"product_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x12.\n" +
 	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
 	"\n" +
-	"request_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\x85\x01\n" +
+	"request_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\x12*\n" +
+	"\border_no\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"\xfa\x01\n" +
 	"\x15TryCreateOrderRequest\x12'\n" +
-	"\auser_id\x18\x01 \x01(\x03B\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12C\n" +
-	"\x05items\x18\x02 \x03(\v2\x16.shop.service.v1.OrderB\x15\xbaG\x12\x92\x02\x0f订单项列表R\x05items\"\x80\x01\n" +
-	"\x16TryCreateOrderResponse\x122\n" +
+	"\auser_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12-\n" +
+	"\n" +
+	"product_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x12.\n" +
+	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
+	"\n" +
+	"request_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\x12*\n" +
+	"\border_no\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"G\n" +
+	"\x19ConfirmCreateOrderRequest\x12*\n" +
+	"\border_no\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"F\n" +
+	"\x18CancelCreateOrderRequest\x12*\n" +
+	"\border_no\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"@\n" +
+	"\x12RefundOrderRequest\x12*\n" +
+	"\border_no\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"w\n" +
+	"\rOrderResponse\x122\n" +
 	"\asuccess\x18\x01 \x01(\bB\x18\xbaG\x15\x92\x02\x12尝试是否成功R\asuccess\x122\n" +
-	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage\"F\n" +
-	"\x19ConfirmCreateOrderRequest\x12)\n" +
-	"\border_id\x18\x01 \x01(\x03B\x0e\xbaG\v\x92\x02\b订单IDR\aorderId\"E\n" +
-	"\x18CancelCreateOrderRequest\x12)\n" +
-	"\border_id\x18\x01 \x01(\x03B\x0e\xbaG\v\x92\x02\b订单IDR\aorderId\"?\n" +
-	"\x12RefundOrderRequest\x12)\n" +
-	"\border_id\x18\x01 \x01(\x03B\x0e\xbaG\v\x92\x02\b订单IDR\aorderId\"}\n" +
-	"\x13RefundOrderResponse\x122\n" +
-	"\asuccess\x18\x01 \x01(\bB\x18\xbaG\x15\x92\x02\x12退款是否成功R\asuccess\x122\n" +
-	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12退款结果消息R\amessage2\xf1\x05\n" +
-	"\fOrderService\x12}\n" +
-	"\vCreateOrder\x12#.shop.service.v1.CreateOrderRequest\x1a\x16.google.protobuf.Empty\"1\xbaG.\x12\f创建订单\x1a\x1e通过订单信息创建订单\x12\xa2\x01\n" +
-	"\x0eTryCreateOrder\x12&.shop.service.v1.TryCreateOrderRequest\x1a'.shop.service.v1.TryCreateOrderResponse\"?\xbaG<\x12\x12尝试创建订单\x1a&预留订单资源，进入 Try 阶段\x12\x97\x01\n" +
-	"\x12ConfirmCreateOrder\x12*.shop.service.v1.ConfirmCreateOrderRequest\x1a\x16.google.protobuf.Empty\"=\xbaG:\x12\x12确认创建订单\x1a$确认订单，进入 Confirm 阶段\x12\x9a\x01\n" +
-	"\x11CancelCreateOrder\x12).shop.service.v1.CancelCreateOrderRequest\x1a\x16.google.protobuf.Empty\"B\xbaG?\x12\x12取消创建订单\x1a)释放订单资源，进入 Cancel 阶段\x12\x85\x01\n" +
-	"\vRefundOrder\x12#.shop.service.v1.RefundOrderRequest\x1a$.shop.service.v1.RefundOrderResponse\"+\xbaG(\x12\f取消订单\x1a\x18取消已创建的订单B\xb9\x01\n" +
+	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage*d\n" +
+	"\vOrderStatus\x12\x1c\n" +
+	"\x18ORDER_STATUS_UNSPECIFIED\x10\x00\x12\v\n" +
+	"\aPENDING\x10\x01\x12\r\n" +
+	"\tCONFIRMED\x10\x02\x12\r\n" +
+	"\tCANCELLED\x10\x03\x12\f\n" +
+	"\bREFUNDED\x10\x042\xfa\x05\n" +
+	"\fOrderService\x12\x85\x01\n" +
+	"\vCreateOrder\x12#.shop.service.v1.CreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"1\xbaG.\x12\f创建订单\x1a\x1e通过订单信息创建订单\x12\x99\x01\n" +
+	"\x0eTryCreateOrder\x12&.shop.service.v1.TryCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"?\xbaG<\x12\x12尝试创建订单\x1a&预留订单资源，进入 Try 阶段\x12\x9f\x01\n" +
+	"\x12ConfirmCreateOrder\x12*.shop.service.v1.ConfirmCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"=\xbaG:\x12\x12确认创建订单\x1a$确认订单，进入 Confirm 阶段\x12\xa2\x01\n" +
+	"\x11CancelCreateOrder\x12).shop.service.v1.CancelCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"B\xbaG?\x12\x12取消创建订单\x1a)释放订单资源，进入 Cancel 阶段\x12\x7f\n" +
+	"\vRefundOrder\x12#.shop.service.v1.RefundOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"+\xbaG(\x12\f取消订单\x1a\x18取消已创建的订单B\xb9\x01\n" +
 	"\x13com.shop.service.v1B\n" +
 	"OrderProtoP\x01Z8kratos-dtm-examples/api/gen/go/shop/service/v1;servicev1\xa2\x02\x03SSX\xaa\x02\x0fShop.Service.V1\xca\x02\x0fShop\\Service\\V1\xe2\x02\x1bShop\\Service\\V1\\GPBMetadata\xea\x02\x11Shop::Service::V1b\x06proto3"
 
@@ -576,34 +621,34 @@ func file_shop_service_v1_order_proto_rawDescGZIP() []byte {
 	return file_shop_service_v1_order_proto_rawDescData
 }
 
-var file_shop_service_v1_order_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_shop_service_v1_order_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_shop_service_v1_order_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_shop_service_v1_order_proto_goTypes = []any{
-	(*Order)(nil),                     // 0: shop.service.v1.Order
-	(*CreateOrderRequest)(nil),        // 1: shop.service.v1.CreateOrderRequest
-	(*TryCreateOrderRequest)(nil),     // 2: shop.service.v1.TryCreateOrderRequest
-	(*TryCreateOrderResponse)(nil),    // 3: shop.service.v1.TryCreateOrderResponse
+	(OrderStatus)(0),                  // 0: shop.service.v1.OrderStatus
+	(*Order)(nil),                     // 1: shop.service.v1.Order
+	(*CreateOrderRequest)(nil),        // 2: shop.service.v1.CreateOrderRequest
+	(*TryCreateOrderRequest)(nil),     // 3: shop.service.v1.TryCreateOrderRequest
 	(*ConfirmCreateOrderRequest)(nil), // 4: shop.service.v1.ConfirmCreateOrderRequest
 	(*CancelCreateOrderRequest)(nil),  // 5: shop.service.v1.CancelCreateOrderRequest
 	(*RefundOrderRequest)(nil),        // 6: shop.service.v1.RefundOrderRequest
-	(*RefundOrderResponse)(nil),       // 7: shop.service.v1.RefundOrderResponse
+	(*OrderResponse)(nil),             // 7: shop.service.v1.OrderResponse
 	(*timestamppb.Timestamp)(nil),     // 8: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),             // 9: google.protobuf.Empty
 }
 var file_shop_service_v1_order_proto_depIdxs = []int32{
-	8, // 0: shop.service.v1.Order.create_time:type_name -> google.protobuf.Timestamp
-	8, // 1: shop.service.v1.Order.update_time:type_name -> google.protobuf.Timestamp
-	8, // 2: shop.service.v1.Order.delete_time:type_name -> google.protobuf.Timestamp
-	0, // 3: shop.service.v1.TryCreateOrderRequest.items:type_name -> shop.service.v1.Order
-	1, // 4: shop.service.v1.OrderService.CreateOrder:input_type -> shop.service.v1.CreateOrderRequest
-	2, // 5: shop.service.v1.OrderService.TryCreateOrder:input_type -> shop.service.v1.TryCreateOrderRequest
+	0, // 0: shop.service.v1.Order.status:type_name -> shop.service.v1.OrderStatus
+	8, // 1: shop.service.v1.Order.create_time:type_name -> google.protobuf.Timestamp
+	8, // 2: shop.service.v1.Order.update_time:type_name -> google.protobuf.Timestamp
+	8, // 3: shop.service.v1.Order.delete_time:type_name -> google.protobuf.Timestamp
+	2, // 4: shop.service.v1.OrderService.CreateOrder:input_type -> shop.service.v1.CreateOrderRequest
+	3, // 5: shop.service.v1.OrderService.TryCreateOrder:input_type -> shop.service.v1.TryCreateOrderRequest
 	4, // 6: shop.service.v1.OrderService.ConfirmCreateOrder:input_type -> shop.service.v1.ConfirmCreateOrderRequest
 	5, // 7: shop.service.v1.OrderService.CancelCreateOrder:input_type -> shop.service.v1.CancelCreateOrderRequest
 	6, // 8: shop.service.v1.OrderService.RefundOrder:input_type -> shop.service.v1.RefundOrderRequest
-	9, // 9: shop.service.v1.OrderService.CreateOrder:output_type -> google.protobuf.Empty
-	3, // 10: shop.service.v1.OrderService.TryCreateOrder:output_type -> shop.service.v1.TryCreateOrderResponse
-	9, // 11: shop.service.v1.OrderService.ConfirmCreateOrder:output_type -> google.protobuf.Empty
-	9, // 12: shop.service.v1.OrderService.CancelCreateOrder:output_type -> google.protobuf.Empty
-	7, // 13: shop.service.v1.OrderService.RefundOrder:output_type -> shop.service.v1.RefundOrderResponse
+	7, // 9: shop.service.v1.OrderService.CreateOrder:output_type -> shop.service.v1.OrderResponse
+	7, // 10: shop.service.v1.OrderService.TryCreateOrder:output_type -> shop.service.v1.OrderResponse
+	7, // 11: shop.service.v1.OrderService.ConfirmCreateOrder:output_type -> shop.service.v1.OrderResponse
+	7, // 12: shop.service.v1.OrderService.CancelCreateOrder:output_type -> shop.service.v1.OrderResponse
+	7, // 13: shop.service.v1.OrderService.RefundOrder:output_type -> shop.service.v1.OrderResponse
 	9, // [9:14] is the sub-list for method output_type
 	4, // [4:9] is the sub-list for method input_type
 	4, // [4:4] is the sub-list for extension type_name
@@ -622,13 +667,14 @@ func file_shop_service_v1_order_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shop_service_v1_order_proto_rawDesc), len(file_shop_service_v1_order_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   8,
+			NumEnums:      1,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_shop_service_v1_order_proto_goTypes,
 		DependencyIndexes: file_shop_service_v1_order_proto_depIdxs,
+		EnumInfos:         file_shop_service_v1_order_proto_enumTypes,
 		MessageInfos:      file_shop_service_v1_order_proto_msgTypes,
 	}.Build()
 	File_shop_service_v1_order_proto = out.File

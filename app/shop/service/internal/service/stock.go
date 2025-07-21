@@ -3,10 +3,6 @@ package service
 import (
 	"context"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
-
 	"github.com/go-kratos/kratos/v2/log"
 
 	"kratos-dtm-examples/app/shop/service/internal/data"
@@ -39,7 +35,7 @@ func NewStockService(
 	}
 }
 
-func (s *StockService) DeductStock(ctx context.Context, req *shopV1.DeductStockRequest) (*shopV1.DeductStockResponse, error) {
+func (s *StockService) DeductStock(_ context.Context, req *shopV1.DeductStockRequest) (*shopV1.StockResponse, error) {
 	exist, err := s.stockDeductionLogRepo.ExistLogByRequestID(req.GetRequestId())
 	if err != nil {
 		s.log.Errorf("failed to check stock deduction log existence for request_id: %s, error: %v", req.GetRequestId(), err)
@@ -47,10 +43,10 @@ func (s *StockService) DeductStock(ctx context.Context, req *shopV1.DeductStockR
 	}
 	if exist {
 		s.log.Infof("stock deduction log already exists for request_id: %s", req.GetRequestId())
-		return &shopV1.DeductStockResponse{Success: true}, nil
+		return &shopV1.StockResponse{Success: true}, nil
 	}
 
-	if err = s.stockRepo.DeductStock(uint(req.GetProductId()), int(req.GetQuantity())); err != nil {
+	if err = s.stockRepo.DeductStock(req.GetProductId(), req.GetQuantity()); err != nil {
 		s.log.Errorf("failed to deduct stock for product_id: %d, quantity: %d, error: %v", req.GetProductId(), req.GetQuantity(), err)
 		return nil, shopV1.ErrorInternalServerError("failed to deduct stock: %v", err)
 	}
@@ -65,21 +61,32 @@ func (s *StockService) DeductStock(ctx context.Context, req *shopV1.DeductStockR
 		return nil, shopV1.ErrorInternalServerError("failed to create stock deduction log: %v", err)
 	}
 
-	return &shopV1.DeductStockResponse{}, nil
+	return &shopV1.StockResponse{
+		Success: true,
+		Message: "Stock deducted successfully",
+	}, nil
 }
 
-func (s *StockService) TryDeductStock(ctx context.Context, req *shopV1.TryDeductStockRequest) (*shopV1.TryDeductStockResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TryDeductStock not implemented")
+func (s *StockService) TryDeductStock(ctx context.Context, req *shopV1.TryDeductStockRequest) (*shopV1.StockResponse, error) {
+	s.log.Infof("TryDeductStock called with request: %+v", req)
+
+	return s.stockRepo.TryDeductStock(ctx, req)
 }
 
-func (s *StockService) ConfirmDeductStock(ctx context.Context, req *shopV1.ConfirmDeductStockRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ConfirmDeductStock not implemented")
+func (s *StockService) ConfirmDeductStock(ctx context.Context, req *shopV1.ConfirmDeductStockRequest) (*shopV1.StockResponse, error) {
+	s.log.Infof("ConfirmDeductStock called with request: %+v", req)
+
+	return s.stockRepo.ConfirmDeductStock(ctx, req)
 }
 
-func (s *StockService) CancelDeductStock(ctx context.Context, req *shopV1.CancelDeductStockRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CancelDeductStock not implemented")
+func (s *StockService) CancelDeductStock(ctx context.Context, req *shopV1.CancelDeductStockRequest) (*shopV1.StockResponse, error) {
+	s.log.Infof("CancelDeductStock called with request: %+v", req)
+
+	return s.stockRepo.CancelDeductStock(ctx, req)
 }
 
-func (s *StockService) RefundStock(ctx context.Context, req *shopV1.RefundStockRequest) (*shopV1.RefundStockResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefundStock not implemented")
+func (s *StockService) RefundStock(ctx context.Context, req *shopV1.RefundStockRequest) (*shopV1.StockResponse, error) {
+	s.log.Infof("RefundStock called with request: %+v", req)
+
+	return s.stockRepo.RefundStock(ctx, req)
 }

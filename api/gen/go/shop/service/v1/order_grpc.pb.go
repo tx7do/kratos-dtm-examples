@@ -11,7 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -33,11 +32,11 @@ const (
 //
 // 订单服务
 type OrderServiceClient interface {
-	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	TryCreateOrder(ctx context.Context, in *TryCreateOrderRequest, opts ...grpc.CallOption) (*TryCreateOrderResponse, error)
-	ConfirmCreateOrder(ctx context.Context, in *ConfirmCreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	CancelCreateOrder(ctx context.Context, in *CancelCreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...grpc.CallOption) (*RefundOrderResponse, error)
+	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
+	TryCreateOrder(ctx context.Context, in *TryCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
+	ConfirmCreateOrder(ctx context.Context, in *ConfirmCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
+	CancelCreateOrder(ctx context.Context, in *CancelCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
+	RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 }
 
 type orderServiceClient struct {
@@ -48,9 +47,9 @@ func NewOrderServiceClient(cc grpc.ClientConnInterface) OrderServiceClient {
 	return &orderServiceClient{cc}
 }
 
-func (c *orderServiceClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderServiceClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(OrderResponse)
 	err := c.cc.Invoke(ctx, OrderService_CreateOrder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -58,9 +57,9 @@ func (c *orderServiceClient) CreateOrder(ctx context.Context, in *CreateOrderReq
 	return out, nil
 }
 
-func (c *orderServiceClient) TryCreateOrder(ctx context.Context, in *TryCreateOrderRequest, opts ...grpc.CallOption) (*TryCreateOrderResponse, error) {
+func (c *orderServiceClient) TryCreateOrder(ctx context.Context, in *TryCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(TryCreateOrderResponse)
+	out := new(OrderResponse)
 	err := c.cc.Invoke(ctx, OrderService_TryCreateOrder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -68,9 +67,9 @@ func (c *orderServiceClient) TryCreateOrder(ctx context.Context, in *TryCreateOr
 	return out, nil
 }
 
-func (c *orderServiceClient) ConfirmCreateOrder(ctx context.Context, in *ConfirmCreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderServiceClient) ConfirmCreateOrder(ctx context.Context, in *ConfirmCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(OrderResponse)
 	err := c.cc.Invoke(ctx, OrderService_ConfirmCreateOrder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -78,9 +77,9 @@ func (c *orderServiceClient) ConfirmCreateOrder(ctx context.Context, in *Confirm
 	return out, nil
 }
 
-func (c *orderServiceClient) CancelCreateOrder(ctx context.Context, in *CancelCreateOrderRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderServiceClient) CancelCreateOrder(ctx context.Context, in *CancelCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(emptypb.Empty)
+	out := new(OrderResponse)
 	err := c.cc.Invoke(ctx, OrderService_CancelCreateOrder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -88,9 +87,9 @@ func (c *orderServiceClient) CancelCreateOrder(ctx context.Context, in *CancelCr
 	return out, nil
 }
 
-func (c *orderServiceClient) RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...grpc.CallOption) (*RefundOrderResponse, error) {
+func (c *orderServiceClient) RefundOrder(ctx context.Context, in *RefundOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(RefundOrderResponse)
+	out := new(OrderResponse)
 	err := c.cc.Invoke(ctx, OrderService_RefundOrder_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -104,11 +103,11 @@ func (c *orderServiceClient) RefundOrder(ctx context.Context, in *RefundOrderReq
 //
 // 订单服务
 type OrderServiceServer interface {
-	CreateOrder(context.Context, *CreateOrderRequest) (*emptypb.Empty, error)
-	TryCreateOrder(context.Context, *TryCreateOrderRequest) (*TryCreateOrderResponse, error)
-	ConfirmCreateOrder(context.Context, *ConfirmCreateOrderRequest) (*emptypb.Empty, error)
-	CancelCreateOrder(context.Context, *CancelCreateOrderRequest) (*emptypb.Empty, error)
-	RefundOrder(context.Context, *RefundOrderRequest) (*RefundOrderResponse, error)
+	CreateOrder(context.Context, *CreateOrderRequest) (*OrderResponse, error)
+	TryCreateOrder(context.Context, *TryCreateOrderRequest) (*OrderResponse, error)
+	ConfirmCreateOrder(context.Context, *ConfirmCreateOrderRequest) (*OrderResponse, error)
+	CancelCreateOrder(context.Context, *CancelCreateOrderRequest) (*OrderResponse, error)
+	RefundOrder(context.Context, *RefundOrderRequest) (*OrderResponse, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -119,19 +118,19 @@ type OrderServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedOrderServiceServer struct{}
 
-func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrderRequest) (*emptypb.Empty, error) {
+func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
 }
-func (UnimplementedOrderServiceServer) TryCreateOrder(context.Context, *TryCreateOrderRequest) (*TryCreateOrderResponse, error) {
+func (UnimplementedOrderServiceServer) TryCreateOrder(context.Context, *TryCreateOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TryCreateOrder not implemented")
 }
-func (UnimplementedOrderServiceServer) ConfirmCreateOrder(context.Context, *ConfirmCreateOrderRequest) (*emptypb.Empty, error) {
+func (UnimplementedOrderServiceServer) ConfirmCreateOrder(context.Context, *ConfirmCreateOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ConfirmCreateOrder not implemented")
 }
-func (UnimplementedOrderServiceServer) CancelCreateOrder(context.Context, *CancelCreateOrderRequest) (*emptypb.Empty, error) {
+func (UnimplementedOrderServiceServer) CancelCreateOrder(context.Context, *CancelCreateOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CancelCreateOrder not implemented")
 }
-func (UnimplementedOrderServiceServer) RefundOrder(context.Context, *RefundOrderRequest) (*RefundOrderResponse, error) {
+func (UnimplementedOrderServiceServer) RefundOrder(context.Context, *RefundOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefundOrder not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}

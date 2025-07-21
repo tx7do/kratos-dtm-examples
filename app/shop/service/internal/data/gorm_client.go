@@ -42,7 +42,7 @@ func NewGormClient(cfg *conf.Bootstrap, logger log.Logger) *gorm.DB {
 
 	client, err := gorm.Open(driver, &gorm.Config{})
 	if err != nil {
-		l.Fatalf("failed opening connection to db: %v", err)
+		l.Fatalf("failed opening connection to data: %v", err)
 		return nil
 	}
 

@@ -4,11 +4,14 @@ import (
 	"context"
 
 	"github.com/dtm-labs/client/dtmgrpc"
+	"github.com/dtm-labs/client/dtmgrpc/dtmgpb"
+
 	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	shopV1 "kratos-dtm-examples/api/gen/go/shop/service/v1"
 
+	_ "kratos-dtm-examples/pkg/dtmdriver-kratos"
 	"kratos-dtm-examples/pkg/service"
 )
 
@@ -21,9 +24,13 @@ type ShopService struct {
 	shopV1.UnimplementedShopServiceServer
 
 	log *log.Helper
+
+	dtmClient dtmgpb.DtmClient
 }
 
-func NewShopService(logger log.Logger) *ShopService {
+func NewShopService(
+	logger log.Logger,
+) *ShopService {
 	return &ShopService{
 		log: log.NewHelper(log.With(logger, "module", "shop/service/shop-service")),
 	}
@@ -34,9 +41,10 @@ func (s *ShopService) Buy(_ context.Context, req *shopV1.BuyRequest) (*shopV1.Bu
 	return &shopV1.BuyResponse{}, nil
 }
 
-func (s *ShopService) TestTP(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+func (s *ShopService) TestTP(ctx context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
 	var requestId string
 
+	// 生成全局唯一事务 ID (GID)
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
 	requestId = gid // 使用 gid 作为 request_id
@@ -58,10 +66,19 @@ func (s *ShopService) TestTP(_ context.Context, req *shopV1.BuyRequest) (*shopV1
 				ProductId: req.ProductId,
 				Quantity:  req.Quantity,
 				RequestId: requestId,
+				OrderNo:   requestId,
 			},
 		)
 
 	msg.WaitResult = true
+
+	msg1 := dtmgpb.DtmRequest{}
+	msg1.Gid = gid
+
+	//if _, err := s.dtmClient.Submit(ctx, &msg1); err != nil {
+	//	s.log.Errorf("提交购买事务失败: %v", err)
+	//	return nil, shopV1.ErrorInternalServerError(err.Error())
+	//}
 
 	// 提交事务
 	if err := msg.Submit(); err != nil {
@@ -74,9 +91,10 @@ func (s *ShopService) TestTP(_ context.Context, req *shopV1.BuyRequest) (*shopV1
 	return &shopV1.BuyResponse{Success: true}, nil
 }
 
-func (s *ShopService) TestTCC(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+func (s *ShopService) TestTCC(ctx context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
 	var requestId string
 
+	// 生成全局唯一事务 ID (GID)
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
 	requestId = gid // 使用 gid 作为 request_id
@@ -108,6 +126,7 @@ func (s *ShopService) TestTCC(_ context.Context, req *shopV1.BuyRequest) (*shopV
 				ProductId: req.ProductId,
 				Quantity:  req.Quantity,
 				RequestId: requestId,
+				OrderNo:   requestId, // 简化使用 requestId 作为订单号
 			},
 			shopServer+shopV1.OrderService_TryCreateOrder_FullMethodName,
 			shopServer+shopV1.OrderService_ConfirmCreateOrder_FullMethodName,
@@ -130,9 +149,10 @@ func (s *ShopService) TestTCC(_ context.Context, req *shopV1.BuyRequest) (*shopV
 	return &shopV1.BuyResponse{Success: true}, nil
 }
 
-func (s *ShopService) TestSAGA(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+func (s *ShopService) TestSAGA(ctx context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
 	var requestId string
 
+	// 生成全局唯一事务 ID (GID)
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
 	requestId = gid // 使用 gid 作为 request_id
@@ -169,9 +189,10 @@ func (s *ShopService) TestSAGA(_ context.Context, req *shopV1.BuyRequest) (*shop
 	return &shopV1.BuyResponse{Success: true}, nil
 }
 
-func (s *ShopService) TestXA(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+func (s *ShopService) TestXA(ctx context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
 	var requestId string
 
+	// 生成全局唯一事务 ID (GID)
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
 	requestId = gid // 使用 gid 作为 request_id
@@ -213,7 +234,8 @@ func (s *ShopService) TestXA(_ context.Context, req *shopV1.BuyRequest) (*shopV1
 	return &shopV1.BuyResponse{Success: true}, nil
 }
 
-func (s *ShopService) TestWorkFlow(_ context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+func (s *ShopService) TestWorkFlow(ctx context.Context, req *shopV1.BuyRequest) (*shopV1.BuyResponse, error) {
+	// 生成全局唯一事务 ID (GID)
 	gid := dtmgrpc.MustGenGid(dtmServer)
 
 	s.log.Infof("开始工作流事务，GID: %s", gid)

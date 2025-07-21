@@ -10,35 +10,35 @@ import "pagination/v1/pagination.proto";
 
 // 库存服务
 service StockService {
-  rpc DeductStock(DeductStockRequest) returns (DeductStockResponse) {
+  rpc DeductStock(DeductStockRequest) returns (StockResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "减少商品库存",
       description: "通过商品ID和数量减少商品库存"
     };
   }
 
-  rpc TryDeductStock(TryDeductStockRequest) returns (TryDeductStockResponse) {
+  rpc TryDeductStock(TryDeductStockRequest) returns (StockResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "尝试减少商品库存",
       description: "预留商品库存，进入 Try 阶段"
     };
   }
 
-  rpc ConfirmDeductStock(ConfirmDeductStockRequest) returns (google.protobuf.Empty) {
+  rpc ConfirmDeductStock(ConfirmDeductStockRequest) returns (StockResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "确认减少商品库存",
       description: "确认减少库存，进入 Confirm 阶段"
     };
   }
 
-  rpc CancelDeductStock(CancelDeductStockRequest) returns (google.protobuf.Empty) {
+  rpc CancelDeductStock(CancelDeductStockRequest) returns (StockResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "取消减少商品库存",
       description: "释放预留库存，进入 Cancel 阶段"
     };
   }
 
-  rpc RefundStock(RefundStockRequest) returns (RefundStockResponse) {
+  rpc RefundStock(RefundStockRequest) returns (StockResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "退款并恢复商品库存",
       description: "通过订单ID和商品ID恢复商品库存"
@@ -94,18 +94,6 @@ message DeductStockRequest {
   ]; // 请求ID，用于幂等性控制
 }
 
-message DeductStockResponse {
-  bool success = 1 [
-    (gnostic.openapi.v3.property) = {description: "库存减少是否成功"},
-    json_name = "success"
-  ]; // 库存减少是否成功
-
-  string message = 2 [
-    (gnostic.openapi.v3.property) = {description: "操作结果消息"},
-    json_name = "message"
-  ]; // 操作结果消息
-}
-
 message TryDeductStockRequest {
   uint32 product_id = 1 [
     (gnostic.openapi.v3.property) = {description: "商品ID"},
@@ -116,18 +104,11 @@ message TryDeductStockRequest {
     (gnostic.openapi.v3.property) = {description: "尝试减少的数量"},
     json_name = "quantity"
   ]; // 尝试减少的数量
-}
 
-message TryDeductStockResponse {
-  bool success = 1 [
-    (gnostic.openapi.v3.property) = {description: "尝试是否成功"},
-    json_name = "success"
-  ]; // 尝试是否成功
-
-  string message = 2 [
-    (gnostic.openapi.v3.property) = {description: "操作结果消息"},
-    json_name = "message"
-  ]; // 操作结果消息
+  string order_no = 3 [
+    (gnostic.openapi.v3.property) = {description: "订单号"},
+    json_name = "orderNo"
+  ]; // 订单号，预留订单资源时生成的唯一标识
 }
 
 message ConfirmDeductStockRequest {
@@ -170,7 +151,8 @@ message RefundStockRequest {
     json_name = "quantity"
   ]; // 恢复的数量
 }
-message RefundStockResponse {
+
+message StockResponse {
   bool success = 1 [
     (gnostic.openapi.v3.property) = {description: "退款并恢复库存是否成功"},
     json_name = "success"

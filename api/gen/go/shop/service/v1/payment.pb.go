@@ -26,7 +26,7 @@ const (
 
 type TryMakePaymentRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // 用户ID
+	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"` // 用户ID
 	Amount        float64                `protobuf:"fixed64,2,opt,name=amount,proto3" json:"amount,omitempty"`              // 支付金额
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -62,7 +62,7 @@ func (*TryMakePaymentRequest) Descriptor() ([]byte, []int) {
 	return file_shop_service_v1_payment_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *TryMakePaymentRequest) GetUserId() int64 {
+func (x *TryMakePaymentRequest) GetUserId() uint32 {
 	if x != nil {
 		return x.UserId
 	}
@@ -222,7 +222,7 @@ const file_shop_service_v1_payment_proto_rawDesc = "" +
 	"\n" +
 	"\x1dshop/service/v1/payment.proto\x12\x0fshop.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1epagination/v1/pagination.proto\"l\n" +
 	"\x15TryMakePaymentRequest\x12'\n" +
-	"\auser_id\x18\x01 \x01(\x03B\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12*\n" +
+	"\auser_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12*\n" +
 	"\x06amount\x18\x02 \x01(\x01B\x12\xbaG\x0f\x92\x02\f支付金额R\x06amount\"\x80\x01\n" +
 	"\x16TryMakePaymentResponse\x122\n" +
 	"\asuccess\x18\x01 \x01(\bB\x18\xbaG\x15\x92\x02\x12尝试是否成功R\asuccess\x122\n" +

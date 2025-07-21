@@ -32,7 +32,7 @@ service PaymentService {
 }
 
 message TryMakePaymentRequest {
-  int64 user_id = 1 [
+  uint32 user_id = 1 [
     (gnostic.openapi.v3.property) = {description: "用户ID"},
     json_name = "userId"
   ]; // 用户ID

@@ -6,7 +6,6 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
 
 	"kratos-dtm-examples/app/shop/service/internal/data"
 
@@ -21,7 +20,10 @@ type OrderService struct {
 	repo *data.OrderRepo
 }
 
-func NewOrderService(logger log.Logger, repo *data.OrderRepo) *OrderService {
+func NewOrderService(
+	logger log.Logger,
+	repo *data.OrderRepo,
+) *OrderService {
 	l := log.NewHelper(log.With(logger, "module", "order/service/shop-service"))
 	return &OrderService{
 		log:  l,
@@ -29,22 +31,60 @@ func NewOrderService(logger log.Logger, repo *data.OrderRepo) *OrderService {
 	}
 }
 
-func (s *OrderService) CreateOrder(ctx context.Context, req *shopV1.CreateOrderRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
+func (s *OrderService) CreateOrder(_ context.Context, req *shopV1.CreateOrderRequest) (*shopV1.OrderResponse, error) {
+	s.log.Infof("Creating order for user %d with product %d, quantity %d", req.UserId, req.ProductId, req.Quantity)
+
+	// 检查订单是否已存在
+	exists, err := s.repo.OrderExistsByRequestID(req.RequestId)
+	if err != nil {
+		s.log.Errorf("Failed to check if order exists: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to check order existence")
+	}
+	if exists {
+		return nil, status.Errorf(codes.AlreadyExists, "order already exists")
+	}
+
+	// 创建订单
+	err = s.repo.CreateOrder(&shopV1.Order{
+		UserId:    req.UserId,
+		ProductId: req.ProductId,
+		RequestId: req.RequestId,
+		OrderNo:   req.OrderNo,
+		Quantity:  req.Quantity,
+		Status:    shopV1.OrderStatus_PENDING, // 设置订单状态为 PENDING
+	})
+	if err != nil {
+		s.log.Errorf("Failed to create order: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to create order")
+	}
+
+	s.log.Infof("Order created successfully for user %d", req.UserId)
+	return &shopV1.OrderResponse{
+		Success: true,
+		Message: "Order created successfully",
+	}, nil
 }
 
-func (s *OrderService) TryCreateOrder(ctx context.Context, req *shopV1.TryCreateOrderRequest) (*shopV1.TryCreateOrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TryCreateOrder not implemented")
+func (s *OrderService) TryCreateOrder(ctx context.Context, req *shopV1.TryCreateOrderRequest) (*shopV1.OrderResponse, error) {
+	s.log.Infof("Trying to create order for user %d with product %d, quantity %d", req.UserId, req.ProductId, req.Quantity)
+
+	return s.repo.TryCreateOrder(ctx, req)
 }
 
-func (s *OrderService) ConfirmCreateOrder(ctx context.Context, req *shopV1.ConfirmCreateOrderRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ConfirmCreateOrder not implemented")
+func (s *OrderService) ConfirmCreateOrder(ctx context.Context, req *shopV1.ConfirmCreateOrderRequest) (*shopV1.OrderResponse, error) {
+	s.log.Infof("Confirming order creation for order ID %s", req.OrderNo)
+
+	return s.repo.ConfirmCreateOrder(ctx, req)
 }
 
-func (s *OrderService) CancelCreateOrder(ctx context.Context, req *shopV1.CancelCreateOrderRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CancelCreateOrder not implemented")
+func (s *OrderService) CancelCreateOrder(ctx context.Context, req *shopV1.CancelCreateOrderRequest) (*shopV1.OrderResponse, error) {
+	s.log.Infof("Canceling order creation for order ID %s", req.OrderNo)
+
+	return s.repo.CancelCreateOrder(ctx, req)
 }
 
-func (s *OrderService) RefundOrder(ctx context.Context, req *shopV1.RefundOrderRequest) (*shopV1.RefundOrderResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefundOrder not implemented")
+func (s *OrderService) RefundOrder(ctx context.Context, req *shopV1.RefundOrderRequest) (*shopV1.OrderResponse, error) {
+	s.log.Infof("Processing refund for order ID %s", req.OrderNo)
+
+	return s.repo.RefundOrder(ctx, req)
 }

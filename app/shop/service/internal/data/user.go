@@ -3,6 +3,7 @@ package data
 import (
 	"time"
 
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"gorm.io/gorm"
@@ -13,12 +14,14 @@ import (
 )
 
 type UserRepo struct {
-	db *gorm.DB
+	data *Data
+	log  *log.Helper
 }
 
-func NewUserRepo(db *gorm.DB) *UserRepo {
+func NewUserRepo(logger log.Logger, db *Data) *UserRepo {
 	return &UserRepo{
-		db: db,
+		data: db,
+		log:  log.NewHelper(log.With(logger, "module", "shop/service/data/user")),
 	}
 }
 
@@ -37,7 +40,7 @@ func (r *UserRepo) CreateUser(dto *shopV1.User) error {
 		return err
 	}
 
-	return r.db.Create(&model).Error
+	return r.data.db.Create(&model).Error
 }
 
 // UpdateUser 更新用户
@@ -55,13 +58,13 @@ func (r *UserRepo) UpdateUser(dto *shopV1.User) error {
 		return err
 	}
 
-	return r.db.Save(&model).Error
+	return r.data.db.Save(&model).Error
 }
 
 // GetUserByID 根据 ID 获取用户
-func (r *UserRepo) GetUserByID(id uint) (*shopV1.User, error) {
+func (r *UserRepo) GetUserByID(id uint32) (*shopV1.User, error) {
 	var model models.User
-	if err := r.db.First(&model, id).Error; err != nil {
+	if err := r.data.db.First(&model, id).Error; err != nil {
 		return nil, err
 	}
 
@@ -74,6 +77,6 @@ func (r *UserRepo) GetUserByID(id uint) (*shopV1.User, error) {
 }
 
 // DeleteUserByID 删除用户
-func (r *UserRepo) DeleteUserByID(id uint) error {
-	return r.db.Delete(&models.User{}, id).Error
+func (r *UserRepo) DeleteUserByID(id uint32) error {
+	return r.data.db.Delete(&models.User{}, id).Error
 }

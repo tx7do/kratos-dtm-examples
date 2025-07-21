@@ -3,6 +3,7 @@ package data
 import (
 	"time"
 
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"gorm.io/gorm"
@@ -13,12 +14,14 @@ import (
 )
 
 type ProductRepo struct {
-	db *gorm.DB
+	data *Data
+	log  *log.Helper
 }
 
-func NewProductRepo(db *gorm.DB) *ProductRepo {
+func NewProductRepo(logger log.Logger, db *Data) *ProductRepo {
 	return &ProductRepo{
-		db: db,
+		data: db,
+		log:  log.NewHelper(log.With(logger, "module", "shop/service/data/product")),
 	}
 }
 
@@ -37,7 +40,7 @@ func (r *ProductRepo) CreateProduct(dto *shopV1.Product) error {
 		return err
 	}
 
-	return r.db.Create(&model).Error
+	return r.data.db.Create(&model).Error
 }
 
 // UpdateProduct 更新商品
@@ -55,13 +58,13 @@ func (r *ProductRepo) UpdateProduct(dto *shopV1.Product) error {
 		return err
 	}
 
-	return r.db.Save(&model).Error
+	return r.data.db.Save(&model).Error
 }
 
 // GetProductByID 根据 ID 获取商品
-func (r *ProductRepo) GetProductByID(id uint) (*shopV1.Product, error) {
+func (r *ProductRepo) GetProductByID(id uint32) (*shopV1.Product, error) {
 	var model models.Product
-	if err := r.db.First(&model, id).Error; err != nil {
+	if err := r.data.db.First(&model, id).Error; err != nil {
 		return nil, err
 	}
 
@@ -74,6 +77,6 @@ func (r *ProductRepo) GetProductByID(id uint) (*shopV1.Product, error) {
 }
 
 // DeleteProductByID 删除商品
-func (r *ProductRepo) DeleteProductByID(id uint) error {
-	return r.db.Delete(&models.Product{}, id).Error
+func (r *ProductRepo) DeleteProductByID(id uint32) error {
+	return r.data.db.Delete(&models.Product{}, id).Error
 }

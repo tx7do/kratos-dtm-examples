@@ -278,6 +278,8 @@ func (m *CreateOrderRequest) validate(all bool) error {
 
 	// no validation rules for RequestId
 
+	// no validation rules for OrderNo
+
 	if len(errors) > 0 {
 		return CreateOrderRequestMultiError(errors)
 	}
@@ -382,39 +384,13 @@ func (m *TryCreateOrderRequest) validate(all bool) error {
 
 	// no validation rules for UserId
 
-	for idx, item := range m.GetItems() {
-		_, _ = idx, item
+	// no validation rules for ProductId
 
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, TryCreateOrderRequestValidationError{
-						field:  fmt.Sprintf("Items[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, TryCreateOrderRequestValidationError{
-						field:  fmt.Sprintf("Items[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return TryCreateOrderRequestValidationError{
-					field:  fmt.Sprintf("Items[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
+	// no validation rules for Quantity
 
-	}
+	// no validation rules for RequestId
+
+	// no validation rules for OrderNo
 
 	if len(errors) > 0 {
 		return TryCreateOrderRequestMultiError(errors)
@@ -496,112 +472,6 @@ var _ interface {
 	ErrorName() string
 } = TryCreateOrderRequestValidationError{}
 
-// Validate checks the field values on TryCreateOrderResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *TryCreateOrderResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on TryCreateOrderResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// TryCreateOrderResponseMultiError, or nil if none found.
-func (m *TryCreateOrderResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *TryCreateOrderResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Success
-
-	// no validation rules for Message
-
-	if len(errors) > 0 {
-		return TryCreateOrderResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// TryCreateOrderResponseMultiError is an error wrapping multiple validation
-// errors returned by TryCreateOrderResponse.ValidateAll() if the designated
-// constraints aren't met.
-type TryCreateOrderResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m TryCreateOrderResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m TryCreateOrderResponseMultiError) AllErrors() []error { return m }
-
-// TryCreateOrderResponseValidationError is the validation error returned by
-// TryCreateOrderResponse.Validate if the designated constraints aren't met.
-type TryCreateOrderResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e TryCreateOrderResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e TryCreateOrderResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e TryCreateOrderResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e TryCreateOrderResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e TryCreateOrderResponseValidationError) ErrorName() string {
-	return "TryCreateOrderResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e TryCreateOrderResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sTryCreateOrderResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = TryCreateOrderResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = TryCreateOrderResponseValidationError{}
-
 // Validate checks the field values on ConfirmCreateOrderRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -624,7 +494,7 @@ func (m *ConfirmCreateOrderRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for OrderId
+	// no validation rules for OrderNo
 
 	if len(errors) > 0 {
 		return ConfirmCreateOrderRequestMultiError(errors)
@@ -728,7 +598,7 @@ func (m *CancelCreateOrderRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for OrderId
+	// no validation rules for OrderNo
 
 	if len(errors) > 0 {
 		return CancelCreateOrderRequestMultiError(errors)
@@ -832,7 +702,7 @@ func (m *RefundOrderRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for OrderId
+	// no validation rules for OrderNo
 
 	if len(errors) > 0 {
 		return RefundOrderRequestMultiError(errors)
@@ -914,22 +784,22 @@ var _ interface {
 	ErrorName() string
 } = RefundOrderRequestValidationError{}
 
-// Validate checks the field values on RefundOrderResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *RefundOrderResponse) Validate() error {
+// Validate checks the field values on OrderResponse with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *OrderResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on RefundOrderResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// RefundOrderResponseMultiError, or nil if none found.
-func (m *RefundOrderResponse) ValidateAll() error {
+// ValidateAll checks the field values on OrderResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in OrderResponseMultiError, or
+// nil if none found.
+func (m *OrderResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RefundOrderResponse) validate(all bool) error {
+func (m *OrderResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -941,19 +811,19 @@ func (m *RefundOrderResponse) validate(all bool) error {
 	// no validation rules for Message
 
 	if len(errors) > 0 {
-		return RefundOrderResponseMultiError(errors)
+		return OrderResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// RefundOrderResponseMultiError is an error wrapping multiple validation
-// errors returned by RefundOrderResponse.ValidateAll() if the designated
-// constraints aren't met.
-type RefundOrderResponseMultiError []error
+// OrderResponseMultiError is an error wrapping multiple validation errors
+// returned by OrderResponse.ValidateAll() if the designated constraints
+// aren't met.
+type OrderResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RefundOrderResponseMultiError) Error() string {
+func (m OrderResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -962,11 +832,11 @@ func (m RefundOrderResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RefundOrderResponseMultiError) AllErrors() []error { return m }
+func (m OrderResponseMultiError) AllErrors() []error { return m }
 
-// RefundOrderResponseValidationError is the validation error returned by
-// RefundOrderResponse.Validate if the designated constraints aren't met.
-type RefundOrderResponseValidationError struct {
+// OrderResponseValidationError is the validation error returned by
+// OrderResponse.Validate if the designated constraints aren't met.
+type OrderResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -974,24 +844,22 @@ type RefundOrderResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e RefundOrderResponseValidationError) Field() string { return e.field }
+func (e OrderResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RefundOrderResponseValidationError) Reason() string { return e.reason }
+func (e OrderResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RefundOrderResponseValidationError) Cause() error { return e.cause }
+func (e OrderResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RefundOrderResponseValidationError) Key() bool { return e.key }
+func (e OrderResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RefundOrderResponseValidationError) ErrorName() string {
-	return "RefundOrderResponseValidationError"
-}
+func (e OrderResponseValidationError) ErrorName() string { return "OrderResponseValidationError" }
 
 // Error satisfies the builtin error interface
-func (e RefundOrderResponseValidationError) Error() string {
+func (e OrderResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1003,14 +871,14 @@ func (e RefundOrderResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRefundOrderResponse.%s: %s%s",
+		"invalid %sOrderResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RefundOrderResponseValidationError{}
+var _ error = OrderResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -1018,4 +886,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RefundOrderResponseValidationError{}
+} = OrderResponseValidationError{}

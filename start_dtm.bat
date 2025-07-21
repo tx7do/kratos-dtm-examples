@@ -1,1 +1,1 @@
-﻿dtm -c ./conf.yml
+dtm -c ./conf.yml

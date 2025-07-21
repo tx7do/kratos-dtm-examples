@@ -40,8 +40,7 @@ api:
 # generate OpenAPI v3 docs.
 openapi:
 	@cd api && \
-	buf generate --path api/admin/service/v1 --template api/admin/service/v1/buf.openapi.gen.yaml && \
-	buf generate --path api/front/service/v1 --template api/front/service/v1/buf.openapi.gen.yaml
+	buf generate --path protos/shop/service/v1 --template buf.shop.openapi.gen.yaml
 
 # initialize develop environment
 init:

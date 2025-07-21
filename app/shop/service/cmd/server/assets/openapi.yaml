@@ -1,0 +1,167 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ShopService API
+    description: 商店服务
+    version: 0.0.1
+paths:
+    /test/saga:
+        get:
+            tags:
+                - ShopService
+            description: SAGA
+            operationId: ShopService_TestSAGA
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
+    /test/tcc:
+        get:
+            tags:
+                - ShopService
+            description: TCC（Try-Confirm-Cancel）
+            operationId: ShopService_TestTCC
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
+    /test/tp:
+        get:
+            tags:
+                - ShopService
+            description: 二阶段消息（Two-Phase Message）
+            operationId: ShopService_TestTP
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
+    /test/wf:
+        get:
+            tags:
+                - ShopService
+            description: 工作流事务(Workflow)
+            operationId: ShopService_TestWorkFlow
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
+    /test/xa:
+        get:
+            tags:
+                - ShopService
+            description: XA
+            operationId: ShopService_TestXA
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
+components:
+    schemas:
+        BuyResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                    description: 购买是否成功
+                message:
+                    type: string
+                    description: 购买结果消息
+tags:
+    - name: ShopService

@@ -350,112 +350,6 @@ var _ interface {
 	ErrorName() string
 } = DeductStockRequestValidationError{}
 
-// Validate checks the field values on DeductStockResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeductStockResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeductStockResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeductStockResponseMultiError, or nil if none found.
-func (m *DeductStockResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeductStockResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Success
-
-	// no validation rules for Message
-
-	if len(errors) > 0 {
-		return DeductStockResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeductStockResponseMultiError is an error wrapping multiple validation
-// errors returned by DeductStockResponse.ValidateAll() if the designated
-// constraints aren't met.
-type DeductStockResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeductStockResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeductStockResponseMultiError) AllErrors() []error { return m }
-
-// DeductStockResponseValidationError is the validation error returned by
-// DeductStockResponse.Validate if the designated constraints aren't met.
-type DeductStockResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeductStockResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeductStockResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeductStockResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeductStockResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeductStockResponseValidationError) ErrorName() string {
-	return "DeductStockResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e DeductStockResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeductStockResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeductStockResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeductStockResponseValidationError{}
-
 // Validate checks the field values on TryDeductStockRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -481,6 +375,8 @@ func (m *TryDeductStockRequest) validate(all bool) error {
 	// no validation rules for ProductId
 
 	// no validation rules for Quantity
+
+	// no validation rules for OrderNo
 
 	if len(errors) > 0 {
 		return TryDeductStockRequestMultiError(errors)
@@ -561,112 +457,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = TryDeductStockRequestValidationError{}
-
-// Validate checks the field values on TryDeductStockResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *TryDeductStockResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on TryDeductStockResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// TryDeductStockResponseMultiError, or nil if none found.
-func (m *TryDeductStockResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *TryDeductStockResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Success
-
-	// no validation rules for Message
-
-	if len(errors) > 0 {
-		return TryDeductStockResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// TryDeductStockResponseMultiError is an error wrapping multiple validation
-// errors returned by TryDeductStockResponse.ValidateAll() if the designated
-// constraints aren't met.
-type TryDeductStockResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m TryDeductStockResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m TryDeductStockResponseMultiError) AllErrors() []error { return m }
-
-// TryDeductStockResponseValidationError is the validation error returned by
-// TryDeductStockResponse.Validate if the designated constraints aren't met.
-type TryDeductStockResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e TryDeductStockResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e TryDeductStockResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e TryDeductStockResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e TryDeductStockResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e TryDeductStockResponseValidationError) ErrorName() string {
-	return "TryDeductStockResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e TryDeductStockResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sTryDeductStockResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = TryDeductStockResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = TryDeductStockResponseValidationError{}
 
 // Validate checks the field values on ConfirmDeductStockRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -988,22 +778,22 @@ var _ interface {
 	ErrorName() string
 } = RefundStockRequestValidationError{}
 
-// Validate checks the field values on RefundStockResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *RefundStockResponse) Validate() error {
+// Validate checks the field values on StockResponse with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *StockResponse) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on RefundStockResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// RefundStockResponseMultiError, or nil if none found.
-func (m *RefundStockResponse) ValidateAll() error {
+// ValidateAll checks the field values on StockResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in StockResponseMultiError, or
+// nil if none found.
+func (m *StockResponse) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *RefundStockResponse) validate(all bool) error {
+func (m *StockResponse) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1015,19 +805,19 @@ func (m *RefundStockResponse) validate(all bool) error {
 	// no validation rules for Message
 
 	if len(errors) > 0 {
-		return RefundStockResponseMultiError(errors)
+		return StockResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// RefundStockResponseMultiError is an error wrapping multiple validation
-// errors returned by RefundStockResponse.ValidateAll() if the designated
-// constraints aren't met.
-type RefundStockResponseMultiError []error
+// StockResponseMultiError is an error wrapping multiple validation errors
+// returned by StockResponse.ValidateAll() if the designated constraints
+// aren't met.
+type StockResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m RefundStockResponseMultiError) Error() string {
+func (m StockResponseMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1036,11 +826,11 @@ func (m RefundStockResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m RefundStockResponseMultiError) AllErrors() []error { return m }
+func (m StockResponseMultiError) AllErrors() []error { return m }
 
-// RefundStockResponseValidationError is the validation error returned by
-// RefundStockResponse.Validate if the designated constraints aren't met.
-type RefundStockResponseValidationError struct {
+// StockResponseValidationError is the validation error returned by
+// StockResponse.Validate if the designated constraints aren't met.
+type StockResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1048,24 +838,22 @@ type RefundStockResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e RefundStockResponseValidationError) Field() string { return e.field }
+func (e StockResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e RefundStockResponseValidationError) Reason() string { return e.reason }
+func (e StockResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e RefundStockResponseValidationError) Cause() error { return e.cause }
+func (e StockResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e RefundStockResponseValidationError) Key() bool { return e.key }
+func (e StockResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e RefundStockResponseValidationError) ErrorName() string {
-	return "RefundStockResponseValidationError"
-}
+func (e StockResponseValidationError) ErrorName() string { return "StockResponseValidationError" }
 
 // Error satisfies the builtin error interface
-func (e RefundStockResponseValidationError) Error() string {
+func (e StockResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1077,14 +865,14 @@ func (e RefundStockResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sRefundStockResponse.%s: %s%s",
+		"invalid %sStockResponse.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = RefundStockResponseValidationError{}
+var _ error = StockResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -1092,4 +880,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = RefundStockResponseValidationError{}
+} = StockResponseValidationError{}

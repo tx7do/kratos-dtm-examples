@@ -11,7 +11,7 @@ import (
 	_ "github.com/tx7do/kratos-bootstrap/api/gen/go/pagination/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	_ "google.golang.org/protobuf/types/known/emptypb"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
@@ -185,69 +185,18 @@ func (x *DeductStockRequest) GetRequestId() string {
 	return ""
 }
 
-type DeductStockResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 库存减少是否成功
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 操作结果消息
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeductStockResponse) Reset() {
-	*x = DeductStockResponse{}
-	mi := &file_shop_service_v1_stock_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeductStockResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeductStockResponse) ProtoMessage() {}
-
-func (x *DeductStockResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_stock_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeductStockResponse.ProtoReflect.Descriptor instead.
-func (*DeductStockResponse) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *DeductStockResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-func (x *DeductStockResponse) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
 type TryDeductStockRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     uint32                 `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
 	Quantity      int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 尝试减少的数量
+	OrderNo       string                 `protobuf:"bytes,3,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`        // 订单号，预留订单资源时生成的唯一标识
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *TryDeductStockRequest) Reset() {
 	*x = TryDeductStockRequest{}
-	mi := &file_shop_service_v1_stock_proto_msgTypes[3]
+	mi := &file_shop_service_v1_stock_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -259,7 +208,7 @@ func (x *TryDeductStockRequest) String() string {
 func (*TryDeductStockRequest) ProtoMessage() {}
 
 func (x *TryDeductStockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_stock_proto_msgTypes[3]
+	mi := &file_shop_service_v1_stock_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -272,7 +221,7 @@ func (x *TryDeductStockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TryDeductStockRequest.ProtoReflect.Descriptor instead.
 func (*TryDeductStockRequest) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{3}
+	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *TryDeductStockRequest) GetProductId() uint32 {
@@ -289,54 +238,9 @@ func (x *TryDeductStockRequest) GetQuantity() int32 {
 	return 0
 }
 
-type TryDeductStockResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 尝试是否成功
-	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 操作结果消息
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *TryDeductStockResponse) Reset() {
-	*x = TryDeductStockResponse{}
-	mi := &file_shop_service_v1_stock_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *TryDeductStockResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*TryDeductStockResponse) ProtoMessage() {}
-
-func (x *TryDeductStockResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_stock_proto_msgTypes[4]
+func (x *TryDeductStockRequest) GetOrderNo() string {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use TryDeductStockResponse.ProtoReflect.Descriptor instead.
-func (*TryDeductStockResponse) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *TryDeductStockResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-func (x *TryDeductStockResponse) GetMessage() string {
-	if x != nil {
-		return x.Message
+		return x.OrderNo
 	}
 	return ""
 }
@@ -351,7 +255,7 @@ type ConfirmDeductStockRequest struct {
 
 func (x *ConfirmDeductStockRequest) Reset() {
 	*x = ConfirmDeductStockRequest{}
-	mi := &file_shop_service_v1_stock_proto_msgTypes[5]
+	mi := &file_shop_service_v1_stock_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -363,7 +267,7 @@ func (x *ConfirmDeductStockRequest) String() string {
 func (*ConfirmDeductStockRequest) ProtoMessage() {}
 
 func (x *ConfirmDeductStockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_stock_proto_msgTypes[5]
+	mi := &file_shop_service_v1_stock_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -376,7 +280,7 @@ func (x *ConfirmDeductStockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConfirmDeductStockRequest.ProtoReflect.Descriptor instead.
 func (*ConfirmDeductStockRequest) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{5}
+	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ConfirmDeductStockRequest) GetProductId() uint32 {
@@ -403,7 +307,7 @@ type CancelDeductStockRequest struct {
 
 func (x *CancelDeductStockRequest) Reset() {
 	*x = CancelDeductStockRequest{}
-	mi := &file_shop_service_v1_stock_proto_msgTypes[6]
+	mi := &file_shop_service_v1_stock_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -415,7 +319,7 @@ func (x *CancelDeductStockRequest) String() string {
 func (*CancelDeductStockRequest) ProtoMessage() {}
 
 func (x *CancelDeductStockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_stock_proto_msgTypes[6]
+	mi := &file_shop_service_v1_stock_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -428,7 +332,7 @@ func (x *CancelDeductStockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CancelDeductStockRequest.ProtoReflect.Descriptor instead.
 func (*CancelDeductStockRequest) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{6}
+	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *CancelDeductStockRequest) GetProductId() uint32 {
@@ -456,7 +360,7 @@ type RefundStockRequest struct {
 
 func (x *RefundStockRequest) Reset() {
 	*x = RefundStockRequest{}
-	mi := &file_shop_service_v1_stock_proto_msgTypes[7]
+	mi := &file_shop_service_v1_stock_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -468,7 +372,7 @@ func (x *RefundStockRequest) String() string {
 func (*RefundStockRequest) ProtoMessage() {}
 
 func (x *RefundStockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_stock_proto_msgTypes[7]
+	mi := &file_shop_service_v1_stock_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -481,7 +385,7 @@ func (x *RefundStockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefundStockRequest.ProtoReflect.Descriptor instead.
 func (*RefundStockRequest) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{7}
+	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *RefundStockRequest) GetOrderId() uint32 {
@@ -505,7 +409,7 @@ func (x *RefundStockRequest) GetQuantity() int32 {
 	return 0
 }
 
-type RefundStockResponse struct {
+type StockResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"` // 退款并恢复库存是否成功
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`  // 操作结果消息
@@ -513,21 +417,21 @@ type RefundStockResponse struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *RefundStockResponse) Reset() {
-	*x = RefundStockResponse{}
-	mi := &file_shop_service_v1_stock_proto_msgTypes[8]
+func (x *StockResponse) Reset() {
+	*x = StockResponse{}
+	mi := &file_shop_service_v1_stock_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *RefundStockResponse) String() string {
+func (x *StockResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*RefundStockResponse) ProtoMessage() {}
+func (*StockResponse) ProtoMessage() {}
 
-func (x *RefundStockResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_shop_service_v1_stock_proto_msgTypes[8]
+func (x *StockResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_shop_service_v1_stock_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -538,19 +442,19 @@ func (x *RefundStockResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use RefundStockResponse.ProtoReflect.Descriptor instead.
-func (*RefundStockResponse) Descriptor() ([]byte, []int) {
-	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{8}
+// Deprecated: Use StockResponse.ProtoReflect.Descriptor instead.
+func (*StockResponse) Descriptor() ([]byte, []int) {
+	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{6}
 }
 
-func (x *RefundStockResponse) GetSuccess() bool {
+func (x *StockResponse) GetSuccess() bool {
 	if x != nil {
 		return x.Success
 	}
 	return false
 }
 
-func (x *RefundStockResponse) GetMessage() string {
+func (x *StockResponse) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
@@ -582,17 +486,12 @@ const file_shop_service_v1_stock_proto_rawDesc = "" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x121\n" +
 	"\bquantity\x18\x02 \x01(\x05B\x15\xbaG\x12\x92\x02\x0f减少的数量R\bquantity\x12-\n" +
 	"\n" +
-	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\x83\x01\n" +
-	"\x13DeductStockResponse\x128\n" +
-	"\asuccess\x18\x01 \x01(\bB\x1e\xbaG\x1b\x92\x02\x18库存减少是否成功R\asuccess\x122\n" +
-	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage\"\x7f\n" +
+	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\xab\x01\n" +
 	"\x15TryDeductStockRequest\x12-\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x127\n" +
-	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15尝试减少的数量R\bquantity\"\x80\x01\n" +
-	"\x16TryDeductStockResponse\x122\n" +
-	"\asuccess\x18\x01 \x01(\bB\x18\xbaG\x15\x92\x02\x12尝试是否成功R\asuccess\x122\n" +
-	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage\"\x83\x01\n" +
+	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15尝试减少的数量R\bquantity\x12*\n" +
+	"\border_no\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"\x83\x01\n" +
 	"\x19ConfirmDeductStockRequest\x12-\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x127\n" +
@@ -605,16 +504,16 @@ const file_shop_service_v1_stock_proto_rawDesc = "" +
 	"\border_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b订单IDR\aorderId\x12-\n" +
 	"\n" +
 	"product_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x121\n" +
-	"\bquantity\x18\x03 \x01(\x05B\x15\xbaG\x12\x92\x02\x0f恢复的数量R\bquantity\"\x8c\x01\n" +
-	"\x13RefundStockResponse\x12A\n" +
+	"\bquantity\x18\x03 \x01(\x05B\x15\xbaG\x12\x92\x02\x0f恢复的数量R\bquantity\"\x86\x01\n" +
+	"\rStockResponse\x12A\n" +
 	"\asuccess\x18\x01 \x01(\bB'\xbaG$\x92\x02!退款并恢复库存是否成功R\asuccess\x122\n" +
-	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage2\xcb\x06\n" +
-	"\fStockService\x12\x9c\x01\n" +
-	"\vDeductStock\x12#.shop.service.v1.DeductStockRequest\x1a$.shop.service.v1.DeductStockResponse\"B\xbaG?\x12\x12减少商品库存\x1a)通过商品ID和数量减少商品库存\x12\xa8\x01\n" +
-	"\x0eTryDeductStock\x12&.shop.service.v1.TryDeductStockRequest\x1a'.shop.service.v1.TryDeductStockResponse\"E\xbaGB\x12\x18尝试减少商品库存\x1a&预留商品库存，进入 Try 阶段\x12\xa3\x01\n" +
-	"\x12ConfirmDeductStock\x12*.shop.service.v1.ConfirmDeductStockRequest\x1a\x16.google.protobuf.Empty\"I\xbaGF\x12\x18确认减少商品库存\x1a*确认减少库存，进入 Confirm 阶段\x12\xa0\x01\n" +
-	"\x11CancelDeductStock\x12).shop.service.v1.CancelDeductStockRequest\x1a\x16.google.protobuf.Empty\"H\xbaGE\x12\x18取消减少商品库存\x1a)释放预留库存，进入 Cancel 阶段\x12\xa7\x01\n" +
-	"\vRefundStock\x12#.shop.service.v1.RefundStockRequest\x1a$.shop.service.v1.RefundStockResponse\"M\xbaGJ\x12\x1b退款并恢复商品库存\x1a+通过订单ID和商品ID恢复商品库存B\xb9\x01\n" +
+	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage2\xc6\x06\n" +
+	"\fStockService\x12\x96\x01\n" +
+	"\vDeductStock\x12#.shop.service.v1.DeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"B\xbaG?\x12\x12减少商品库存\x1a)通过商品ID和数量减少商品库存\x12\x9f\x01\n" +
+	"\x0eTryDeductStock\x12&.shop.service.v1.TryDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"E\xbaGB\x12\x18尝试减少商品库存\x1a&预留商品库存，进入 Try 阶段\x12\xab\x01\n" +
+	"\x12ConfirmDeductStock\x12*.shop.service.v1.ConfirmDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"I\xbaGF\x12\x18确认减少商品库存\x1a*确认减少库存，进入 Confirm 阶段\x12\xa8\x01\n" +
+	"\x11CancelDeductStock\x12).shop.service.v1.CancelDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"H\xbaGE\x12\x18取消减少商品库存\x1a)释放预留库存，进入 Cancel 阶段\x12\xa1\x01\n" +
+	"\vRefundStock\x12#.shop.service.v1.RefundStockRequest\x1a\x1e.shop.service.v1.StockResponse\"M\xbaGJ\x12\x1b退款并恢复商品库存\x1a+通过订单ID和商品ID恢复商品库存B\xb9\x01\n" +
 	"\x13com.shop.service.v1B\n" +
 	"StockProtoP\x01Z8kratos-dtm-examples/api/gen/go/shop/service/v1;servicev1\xa2\x02\x03SSX\xaa\x02\x0fShop.Service.V1\xca\x02\x0fShop\\Service\\V1\xe2\x02\x1bShop\\Service\\V1\\GPBMetadata\xea\x02\x11Shop::Service::V1b\x06proto3"
 
@@ -630,39 +529,36 @@ func file_shop_service_v1_stock_proto_rawDescGZIP() []byte {
 	return file_shop_service_v1_stock_proto_rawDescData
 }
 
-var file_shop_service_v1_stock_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_shop_service_v1_stock_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_shop_service_v1_stock_proto_goTypes = []any{
 	(*Product)(nil),                   // 0: shop.service.v1.Product
 	(*DeductStockRequest)(nil),        // 1: shop.service.v1.DeductStockRequest
-	(*DeductStockResponse)(nil),       // 2: shop.service.v1.DeductStockResponse
-	(*TryDeductStockRequest)(nil),     // 3: shop.service.v1.TryDeductStockRequest
-	(*TryDeductStockResponse)(nil),    // 4: shop.service.v1.TryDeductStockResponse
-	(*ConfirmDeductStockRequest)(nil), // 5: shop.service.v1.ConfirmDeductStockRequest
-	(*CancelDeductStockRequest)(nil),  // 6: shop.service.v1.CancelDeductStockRequest
-	(*RefundStockRequest)(nil),        // 7: shop.service.v1.RefundStockRequest
-	(*RefundStockResponse)(nil),       // 8: shop.service.v1.RefundStockResponse
-	(*timestamppb.Timestamp)(nil),     // 9: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),             // 10: google.protobuf.Empty
+	(*TryDeductStockRequest)(nil),     // 2: shop.service.v1.TryDeductStockRequest
+	(*ConfirmDeductStockRequest)(nil), // 3: shop.service.v1.ConfirmDeductStockRequest
+	(*CancelDeductStockRequest)(nil),  // 4: shop.service.v1.CancelDeductStockRequest
+	(*RefundStockRequest)(nil),        // 5: shop.service.v1.RefundStockRequest
+	(*StockResponse)(nil),             // 6: shop.service.v1.StockResponse
+	(*timestamppb.Timestamp)(nil),     // 7: google.protobuf.Timestamp
 }
 var file_shop_service_v1_stock_proto_depIdxs = []int32{
-	9,  // 0: shop.service.v1.Product.create_time:type_name -> google.protobuf.Timestamp
-	9,  // 1: shop.service.v1.Product.update_time:type_name -> google.protobuf.Timestamp
-	9,  // 2: shop.service.v1.Product.delete_time:type_name -> google.protobuf.Timestamp
-	1,  // 3: shop.service.v1.StockService.DeductStock:input_type -> shop.service.v1.DeductStockRequest
-	3,  // 4: shop.service.v1.StockService.TryDeductStock:input_type -> shop.service.v1.TryDeductStockRequest
-	5,  // 5: shop.service.v1.StockService.ConfirmDeductStock:input_type -> shop.service.v1.ConfirmDeductStockRequest
-	6,  // 6: shop.service.v1.StockService.CancelDeductStock:input_type -> shop.service.v1.CancelDeductStockRequest
-	7,  // 7: shop.service.v1.StockService.RefundStock:input_type -> shop.service.v1.RefundStockRequest
-	2,  // 8: shop.service.v1.StockService.DeductStock:output_type -> shop.service.v1.DeductStockResponse
-	4,  // 9: shop.service.v1.StockService.TryDeductStock:output_type -> shop.service.v1.TryDeductStockResponse
-	10, // 10: shop.service.v1.StockService.ConfirmDeductStock:output_type -> google.protobuf.Empty
-	10, // 11: shop.service.v1.StockService.CancelDeductStock:output_type -> google.protobuf.Empty
-	8,  // 12: shop.service.v1.StockService.RefundStock:output_type -> shop.service.v1.RefundStockResponse
-	8,  // [8:13] is the sub-list for method output_type
-	3,  // [3:8] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	7, // 0: shop.service.v1.Product.create_time:type_name -> google.protobuf.Timestamp
+	7, // 1: shop.service.v1.Product.update_time:type_name -> google.protobuf.Timestamp
+	7, // 2: shop.service.v1.Product.delete_time:type_name -> google.protobuf.Timestamp
+	1, // 3: shop.service.v1.StockService.DeductStock:input_type -> shop.service.v1.DeductStockRequest
+	2, // 4: shop.service.v1.StockService.TryDeductStock:input_type -> shop.service.v1.TryDeductStockRequest
+	3, // 5: shop.service.v1.StockService.ConfirmDeductStock:input_type -> shop.service.v1.ConfirmDeductStockRequest
+	4, // 6: shop.service.v1.StockService.CancelDeductStock:input_type -> shop.service.v1.CancelDeductStockRequest
+	5, // 7: shop.service.v1.StockService.RefundStock:input_type -> shop.service.v1.RefundStockRequest
+	6, // 8: shop.service.v1.StockService.DeductStock:output_type -> shop.service.v1.StockResponse
+	6, // 9: shop.service.v1.StockService.TryDeductStock:output_type -> shop.service.v1.StockResponse
+	6, // 10: shop.service.v1.StockService.ConfirmDeductStock:output_type -> shop.service.v1.StockResponse
+	6, // 11: shop.service.v1.StockService.CancelDeductStock:output_type -> shop.service.v1.StockResponse
+	6, // 12: shop.service.v1.StockService.RefundStock:output_type -> shop.service.v1.StockResponse
+	8, // [8:13] is the sub-list for method output_type
+	3, // [3:8] is the sub-list for method input_type
+	3, // [3:3] is the sub-list for extension type_name
+	3, // [3:3] is the sub-list for extension extendee
+	0, // [0:3] is the sub-list for field type_name
 }
 
 func init() { file_shop_service_v1_stock_proto_init() }
@@ -677,7 +573,7 @@ func file_shop_service_v1_stock_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_shop_service_v1_stock_proto_rawDesc), len(file_shop_service_v1_stock_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   9,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

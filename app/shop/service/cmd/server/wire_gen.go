@@ -20,12 +20,17 @@ import (
 
 // initApp init kratos application.
 func initApp(logger log.Logger, registrar registry.Registrar, bootstrap *v1.Bootstrap) (*kratos.App, func(), error) {
+	discovery := data.NewDiscovery(bootstrap)
 	db := data.NewGormClient(bootstrap, logger)
-	productRepo := data.NewProductRepo(db)
-	stockDeductionLogRepo := data.NewStockDeductionLogRepo(db)
-	stockRepo := data.NewStockRepo(db)
+	dataData, cleanup, err := data.NewData(logger, discovery, db)
+	if err != nil {
+		return nil, nil, err
+	}
+	productRepo := data.NewProductRepo(logger, dataData)
+	stockDeductionLogRepo := data.NewStockDeductionLogRepo(logger, dataData)
+	stockRepo := data.NewStockRepo(logger, dataData)
 	stockService := service.NewStockService(logger, productRepo, stockDeductionLogRepo, stockRepo)
-	orderRepo := data.NewOrderRepo(db)
+	orderRepo := data.NewOrderRepo(logger, dataData)
 	orderService := service.NewOrderService(logger, orderRepo)
 	paymentService := service.NewPaymentService(logger)
 	grpcServer := server.NewGRPCServer(bootstrap, logger, stockService, orderService, paymentService)
@@ -33,5 +38,6 @@ func initApp(logger log.Logger, registrar registry.Registrar, bootstrap *v1.Boot
 	httpServer := server.NewRestServer(bootstrap, shopService)
 	app := newApp(logger, registrar, grpcServer, httpServer)
 	return app, func() {
+		cleanup()
 	}, nil
 }

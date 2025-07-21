@@ -3,6 +3,7 @@ package data
 import (
 	"time"
 
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/jinzhu/copier"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"gorm.io/gorm"
@@ -13,12 +14,14 @@ import (
 )
 
 type StockDeductionLogRepo struct {
-	db *gorm.DB
+	data *Data
+	log  *log.Helper
 }
 
-func NewStockDeductionLogRepo(db *gorm.DB) *StockDeductionLogRepo {
+func NewStockDeductionLogRepo(logger log.Logger, db *Data) *StockDeductionLogRepo {
 	return &StockDeductionLogRepo{
-		db: db,
+		data: db,
+		log:  log.NewHelper(log.With(logger, "module", "shop/service/data/stock_deduction_log")),
 	}
 }
 
@@ -36,12 +39,12 @@ func (r *StockDeductionLogRepo) CreateLog(dto *shopV1.StockDeductionLog) error {
 		return err
 	}
 
-	return r.db.Create(&model).Error
+	return r.data.db.Create(&model).Error
 }
 
-func (r *StockDeductionLogRepo) GetLogByID(id uint) (*shopV1.StockDeductionLog, error) {
+func (r *StockDeductionLogRepo) GetLogByID(id uint32) (*shopV1.StockDeductionLog, error) {
 	var model models.StockDeductionLog
-	if err := r.db.First(&model, id).Error; err != nil {
+	if err := r.data.db.First(&model, id).Error; err != nil {
 		return nil, err
 	}
 
@@ -55,7 +58,9 @@ func (r *StockDeductionLogRepo) GetLogByID(id uint) (*shopV1.StockDeductionLog, 
 
 func (r *StockDeductionLogRepo) GetLogByRequestID(requestID string) (*shopV1.StockDeductionLog, error) {
 	var model models.StockDeductionLog
-	if err := r.db.Where("request_id = ?", requestID).First(&model).Error; err != nil {
+	if err := r.data.db.
+		Where("request_id = ?", requestID).
+		First(&model).Error; err != nil {
 		return nil, err
 	}
 
@@ -69,7 +74,9 @@ func (r *StockDeductionLogRepo) GetLogByRequestID(requestID string) (*shopV1.Sto
 
 func (r *StockDeductionLogRepo) ExistLogByRequestID(requestID string) (bool, error) {
 	var count int64
-	if err := r.db.Model(&models.StockDeductionLog{}).Where("request_id = ?", requestID).Count(&count).Error; err != nil {
+	if err := r.data.db.Model(&models.StockDeductionLog{}).
+		Where("request_id = ?", requestID).
+		Count(&count).Error; err != nil {
 		return false, err
 	}
 	return count > 0, nil
