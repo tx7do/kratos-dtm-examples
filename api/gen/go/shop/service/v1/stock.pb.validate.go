@@ -376,7 +376,7 @@ func (m *TryDeductStockRequest) validate(all bool) error {
 
 	// no validation rules for Quantity
 
-	// no validation rules for OrderNo
+	// no validation rules for RequestId
 
 	if len(errors) > 0 {
 		return TryDeductStockRequestMultiError(errors)

@@ -189,7 +189,7 @@ type TryDeductStockRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     uint32                 `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
 	Quantity      int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 尝试减少的数量
-	OrderNo       string                 `protobuf:"bytes,3,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`        // 订单号，预留订单资源时生成的唯一标识
+	RequestId     string                 `protobuf:"bytes,3,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -238,9 +238,9 @@ func (x *TryDeductStockRequest) GetQuantity() int32 {
 	return 0
 }
 
-func (x *TryDeductStockRequest) GetOrderNo() string {
+func (x *TryDeductStockRequest) GetRequestId() string {
 	if x != nil {
-		return x.OrderNo
+		return x.RequestId
 	}
 	return ""
 }
@@ -486,12 +486,13 @@ const file_shop_service_v1_stock_proto_rawDesc = "" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x121\n" +
 	"\bquantity\x18\x02 \x01(\x05B\x15\xbaG\x12\x92\x02\x0f减少的数量R\bquantity\x12-\n" +
 	"\n" +
-	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\xab\x01\n" +
+	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\xae\x01\n" +
 	"\x15TryDeductStockRequest\x12-\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x127\n" +
-	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15尝试减少的数量R\bquantity\x12*\n" +
-	"\border_no\x18\x03 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"\x83\x01\n" +
+	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15尝试减少的数量R\bquantity\x12-\n" +
+	"\n" +
+	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\x83\x01\n" +
 	"\x19ConfirmDeductStockRequest\x12-\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x127\n" +

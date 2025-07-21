@@ -105,10 +105,10 @@ message TryDeductStockRequest {
     json_name = "quantity"
   ]; // 尝试减少的数量
 
-  string order_no = 3 [
-    (gnostic.openapi.v3.property) = {description: "订单号"},
-    json_name = "orderNo"
-  ]; // 订单号，预留订单资源时生成的唯一标识
+  string request_id = 3 [
+    (gnostic.openapi.v3.property) = {description: "请求ID"},
+    json_name = "requestId"
+  ]; // 请求ID，用于幂等性控制
 }
 
 message ConfirmDeductStockRequest {

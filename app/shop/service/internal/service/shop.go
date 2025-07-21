@@ -96,7 +96,7 @@ func (s *ShopService) TestTCC(ctx context.Context, req *shopV1.BuyRequest) (*sho
 	err := dtmgrpc.TccGlobalTransaction(dtmServer, gid, func(tcc *dtmgrpc.TccGrpc) error {
 		// Try 阶段：扣减库存
 		err := tcc.CallBranch(
-			&shopV1.DeductStockRequest{
+			&shopV1.TryDeductStockRequest{
 				ProductId: req.ProductId,
 				Quantity:  req.Quantity,
 				RequestId: requestId,
@@ -104,11 +104,11 @@ func (s *ShopService) TestTCC(ctx context.Context, req *shopV1.BuyRequest) (*sho
 			shopServer+shopV1.StockService_TryDeductStock_FullMethodName,
 			shopServer+shopV1.StockService_ConfirmDeductStock_FullMethodName,
 			shopServer+shopV1.StockService_CancelDeductStock_FullMethodName,
-			&emptypb.Empty{},
+			&shopV1.StockResponse{},
 		)
 		if err != nil {
 			s.log.Errorf("扣减库存失败: %v", err)
-			return shopV1.ErrorInternalServerError(err.Error())
+			return shopV1.ErrorInternalServerError("扣减库存失败")
 		}
 
 		// Try 阶段：创建订单
@@ -123,11 +123,11 @@ func (s *ShopService) TestTCC(ctx context.Context, req *shopV1.BuyRequest) (*sho
 			shopServer+shopV1.OrderService_TryCreateOrder_FullMethodName,
 			shopServer+shopV1.OrderService_ConfirmCreateOrder_FullMethodName,
 			shopServer+shopV1.OrderService_CancelCreateOrder_FullMethodName,
-			&emptypb.Empty{},
+			&shopV1.OrderResponse{},
 		)
 		if err != nil {
 			s.log.Errorf("创建订单失败: %v", err)
-			return shopV1.ErrorInternalServerError(err.Error())
+			return shopV1.ErrorInternalServerError("创建订单失败")
 		}
 
 		return nil
