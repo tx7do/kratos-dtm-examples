@@ -66,19 +66,11 @@ func (s *ShopService) TestTP(ctx context.Context, req *shopV1.BuyRequest) (*shop
 				ProductId: req.ProductId,
 				Quantity:  req.Quantity,
 				RequestId: requestId,
-				OrderNo:   requestId,
+				OrderNo:   requestId, // 简化使用 requestId 作为订单号
 			},
 		)
 
 	msg.WaitResult = true
-
-	msg1 := dtmgpb.DtmRequest{}
-	msg1.Gid = gid
-
-	//if _, err := s.dtmClient.Submit(ctx, &msg1); err != nil {
-	//	s.log.Errorf("提交购买事务失败: %v", err)
-	//	return nil, shopV1.ErrorInternalServerError(err.Error())
-	//}
 
 	// 提交事务
 	if err := msg.Submit(); err != nil {
@@ -177,6 +169,7 @@ func (s *ShopService) TestSAGA(ctx context.Context, req *shopV1.BuyRequest) (*sh
 				ProductId: req.ProductId,
 				Quantity:  req.Quantity,
 				RequestId: requestId,
+				OrderNo:   requestId, // 简化使用 requestId 作为订单号
 			},
 		)
 
@@ -215,6 +208,7 @@ func (s *ShopService) TestXA(ctx context.Context, req *shopV1.BuyRequest) (*shop
 				ProductId: req.ProductId,
 				Quantity:  req.Quantity,
 				RequestId: requestId,
+				OrderNo:   requestId, // 简化使用 requestId 作为订单号
 			},
 			shopServer+shopV1.OrderService_CreateOrder_FullMethodName,
 			&emptypb.Empty{},
