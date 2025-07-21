@@ -73,11 +73,11 @@ func (s *ShopService) TestTP(ctx context.Context, req *shopV1.BuyRequest) (*shop
 
 	// 提交事务
 	if err := msg.Submit(); err != nil {
-		s.log.Errorf("提交购买事务失败: %v", err)
+		s.log.Errorf("提交 二阶消息 事务失败: %v", err)
 		return nil, shopV1.ErrorInternalServerError(err.Error())
 	}
 
-	s.log.Infof("购买事务提交成功，GID: %s", gid)
+	s.log.Infof("二阶消息 事务提交成功，GID: %s", gid)
 
 	return &shopV1.BuyResponse{Success: true}, nil
 }
@@ -96,21 +96,21 @@ func (s *ShopService) TestTCC(ctx context.Context, req *shopV1.BuyRequest) (*sho
 
 	err = dtmgrpc.TccGlobalTransaction(dtmServer, gid, func(tcc *dtmgrpc.TccGrpc) error {
 		// Try 阶段：扣减库存
-		//err = tcc.CallBranch(
-		//	&shopV1.TryDeductStockRequest{
-		//		ProductId: req.ProductId,
-		//		Quantity:  req.Quantity,
-		//		RequestId: requestId,
-		//	},
-		//	shopServer+shopV1.StockService_TryDeductStock_FullMethodName,
-		//	shopServer+shopV1.StockService_ConfirmDeductStock_FullMethodName,
-		//	shopServer+shopV1.StockService_CancelDeductStock_FullMethodName,
-		//	&shopV1.StockResponse{},
-		//)
-		//if err != nil {
-		//	s.log.Errorf("扣减库存失败: %v", err)
-		//	return shopV1.ErrorInternalServerError("扣减库存失败")
-		//}
+		err = tcc.CallBranch(
+			&shopV1.TryDeductStockRequest{
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
+				RequestId: requestId,
+			},
+			shopServer+shopV1.StockService_TryDeductStock_FullMethodName,
+			shopServer+shopV1.StockService_ConfirmDeductStock_FullMethodName,
+			shopServer+shopV1.StockService_CancelDeductStock_FullMethodName,
+			&shopV1.StockResponse{},
+		)
+		if err != nil {
+			s.log.Errorf("扣减库存失败: %v", err)
+			return shopV1.ErrorInternalServerError("扣减库存失败")
+		}
 
 		// Try 阶段：创建订单
 		err = tcc.CallBranch(
