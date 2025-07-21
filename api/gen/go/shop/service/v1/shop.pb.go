@@ -150,11 +150,10 @@ const file_shop_service_v1_shop_proto_rawDesc = "" +
 	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f购买数量R\bquantity\"u\n" +
 	"\vBuyResponse\x122\n" +
 	"\asuccess\x18\x01 \x01(\bB\x18\xbaG\x15\x92\x02\x12购买是否成功R\asuccess\x122\n" +
-	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12购买结果消息R\amessage2\x95\a\n" +
-	"\vShopService\x12x\n" +
-	"\x03Buy\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"6\xbaG3\x12\f购买商品\x1a#通过商品ID和数量购买商品\x12U\n" +
-	"\x06TestTP\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
-	"\x12\b/shop/tp\x12W\n" +
+	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12购买结果消息R\amessage2\xe0\x06\n" +
+	"\vShopService\x12B\n" +
+	"\x03Buy\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x00\x12V\n" +
+	"\x06TestTP\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/shop/2pm\x12W\n" +
 	"\aTestTCC\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/shop/tcc\x12Y\n" +
 	"\bTestSAGA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
 	"/shop/saga\x12U\n" +

@@ -49,7 +49,7 @@ type ShopServiceHTTPServer interface {
 
 func RegisterShopServiceHTTPServer(s *http.Server, srv ShopServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/shop/tp", _ShopService_TestTP0_HTTP_Handler(srv))
+	r.GET("/shop/2pm", _ShopService_TestTP0_HTTP_Handler(srv))
 	r.GET("/shop/tcc", _ShopService_TestTCC0_HTTP_Handler(srv))
 	r.GET("/shop/saga", _ShopService_TestSAGA0_HTTP_Handler(srv))
 	r.GET("/shop/xa", _ShopService_TestXA0_HTTP_Handler(srv))
@@ -258,7 +258,7 @@ func (c *ShopServiceHTTPClientImpl) TestTCC(ctx context.Context, in *BuyRequest,
 
 func (c *ShopServiceHTTPClientImpl) TestTP(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/shop/tp"
+	pattern := "/shop/2pm"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestTP))
 	opts = append(opts, http.PathTemplate(pattern))

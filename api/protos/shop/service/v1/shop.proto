@@ -10,17 +10,13 @@ import "pagination/v1/pagination.proto";
 
 // 商店服务
 service ShopService {
-  rpc Buy(BuyRequest) returns (BuyResponse) {
-    option (gnostic.openapi.v3.operation) = {
-      summary: "购买商品",
-      description: "通过商品ID和数量购买商品"
-    };
-  }
+  // 购买商品
+  rpc Buy(BuyRequest) returns (BuyResponse) {}
 
   // 二阶段消息（Two-Phase Message）
   rpc TestTP(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/shop/tp"
+      get: "/shop/2pm"
     };
   }
 

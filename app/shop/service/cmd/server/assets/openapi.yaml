@@ -7,6 +7,35 @@ info:
     description: 商店服务
     version: 0.0.1
 paths:
+    /shop/2pm:
+        get:
+            tags:
+                - ShopService
+            description: 二阶段消息（Two-Phase Message）
+            operationId: ShopService_TestTP
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
     /shop/saga:
         get:
             tags:
@@ -42,35 +71,6 @@ paths:
                 - ShopService
             description: TCC（Try-Confirm-Cancel）
             operationId: ShopService_TestTCC
-            parameters:
-                - name: userId
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint32
-                - name: productId
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint32
-                - name: quantity
-                  in: query
-                  schema:
-                    type: integer
-                    format: int32
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/BuyResponse'
-    /shop/tp:
-        get:
-            tags:
-                - ShopService
-            description: 二阶段消息（Two-Phase Message）
-            operationId: ShopService_TestTP
             parameters:
                 - name: userId
                   in: query

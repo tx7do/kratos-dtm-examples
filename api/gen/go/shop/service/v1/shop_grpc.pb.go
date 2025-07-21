@@ -36,6 +36,7 @@ const (
 //
 // 商店服务
 type ShopServiceClient interface {
+	// 购买商品
 	Buy(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// 二阶段消息（Two-Phase Message）
 	TestTP(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
@@ -159,6 +160,7 @@ func (c *shopServiceClient) TestWorkFlowMixed(ctx context.Context, in *BuyReques
 //
 // 商店服务
 type ShopServiceServer interface {
+	// 购买商品
 	Buy(context.Context, *BuyRequest) (*BuyResponse, error)
 	// 二阶段消息（Two-Phase Message）
 	TestTP(context.Context, *BuyRequest) (*BuyResponse, error)
