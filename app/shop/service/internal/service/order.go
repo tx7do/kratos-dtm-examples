@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/go-kratos/kratos/v2/log"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
@@ -63,6 +64,21 @@ func (s *OrderService) CreateOrder(_ context.Context, req *shopV1.CreateOrderReq
 		Success: true,
 		Message: "Order created successfully",
 	}, nil
+}
+
+func (s *OrderService) CreateOrderXA(ctx context.Context, req *shopV1.CreateOrderRequest) (*shopV1.OrderResponse, error) {
+	// 从上下文获取XA事务
+	//xa, err := dtmgrpc.XaGrpcFromRequest(ctx)
+	//if err != nil {
+	//	s.log.Errorf("Failed to get XA transaction from context: %v", err)
+	//	return nil, shopV1.ErrorInternalServerError("failed to get XA transaction from context")
+	//}
+
+	//dtmgrpc.XaLocalTransaction()
+	//
+	//xa.CallBranch()
+
+	return nil, nil
 }
 
 func (s *OrderService) TryCreateOrder(ctx context.Context, req *shopV1.TryCreateOrderRequest) (*shopV1.OrderResponse, error) {

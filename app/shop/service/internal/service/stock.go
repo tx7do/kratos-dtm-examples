@@ -67,6 +67,18 @@ func (s *StockService) DeductStock(_ context.Context, req *shopV1.DeductStockReq
 	}, nil
 }
 
+func (s *StockService) DeductStockXA(ctx context.Context, req *shopV1.DeductStockRequest) (*shopV1.StockResponse, error) {
+	//// 从上下文获取XA事务
+	//xa, err := dtmgrpc.XaGrpcFromRequest(ctx)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//xa.XaLocalTransaction()
+
+	return nil, nil
+}
+
 func (s *StockService) TryDeductStock(ctx context.Context, req *shopV1.TryDeductStockRequest) (*shopV1.StockResponse, error) {
 	s.log.Infof("尝试扣除库存: %+v", req.RequestId)
 

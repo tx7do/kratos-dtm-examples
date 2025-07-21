@@ -22,7 +22,10 @@ const _ = http.SupportPackageIsVersion1
 const OperationShopServiceTestSAGA = "/shop.service.v1.ShopService/TestSAGA"
 const OperationShopServiceTestTCC = "/shop.service.v1.ShopService/TestTCC"
 const OperationShopServiceTestTP = "/shop.service.v1.ShopService/TestTP"
-const OperationShopServiceTestWorkFlow = "/shop.service.v1.ShopService/TestWorkFlow"
+const OperationShopServiceTestWorkFlowMixed = "/shop.service.v1.ShopService/TestWorkFlowMixed"
+const OperationShopServiceTestWorkFlowSAGA = "/shop.service.v1.ShopService/TestWorkFlowSAGA"
+const OperationShopServiceTestWorkFlowTCC = "/shop.service.v1.ShopService/TestWorkFlowTCC"
+const OperationShopServiceTestWorkFlowXA = "/shop.service.v1.ShopService/TestWorkFlowXA"
 const OperationShopServiceTestXA = "/shop.service.v1.ShopService/TestXA"
 
 type ShopServiceHTTPServer interface {
@@ -32,8 +35,14 @@ type ShopServiceHTTPServer interface {
 	TestTCC(context.Context, *BuyRequest) (*BuyResponse, error)
 	// TestTP 二阶段消息（Two-Phase Message）
 	TestTP(context.Context, *BuyRequest) (*BuyResponse, error)
-	// TestWorkFlow 工作流事务(Workflow)
-	TestWorkFlow(context.Context, *BuyRequest) (*BuyResponse, error)
+	// TestWorkFlowMixed 工作流事务 - 混合
+	TestWorkFlowMixed(context.Context, *BuyRequest) (*BuyResponse, error)
+	// TestWorkFlowSAGA 工作流事务 - SAGA
+	TestWorkFlowSAGA(context.Context, *BuyRequest) (*BuyResponse, error)
+	// TestWorkFlowTCC 工作流事务 - TCC
+	TestWorkFlowTCC(context.Context, *BuyRequest) (*BuyResponse, error)
+	// TestWorkFlowXA 工作流事务 - XA
+	TestWorkFlowXA(context.Context, *BuyRequest) (*BuyResponse, error)
 	// TestXA XA
 	TestXA(context.Context, *BuyRequest) (*BuyResponse, error)
 }
@@ -44,7 +53,10 @@ func RegisterShopServiceHTTPServer(s *http.Server, srv ShopServiceHTTPServer) {
 	r.GET("/test/tcc", _ShopService_TestTCC0_HTTP_Handler(srv))
 	r.GET("/test/saga", _ShopService_TestSAGA0_HTTP_Handler(srv))
 	r.GET("/test/xa", _ShopService_TestXA0_HTTP_Handler(srv))
-	r.GET("/test/wf", _ShopService_TestWorkFlow0_HTTP_Handler(srv))
+	r.GET("/test/workflow/saga", _ShopService_TestWorkFlowSAGA0_HTTP_Handler(srv))
+	r.GET("/test/workflow/tcc", _ShopService_TestWorkFlowTCC0_HTTP_Handler(srv))
+	r.GET("/test/workflow/xa", _ShopService_TestWorkFlowXA0_HTTP_Handler(srv))
+	r.GET("/test/workflow/mixed", _ShopService_TestWorkFlowMixed0_HTTP_Handler(srv))
 }
 
 func _ShopService_TestTP0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
@@ -123,15 +135,72 @@ func _ShopService_TestXA0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.
 	}
 }
 
-func _ShopService_TestWorkFlow0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+func _ShopService_TestWorkFlowSAGA0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in BuyRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationShopServiceTestWorkFlow)
+		http.SetOperation(ctx, OperationShopServiceTestWorkFlowSAGA)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.TestWorkFlow(ctx, req.(*BuyRequest))
+			return srv.TestWorkFlowSAGA(ctx, req.(*BuyRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*BuyResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ShopService_TestWorkFlowTCC0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in BuyRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopServiceTestWorkFlowTCC)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.TestWorkFlowTCC(ctx, req.(*BuyRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*BuyResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ShopService_TestWorkFlowXA0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in BuyRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopServiceTestWorkFlowXA)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.TestWorkFlowXA(ctx, req.(*BuyRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*BuyResponse)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _ShopService_TestWorkFlowMixed0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in BuyRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationShopServiceTestWorkFlowMixed)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.TestWorkFlowMixed(ctx, req.(*BuyRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -146,7 +215,10 @@ type ShopServiceHTTPClient interface {
 	TestSAGA(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
 	TestTCC(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
 	TestTP(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
-	TestWorkFlow(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
+	TestWorkFlowMixed(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
+	TestWorkFlowSAGA(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
+	TestWorkFlowTCC(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
+	TestWorkFlowXA(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
 	TestXA(ctx context.Context, req *BuyRequest, opts ...http.CallOption) (rsp *BuyResponse, err error)
 }
 
@@ -197,11 +269,50 @@ func (c *ShopServiceHTTPClientImpl) TestTP(ctx context.Context, in *BuyRequest, 
 	return &out, nil
 }
 
-func (c *ShopServiceHTTPClientImpl) TestWorkFlow(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
+func (c *ShopServiceHTTPClientImpl) TestWorkFlowMixed(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/wf"
+	pattern := "/test/workflow/mixed"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlow))
+	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlowMixed))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopServiceHTTPClientImpl) TestWorkFlowSAGA(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
+	var out BuyResponse
+	pattern := "/test/workflow/saga"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlowSAGA))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopServiceHTTPClientImpl) TestWorkFlowTCC(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
+	var out BuyResponse
+	pattern := "/test/workflow/tcc"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlowTCC))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, nil
+}
+
+func (c *ShopServiceHTTPClientImpl) TestWorkFlowXA(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
+	var out BuyResponse
+	pattern := "/test/workflow/xa"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlowXA))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

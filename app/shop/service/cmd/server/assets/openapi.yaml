@@ -94,12 +94,99 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/BuyResponse'
-    /test/wf:
+    /test/workflow/mixed:
         get:
             tags:
                 - ShopService
-            description: 工作流事务(Workflow)
-            operationId: ShopService_TestWorkFlow
+            description: 工作流事务 - 混合
+            operationId: ShopService_TestWorkFlowMixed
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
+    /test/workflow/saga:
+        get:
+            tags:
+                - ShopService
+            description: 工作流事务 - SAGA
+            operationId: ShopService_TestWorkFlowSAGA
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
+    /test/workflow/tcc:
+        get:
+            tags:
+                - ShopService
+            description: 工作流事务 - TCC
+            operationId: ShopService_TestWorkFlowTCC
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: productId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: quantity
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/BuyResponse'
+    /test/workflow/xa:
+        get:
+            tags:
+                - ShopService
+            description: 工作流事务 - XA
+            operationId: ShopService_TestWorkFlowXA
             parameters:
                 - name: userId
                   in: query

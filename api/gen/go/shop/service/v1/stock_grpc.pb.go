@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	StockService_DeductStock_FullMethodName        = "/shop.service.v1.StockService/DeductStock"
+	StockService_DeductStockXA_FullMethodName      = "/shop.service.v1.StockService/DeductStockXA"
 	StockService_TryDeductStock_FullMethodName     = "/shop.service.v1.StockService/TryDeductStock"
 	StockService_ConfirmDeductStock_FullMethodName = "/shop.service.v1.StockService/ConfirmDeductStock"
 	StockService_CancelDeductStock_FullMethodName  = "/shop.service.v1.StockService/CancelDeductStock"
@@ -33,6 +34,7 @@ const (
 // 库存服务
 type StockServiceClient interface {
 	DeductStock(ctx context.Context, in *DeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
+	DeductStockXA(ctx context.Context, in *DeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
 	TryDeductStock(ctx context.Context, in *TryDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
 	ConfirmDeductStock(ctx context.Context, in *ConfirmDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
 	CancelDeductStock(ctx context.Context, in *CancelDeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error)
@@ -51,6 +53,16 @@ func (c *stockServiceClient) DeductStock(ctx context.Context, in *DeductStockReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(StockResponse)
 	err := c.cc.Invoke(ctx, StockService_DeductStock_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *stockServiceClient) DeductStockXA(ctx context.Context, in *DeductStockRequest, opts ...grpc.CallOption) (*StockResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(StockResponse)
+	err := c.cc.Invoke(ctx, StockService_DeductStockXA_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -104,6 +116,7 @@ func (c *stockServiceClient) RefundStock(ctx context.Context, in *RefundStockReq
 // 库存服务
 type StockServiceServer interface {
 	DeductStock(context.Context, *DeductStockRequest) (*StockResponse, error)
+	DeductStockXA(context.Context, *DeductStockRequest) (*StockResponse, error)
 	TryDeductStock(context.Context, *TryDeductStockRequest) (*StockResponse, error)
 	ConfirmDeductStock(context.Context, *ConfirmDeductStockRequest) (*StockResponse, error)
 	CancelDeductStock(context.Context, *CancelDeductStockRequest) (*StockResponse, error)
@@ -120,6 +133,9 @@ type UnimplementedStockServiceServer struct{}
 
 func (UnimplementedStockServiceServer) DeductStock(context.Context, *DeductStockRequest) (*StockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeductStock not implemented")
+}
+func (UnimplementedStockServiceServer) DeductStockXA(context.Context, *DeductStockRequest) (*StockResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeductStockXA not implemented")
 }
 func (UnimplementedStockServiceServer) TryDeductStock(context.Context, *TryDeductStockRequest) (*StockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TryDeductStock not implemented")
@@ -168,6 +184,24 @@ func _StockService_DeductStock_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(StockServiceServer).DeductStock(ctx, req.(*DeductStockRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StockService_DeductStockXA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeductStockRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StockServiceServer).DeductStockXA(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StockService_DeductStockXA_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StockServiceServer).DeductStockXA(ctx, req.(*DeductStockRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -254,6 +288,10 @@ var StockService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeductStock",
 			Handler:    _StockService_DeductStock_Handler,
+		},
+		{
+			MethodName: "DeductStockXA",
+			Handler:    _StockService_DeductStockXA_Handler,
 		},
 		{
 			MethodName: "TryDeductStock",

@@ -150,7 +150,7 @@ const file_shop_service_v1_shop_proto_rawDesc = "" +
 	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f购买数量R\bquantity\"u\n" +
 	"\vBuyResponse\x122\n" +
 	"\asuccess\x18\x01 \x01(\bB\x18\xbaG\x15\x92\x02\x12购买是否成功R\asuccess\x122\n" +
-	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12购买结果消息R\amessage2\xc6\x04\n" +
+	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12购买结果消息R\amessage2\x95\a\n" +
 	"\vShopService\x12x\n" +
 	"\x03Buy\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"6\xbaG3\x12\f购买商品\x1a#通过商品ID和数量购买商品\x12U\n" +
 	"\x06TestTP\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
@@ -159,9 +159,11 @@ const file_shop_service_v1_shop_proto_rawDesc = "" +
 	"\bTestSAGA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
 	"/test/saga\x12U\n" +
 	"\x06TestXA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
-	"\x12\b/test/xa\x12[\n" +
-	"\fTestWorkFlow\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
-	"\x12\b/test/wfB\xb8\x01\n" +
+	"\x12\b/test/xa\x12j\n" +
+	"\x10TestWorkFlowSAGA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/test/workflow/saga\x12h\n" +
+	"\x0fTestWorkFlowTCC\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/test/workflow/tcc\x12f\n" +
+	"\x0eTestWorkFlowXA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/test/workflow/xa\x12l\n" +
+	"\x11TestWorkFlowMixed\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/test/workflow/mixedB\xb8\x01\n" +
 	"\x13com.shop.service.v1B\tShopProtoP\x01Z8kratos-dtm-examples/api/gen/go/shop/service/v1;servicev1\xa2\x02\x03SSX\xaa\x02\x0fShop.Service.V1\xca\x02\x0fShop\\Service\\V1\xe2\x02\x1bShop\\Service\\V1\\GPBMetadata\xea\x02\x11Shop::Service::V1b\x06proto3"
 
 var (
@@ -187,15 +189,21 @@ var file_shop_service_v1_shop_proto_depIdxs = []int32{
 	0, // 2: shop.service.v1.ShopService.TestTCC:input_type -> shop.service.v1.BuyRequest
 	0, // 3: shop.service.v1.ShopService.TestSAGA:input_type -> shop.service.v1.BuyRequest
 	0, // 4: shop.service.v1.ShopService.TestXA:input_type -> shop.service.v1.BuyRequest
-	0, // 5: shop.service.v1.ShopService.TestWorkFlow:input_type -> shop.service.v1.BuyRequest
-	1, // 6: shop.service.v1.ShopService.Buy:output_type -> shop.service.v1.BuyResponse
-	1, // 7: shop.service.v1.ShopService.TestTP:output_type -> shop.service.v1.BuyResponse
-	1, // 8: shop.service.v1.ShopService.TestTCC:output_type -> shop.service.v1.BuyResponse
-	1, // 9: shop.service.v1.ShopService.TestSAGA:output_type -> shop.service.v1.BuyResponse
-	1, // 10: shop.service.v1.ShopService.TestXA:output_type -> shop.service.v1.BuyResponse
-	1, // 11: shop.service.v1.ShopService.TestWorkFlow:output_type -> shop.service.v1.BuyResponse
-	6, // [6:12] is the sub-list for method output_type
-	0, // [0:6] is the sub-list for method input_type
+	0, // 5: shop.service.v1.ShopService.TestWorkFlowSAGA:input_type -> shop.service.v1.BuyRequest
+	0, // 6: shop.service.v1.ShopService.TestWorkFlowTCC:input_type -> shop.service.v1.BuyRequest
+	0, // 7: shop.service.v1.ShopService.TestWorkFlowXA:input_type -> shop.service.v1.BuyRequest
+	0, // 8: shop.service.v1.ShopService.TestWorkFlowMixed:input_type -> shop.service.v1.BuyRequest
+	1, // 9: shop.service.v1.ShopService.Buy:output_type -> shop.service.v1.BuyResponse
+	1, // 10: shop.service.v1.ShopService.TestTP:output_type -> shop.service.v1.BuyResponse
+	1, // 11: shop.service.v1.ShopService.TestTCC:output_type -> shop.service.v1.BuyResponse
+	1, // 12: shop.service.v1.ShopService.TestSAGA:output_type -> shop.service.v1.BuyResponse
+	1, // 13: shop.service.v1.ShopService.TestXA:output_type -> shop.service.v1.BuyResponse
+	1, // 14: shop.service.v1.ShopService.TestWorkFlowSAGA:output_type -> shop.service.v1.BuyResponse
+	1, // 15: shop.service.v1.ShopService.TestWorkFlowTCC:output_type -> shop.service.v1.BuyResponse
+	1, // 16: shop.service.v1.ShopService.TestWorkFlowXA:output_type -> shop.service.v1.BuyResponse
+	1, // 17: shop.service.v1.ShopService.TestWorkFlowMixed:output_type -> shop.service.v1.BuyResponse
+	9, // [9:18] is the sub-list for method output_type
+	0, // [0:9] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name

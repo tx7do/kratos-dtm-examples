@@ -25,13 +25,12 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Product struct {
+type Stock struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                          // 商品ID
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                       // 商品名称
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`                         // 商品描述
-	Stock         int32                  `protobuf:"varint,4,opt,name=stock,proto3" json:"stock,omitempty"`                                    // 商品库存
-	Price         float64                `protobuf:"fixed64,5,opt,name=price,proto3" json:"price,omitempty"`                                   // 商品价格
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                          // 库存ID
+	ProductId     uint32                 `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"`           // 商品ID
+	Quantity      int32                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`                              // 当前库存数量
+	Locked        int32                  `protobuf:"varint,4,opt,name=locked,proto3" json:"locked,omitempty"`                                  // 锁定库存数量
 	CreateTime    *timestamppb.Timestamp `protobuf:"bytes,200,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"` // 创建时间
 	UpdateTime    *timestamppb.Timestamp `protobuf:"bytes,201,opt,name=update_time,json=updateTime,proto3,oneof" json:"update_time,omitempty"` // 更新时间
 	DeleteTime    *timestamppb.Timestamp `protobuf:"bytes,202,opt,name=delete_time,json=deleteTime,proto3,oneof" json:"delete_time,omitempty"` // 删除时间
@@ -39,20 +38,20 @@ type Product struct {
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *Product) Reset() {
-	*x = Product{}
+func (x *Stock) Reset() {
+	*x = Stock{}
 	mi := &file_shop_service_v1_stock_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *Product) String() string {
+func (x *Stock) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*Product) ProtoMessage() {}
+func (*Stock) ProtoMessage() {}
 
-func (x *Product) ProtoReflect() protoreflect.Message {
+func (x *Stock) ProtoReflect() protoreflect.Message {
 	mi := &file_shop_service_v1_stock_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -64,61 +63,54 @@ func (x *Product) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use Product.ProtoReflect.Descriptor instead.
-func (*Product) Descriptor() ([]byte, []int) {
+// Deprecated: Use Stock.ProtoReflect.Descriptor instead.
+func (*Stock) Descriptor() ([]byte, []int) {
 	return file_shop_service_v1_stock_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *Product) GetId() uint32 {
+func (x *Stock) GetId() uint32 {
 	if x != nil {
 		return x.Id
 	}
 	return 0
 }
 
-func (x *Product) GetName() string {
+func (x *Stock) GetProductId() uint32 {
 	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Product) GetDescription() string {
-	if x != nil {
-		return x.Description
-	}
-	return ""
-}
-
-func (x *Product) GetStock() int32 {
-	if x != nil {
-		return x.Stock
+		return x.ProductId
 	}
 	return 0
 }
 
-func (x *Product) GetPrice() float64 {
+func (x *Stock) GetQuantity() int32 {
 	if x != nil {
-		return x.Price
+		return x.Quantity
 	}
 	return 0
 }
 
-func (x *Product) GetCreateTime() *timestamppb.Timestamp {
+func (x *Stock) GetLocked() int32 {
+	if x != nil {
+		return x.Locked
+	}
+	return 0
+}
+
+func (x *Stock) GetCreateTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.CreateTime
 	}
 	return nil
 }
 
-func (x *Product) GetUpdateTime() *timestamppb.Timestamp {
+func (x *Stock) GetUpdateTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.UpdateTime
 	}
 	return nil
 }
 
-func (x *Product) GetDeleteTime() *timestamppb.Timestamp {
+func (x *Stock) GetDeleteTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.DeleteTime
 	}
@@ -481,13 +473,13 @@ var File_shop_service_v1_stock_proto protoreflect.FileDescriptor
 
 const file_shop_service_v1_stock_proto_rawDesc = "" +
 	"\n" +
-	"\x1bshop/service/v1/stock.proto\x12\x0fshop.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epagination/v1/pagination.proto\"\x90\x04\n" +
-	"\aProduct\x12\x1e\n" +
-	"\x02id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\x02id\x12&\n" +
-	"\x04name\x18\x02 \x01(\tB\x12\xbaG\x0f\x92\x02\f商品名称R\x04name\x124\n" +
-	"\vdescription\x18\x03 \x01(\tB\x12\xbaG\x0f\x92\x02\f商品描述R\vdescription\x12(\n" +
-	"\x05stock\x18\x04 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品库存R\x05stock\x12(\n" +
-	"\x05price\x18\x05 \x01(\x01B\x12\xbaG\x0f\x92\x02\f商品价格R\x05price\x12U\n" +
+	"\x1bshop/service/v1/stock.proto\x12\x0fshop.service.v1\x1a$gnostic/openapi/v3/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1epagination/v1/pagination.proto\"\xf3\x03\n" +
+	"\x05Stock\x12\x1e\n" +
+	"\x02id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b库存IDR\x02id\x12-\n" +
+	"\n" +
+	"product_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x124\n" +
+	"\bquantity\x18\x03 \x01(\x05B\x18\xbaG\x15\x92\x02\x12当前库存数量R\bquantity\x120\n" +
+	"\x06locked\x18\x04 \x01(\x05B\x18\xbaG\x15\x92\x02\x12锁定库存数量R\x06locked\x12U\n" +
 	"\vcreate_time\x18\xc8\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f创建时间H\x00R\n" +
 	"createTime\x88\x01\x01\x12U\n" +
 	"\vupdate_time\x18\xc9\x01 \x01(\v2\x1a.google.protobuf.TimestampB\x12\xbaG\x0f\x92\x02\f更新时间H\x01R\n" +
@@ -528,13 +520,14 @@ const file_shop_service_v1_stock_proto_rawDesc = "" +
 	"\bquantity\x18\x03 \x01(\x05B\x15\xbaG\x12\x92\x02\x0f恢复的数量R\bquantity\"\x86\x01\n" +
 	"\rStockResponse\x12A\n" +
 	"\asuccess\x18\x01 \x01(\bB'\xbaG$\x92\x02!退款并恢复库存是否成功R\asuccess\x122\n" +
-	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage2\xc6\x06\n" +
+	"\amessage\x18\x02 \x01(\tB\x18\xbaG\x15\x92\x02\x12操作结果消息R\amessage2\x8d\b\n" +
 	"\fStockService\x12\x96\x01\n" +
-	"\vDeductStock\x12#.shop.service.v1.DeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"B\xbaG?\x12\x12减少商品库存\x1a)通过商品ID和数量减少商品库存\x12\x9f\x01\n" +
-	"\x0eTryDeductStock\x12&.shop.service.v1.TryDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"E\xbaGB\x12\x18尝试减少商品库存\x1a&预留商品库存，进入 Try 阶段\x12\xab\x01\n" +
-	"\x12ConfirmDeductStock\x12*.shop.service.v1.ConfirmDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"I\xbaGF\x12\x18确认减少商品库存\x1a*确认减少库存，进入 Confirm 阶段\x12\xa8\x01\n" +
-	"\x11CancelDeductStock\x12).shop.service.v1.CancelDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"H\xbaGE\x12\x18取消减少商品库存\x1a)释放预留库存，进入 Cancel 阶段\x12\xa1\x01\n" +
-	"\vRefundStock\x12#.shop.service.v1.RefundStockRequest\x1a\x1e.shop.service.v1.StockResponse\"M\xbaGJ\x12\x1b退款并恢复商品库存\x1a+通过订单ID和商品ID恢复商品库存B\xb9\x01\n" +
+	"\vDeductStock\x12#.shop.service.v1.DeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"B\xbaG?\x12\x12减少商品库存\x1a)通过商品ID和数量减少商品库存\x12\xab\x01\n" +
+	"\rDeductStockXA\x12#.shop.service.v1.DeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"U\xbaGR\x12\x12减少商品库存\x1a<通过商品ID和数量减少商品库存，使用 XA 事务\x12\xa9\x01\n" +
+	"\x0eTryDeductStock\x12&.shop.service.v1.TryDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"O\xbaGL\x12\x18尝试减少商品库存\x1a0预留商品库存，TCC事务 进入 Try 阶段\x12\xb5\x01\n" +
+	"\x12ConfirmDeductStock\x12*.shop.service.v1.ConfirmDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"S\xbaGP\x12\x18确认减少商品库存\x1a4确认减少库存，TCC事务 进入 Confirm 阶段\x12\xb2\x01\n" +
+	"\x11CancelDeductStock\x12).shop.service.v1.CancelDeductStockRequest\x1a\x1e.shop.service.v1.StockResponse\"R\xbaGO\x12\x18取消减少商品库存\x1a3释放预留库存，TCC事务 进入 Cancel 阶段\x12\x9c\x01\n" +
+	"\vRefundStock\x12#.shop.service.v1.RefundStockRequest\x1a\x1e.shop.service.v1.StockResponse\"H\xbaGE\x12\x1b退款并恢复商品库存\x1a&SAGA事务 退款并恢复商品库存B\xb9\x01\n" +
 	"\x13com.shop.service.v1B\n" +
 	"StockProtoP\x01Z8kratos-dtm-examples/api/gen/go/shop/service/v1;servicev1\xa2\x02\x03SSX\xaa\x02\x0fShop.Service.V1\xca\x02\x0fShop\\Service\\V1\xe2\x02\x1bShop\\Service\\V1\\GPBMetadata\xea\x02\x11Shop::Service::V1b\x06proto3"
 
@@ -552,7 +545,7 @@ func file_shop_service_v1_stock_proto_rawDescGZIP() []byte {
 
 var file_shop_service_v1_stock_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_shop_service_v1_stock_proto_goTypes = []any{
-	(*Product)(nil),                   // 0: shop.service.v1.Product
+	(*Stock)(nil),                     // 0: shop.service.v1.Stock
 	(*DeductStockRequest)(nil),        // 1: shop.service.v1.DeductStockRequest
 	(*TryDeductStockRequest)(nil),     // 2: shop.service.v1.TryDeductStockRequest
 	(*ConfirmDeductStockRequest)(nil), // 3: shop.service.v1.ConfirmDeductStockRequest
@@ -562,21 +555,23 @@ var file_shop_service_v1_stock_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil),     // 7: google.protobuf.Timestamp
 }
 var file_shop_service_v1_stock_proto_depIdxs = []int32{
-	7, // 0: shop.service.v1.Product.create_time:type_name -> google.protobuf.Timestamp
-	7, // 1: shop.service.v1.Product.update_time:type_name -> google.protobuf.Timestamp
-	7, // 2: shop.service.v1.Product.delete_time:type_name -> google.protobuf.Timestamp
+	7, // 0: shop.service.v1.Stock.create_time:type_name -> google.protobuf.Timestamp
+	7, // 1: shop.service.v1.Stock.update_time:type_name -> google.protobuf.Timestamp
+	7, // 2: shop.service.v1.Stock.delete_time:type_name -> google.protobuf.Timestamp
 	1, // 3: shop.service.v1.StockService.DeductStock:input_type -> shop.service.v1.DeductStockRequest
-	2, // 4: shop.service.v1.StockService.TryDeductStock:input_type -> shop.service.v1.TryDeductStockRequest
-	3, // 5: shop.service.v1.StockService.ConfirmDeductStock:input_type -> shop.service.v1.ConfirmDeductStockRequest
-	4, // 6: shop.service.v1.StockService.CancelDeductStock:input_type -> shop.service.v1.CancelDeductStockRequest
-	5, // 7: shop.service.v1.StockService.RefundStock:input_type -> shop.service.v1.RefundStockRequest
-	6, // 8: shop.service.v1.StockService.DeductStock:output_type -> shop.service.v1.StockResponse
-	6, // 9: shop.service.v1.StockService.TryDeductStock:output_type -> shop.service.v1.StockResponse
-	6, // 10: shop.service.v1.StockService.ConfirmDeductStock:output_type -> shop.service.v1.StockResponse
-	6, // 11: shop.service.v1.StockService.CancelDeductStock:output_type -> shop.service.v1.StockResponse
-	6, // 12: shop.service.v1.StockService.RefundStock:output_type -> shop.service.v1.StockResponse
-	8, // [8:13] is the sub-list for method output_type
-	3, // [3:8] is the sub-list for method input_type
+	1, // 4: shop.service.v1.StockService.DeductStockXA:input_type -> shop.service.v1.DeductStockRequest
+	2, // 5: shop.service.v1.StockService.TryDeductStock:input_type -> shop.service.v1.TryDeductStockRequest
+	3, // 6: shop.service.v1.StockService.ConfirmDeductStock:input_type -> shop.service.v1.ConfirmDeductStockRequest
+	4, // 7: shop.service.v1.StockService.CancelDeductStock:input_type -> shop.service.v1.CancelDeductStockRequest
+	5, // 8: shop.service.v1.StockService.RefundStock:input_type -> shop.service.v1.RefundStockRequest
+	6, // 9: shop.service.v1.StockService.DeductStock:output_type -> shop.service.v1.StockResponse
+	6, // 10: shop.service.v1.StockService.DeductStockXA:output_type -> shop.service.v1.StockResponse
+	6, // 11: shop.service.v1.StockService.TryDeductStock:output_type -> shop.service.v1.StockResponse
+	6, // 12: shop.service.v1.StockService.ConfirmDeductStock:output_type -> shop.service.v1.StockResponse
+	6, // 13: shop.service.v1.StockService.CancelDeductStock:output_type -> shop.service.v1.StockResponse
+	6, // 14: shop.service.v1.StockService.RefundStock:output_type -> shop.service.v1.StockResponse
+	9, // [9:15] is the sub-list for method output_type
+	3, // [3:9] is the sub-list for method input_type
 	3, // [3:3] is the sub-list for extension type_name
 	3, // [3:3] is the sub-list for extension extendee
 	0, // [0:3] is the sub-list for field type_name

@@ -45,10 +45,31 @@ service ShopService {
     };
   }
 
-  // 工作流事务(Workflow)
-  rpc TestWorkFlow(BuyRequest) returns (BuyResponse) {
+  // 工作流事务 - SAGA
+  rpc TestWorkFlowSAGA(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/wf"
+      get: "/test/workflow/saga"
+    };
+  }
+
+  // 工作流事务 - TCC
+  rpc TestWorkFlowTCC(BuyRequest) returns (BuyResponse) {
+    option (google.api.http) = {
+      get: "/test/workflow/tcc"
+    };
+  }
+
+  // 工作流事务 - XA
+  rpc TestWorkFlowXA(BuyRequest) returns (BuyResponse) {
+    option (google.api.http) = {
+      get: "/test/workflow/xa"
+    };
+  }
+
+  // 工作流事务 - 混合
+  rpc TestWorkFlowMixed(BuyRequest) returns (BuyResponse) {
+    option (google.api.http) = {
+      get: "/test/workflow/mixed"
     };
   }
 }

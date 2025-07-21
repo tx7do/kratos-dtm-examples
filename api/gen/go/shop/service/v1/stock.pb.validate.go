@@ -35,21 +35,21 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on Product with the rules defined in the
+// Validate checks the field values on Stock with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *Product) Validate() error {
+func (m *Stock) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on Product with the rules defined in the
+// ValidateAll checks the field values on Stock with the rules defined in the
 // proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in ProductMultiError, or nil if none found.
-func (m *Product) ValidateAll() error {
+// a list of violation errors wrapped in StockMultiError, or nil if none found.
+func (m *Stock) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *Product) validate(all bool) error {
+func (m *Stock) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -58,13 +58,11 @@ func (m *Product) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for Name
+	// no validation rules for ProductId
 
-	// no validation rules for Description
+	// no validation rules for Quantity
 
-	// no validation rules for Stock
-
-	// no validation rules for Price
+	// no validation rules for Locked
 
 	if m.CreateTime != nil {
 
@@ -72,7 +70,7 @@ func (m *Product) validate(all bool) error {
 			switch v := interface{}(m.GetCreateTime()).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ProductValidationError{
+					errors = append(errors, StockValidationError{
 						field:  "CreateTime",
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -80,7 +78,7 @@ func (m *Product) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ProductValidationError{
+					errors = append(errors, StockValidationError{
 						field:  "CreateTime",
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -89,7 +87,7 @@ func (m *Product) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(m.GetCreateTime()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ProductValidationError{
+				return StockValidationError{
 					field:  "CreateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -105,7 +103,7 @@ func (m *Product) validate(all bool) error {
 			switch v := interface{}(m.GetUpdateTime()).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ProductValidationError{
+					errors = append(errors, StockValidationError{
 						field:  "UpdateTime",
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -113,7 +111,7 @@ func (m *Product) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ProductValidationError{
+					errors = append(errors, StockValidationError{
 						field:  "UpdateTime",
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -122,7 +120,7 @@ func (m *Product) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(m.GetUpdateTime()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ProductValidationError{
+				return StockValidationError{
 					field:  "UpdateTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -138,7 +136,7 @@ func (m *Product) validate(all bool) error {
 			switch v := interface{}(m.GetDeleteTime()).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ProductValidationError{
+					errors = append(errors, StockValidationError{
 						field:  "DeleteTime",
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -146,7 +144,7 @@ func (m *Product) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ProductValidationError{
+					errors = append(errors, StockValidationError{
 						field:  "DeleteTime",
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -155,7 +153,7 @@ func (m *Product) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(m.GetDeleteTime()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ProductValidationError{
+				return StockValidationError{
 					field:  "DeleteTime",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -166,18 +164,18 @@ func (m *Product) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ProductMultiError(errors)
+		return StockMultiError(errors)
 	}
 
 	return nil
 }
 
-// ProductMultiError is an error wrapping multiple validation errors returned
-// by Product.ValidateAll() if the designated constraints aren't met.
-type ProductMultiError []error
+// StockMultiError is an error wrapping multiple validation errors returned by
+// Stock.ValidateAll() if the designated constraints aren't met.
+type StockMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ProductMultiError) Error() string {
+func (m StockMultiError) Error() string {
 	msgs := make([]string, 0, len(m))
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -186,11 +184,11 @@ func (m ProductMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ProductMultiError) AllErrors() []error { return m }
+func (m StockMultiError) AllErrors() []error { return m }
 
-// ProductValidationError is the validation error returned by Product.Validate
-// if the designated constraints aren't met.
-type ProductValidationError struct {
+// StockValidationError is the validation error returned by Stock.Validate if
+// the designated constraints aren't met.
+type StockValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -198,22 +196,22 @@ type ProductValidationError struct {
 }
 
 // Field function returns field value.
-func (e ProductValidationError) Field() string { return e.field }
+func (e StockValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ProductValidationError) Reason() string { return e.reason }
+func (e StockValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ProductValidationError) Cause() error { return e.cause }
+func (e StockValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ProductValidationError) Key() bool { return e.key }
+func (e StockValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ProductValidationError) ErrorName() string { return "ProductValidationError" }
+func (e StockValidationError) ErrorName() string { return "StockValidationError" }
 
 // Error satisfies the builtin error interface
-func (e ProductValidationError) Error() string {
+func (e StockValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -225,14 +223,14 @@ func (e ProductValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sProduct.%s: %s%s",
+		"invalid %sStock.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ProductValidationError{}
+var _ error = StockValidationError{}
 
 var _ interface {
 	Field() string
@@ -240,7 +238,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ProductValidationError{}
+} = StockValidationError{}
 
 // Validate checks the field values on DeductStockRequest with the rules
 // defined in the proto definition for this message. If any rules are

@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	OrderService_CreateOrder_FullMethodName        = "/shop.service.v1.OrderService/CreateOrder"
+	OrderService_CreateOrderXA_FullMethodName      = "/shop.service.v1.OrderService/CreateOrderXA"
 	OrderService_TryCreateOrder_FullMethodName     = "/shop.service.v1.OrderService/TryCreateOrder"
 	OrderService_ConfirmCreateOrder_FullMethodName = "/shop.service.v1.OrderService/ConfirmCreateOrder"
 	OrderService_CancelCreateOrder_FullMethodName  = "/shop.service.v1.OrderService/CancelCreateOrder"
@@ -33,6 +34,7 @@ const (
 // 订单服务
 type OrderServiceClient interface {
 	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
+	CreateOrderXA(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	TryCreateOrder(ctx context.Context, in *TryCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	ConfirmCreateOrder(ctx context.Context, in *ConfirmCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
 	CancelCreateOrder(ctx context.Context, in *CancelCreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error)
@@ -51,6 +53,16 @@ func (c *orderServiceClient) CreateOrder(ctx context.Context, in *CreateOrderReq
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(OrderResponse)
 	err := c.cc.Invoke(ctx, OrderService_CreateOrder_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) CreateOrderXA(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*OrderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(OrderResponse)
+	err := c.cc.Invoke(ctx, OrderService_CreateOrderXA_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -104,6 +116,7 @@ func (c *orderServiceClient) RefundOrder(ctx context.Context, in *RefundOrderReq
 // 订单服务
 type OrderServiceServer interface {
 	CreateOrder(context.Context, *CreateOrderRequest) (*OrderResponse, error)
+	CreateOrderXA(context.Context, *CreateOrderRequest) (*OrderResponse, error)
 	TryCreateOrder(context.Context, *TryCreateOrderRequest) (*OrderResponse, error)
 	ConfirmCreateOrder(context.Context, *ConfirmCreateOrderRequest) (*OrderResponse, error)
 	CancelCreateOrder(context.Context, *CancelCreateOrderRequest) (*OrderResponse, error)
@@ -120,6 +133,9 @@ type UnimplementedOrderServiceServer struct{}
 
 func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) CreateOrderXA(context.Context, *CreateOrderRequest) (*OrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOrderXA not implemented")
 }
 func (UnimplementedOrderServiceServer) TryCreateOrder(context.Context, *TryCreateOrderRequest) (*OrderResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TryCreateOrder not implemented")
@@ -168,6 +184,24 @@ func _OrderService_CreateOrder_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(OrderServiceServer).CreateOrder(ctx, req.(*CreateOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_CreateOrderXA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).CreateOrderXA(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: OrderService_CreateOrderXA_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).CreateOrderXA(ctx, req.(*CreateOrderRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -254,6 +288,10 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateOrder",
 			Handler:    _OrderService_CreateOrder_Handler,
+		},
+		{
+			MethodName: "CreateOrderXA",
+			Handler:    _OrderService_CreateOrderXA_Handler,
 		},
 		{
 			MethodName: "TryCreateOrder",

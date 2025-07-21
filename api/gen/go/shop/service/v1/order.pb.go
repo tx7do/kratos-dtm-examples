@@ -675,13 +675,14 @@ const file_shop_service_v1_order_proto_rawDesc = "" +
 	"\aPENDING\x10\x01\x12\r\n" +
 	"\tCONFIRMED\x10\x02\x12\r\n" +
 	"\tCANCELLED\x10\x03\x12\f\n" +
-	"\bREFUNDED\x10\x042\xfa\x05\n" +
+	"\bREFUNDED\x10\x042\xc1\a\n" +
 	"\fOrderService\x12\x85\x01\n" +
-	"\vCreateOrder\x12#.shop.service.v1.CreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"1\xbaG.\x12\f创建订单\x1a\x1e通过订单信息创建订单\x12\x99\x01\n" +
-	"\x0eTryCreateOrder\x12&.shop.service.v1.TryCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"?\xbaG<\x12\x12尝试创建订单\x1a&预留订单资源，进入 Try 阶段\x12\x9f\x01\n" +
-	"\x12ConfirmCreateOrder\x12*.shop.service.v1.ConfirmCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"=\xbaG:\x12\x12确认创建订单\x1a$确认订单，进入 Confirm 阶段\x12\xa2\x01\n" +
-	"\x11CancelCreateOrder\x12).shop.service.v1.CancelCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"B\xbaG?\x12\x12取消创建订单\x1a)释放订单资源，进入 Cancel 阶段\x12\x7f\n" +
-	"\vRefundOrder\x12#.shop.service.v1.RefundOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"+\xbaG(\x12\f取消订单\x1a\x18取消已创建的订单B\xb9\x01\n" +
+	"\vCreateOrder\x12#.shop.service.v1.CreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"1\xbaG.\x12\f创建订单\x1a\x1e通过订单信息创建订单\x12\x9a\x01\n" +
+	"\rCreateOrderXA\x12#.shop.service.v1.CreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"D\xbaGA\x12\f创建订单\x1a1通过订单信息创建订单，使用 XA 事务\x12\xa3\x01\n" +
+	"\x0eTryCreateOrder\x12&.shop.service.v1.TryCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"I\xbaGF\x12\x12尝试创建订单\x1a0预留订单资源，TCC事务 进入 Try 阶段\x12\xa9\x01\n" +
+	"\x12ConfirmCreateOrder\x12*.shop.service.v1.ConfirmCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"G\xbaGD\x12\x12确认创建订单\x1a.确认订单，TCC事务 进入 Confirm 阶段\x12\xac\x01\n" +
+	"\x11CancelCreateOrder\x12).shop.service.v1.CancelCreateOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"L\xbaGI\x12\x12取消创建订单\x1a3释放订单资源，TCC事务 进入 Cancel 阶段\x12\x8a\x01\n" +
+	"\vRefundOrder\x12#.shop.service.v1.RefundOrderRequest\x1a\x1e.shop.service.v1.OrderResponse\"6\xbaG3\x12\f取消订单\x1a#SAGA事务 取消已创建的订单B\xb9\x01\n" +
 	"\x13com.shop.service.v1B\n" +
 	"OrderProtoP\x01Z8kratos-dtm-examples/api/gen/go/shop/service/v1;servicev1\xa2\x02\x03SSX\xaa\x02\x0fShop.Service.V1\xca\x02\x0fShop\\Service\\V1\xe2\x02\x1bShop\\Service\\V1\\GPBMetadata\xea\x02\x11Shop::Service::V1b\x06proto3"
 
@@ -711,25 +712,27 @@ var file_shop_service_v1_order_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil),     // 8: google.protobuf.Timestamp
 }
 var file_shop_service_v1_order_proto_depIdxs = []int32{
-	0, // 0: shop.service.v1.Order.status:type_name -> shop.service.v1.OrderStatus
-	8, // 1: shop.service.v1.Order.create_time:type_name -> google.protobuf.Timestamp
-	8, // 2: shop.service.v1.Order.update_time:type_name -> google.protobuf.Timestamp
-	8, // 3: shop.service.v1.Order.delete_time:type_name -> google.protobuf.Timestamp
-	2, // 4: shop.service.v1.OrderService.CreateOrder:input_type -> shop.service.v1.CreateOrderRequest
-	3, // 5: shop.service.v1.OrderService.TryCreateOrder:input_type -> shop.service.v1.TryCreateOrderRequest
-	4, // 6: shop.service.v1.OrderService.ConfirmCreateOrder:input_type -> shop.service.v1.ConfirmCreateOrderRequest
-	5, // 7: shop.service.v1.OrderService.CancelCreateOrder:input_type -> shop.service.v1.CancelCreateOrderRequest
-	6, // 8: shop.service.v1.OrderService.RefundOrder:input_type -> shop.service.v1.RefundOrderRequest
-	7, // 9: shop.service.v1.OrderService.CreateOrder:output_type -> shop.service.v1.OrderResponse
-	7, // 10: shop.service.v1.OrderService.TryCreateOrder:output_type -> shop.service.v1.OrderResponse
-	7, // 11: shop.service.v1.OrderService.ConfirmCreateOrder:output_type -> shop.service.v1.OrderResponse
-	7, // 12: shop.service.v1.OrderService.CancelCreateOrder:output_type -> shop.service.v1.OrderResponse
-	7, // 13: shop.service.v1.OrderService.RefundOrder:output_type -> shop.service.v1.OrderResponse
-	9, // [9:14] is the sub-list for method output_type
-	4, // [4:9] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	0,  // 0: shop.service.v1.Order.status:type_name -> shop.service.v1.OrderStatus
+	8,  // 1: shop.service.v1.Order.create_time:type_name -> google.protobuf.Timestamp
+	8,  // 2: shop.service.v1.Order.update_time:type_name -> google.protobuf.Timestamp
+	8,  // 3: shop.service.v1.Order.delete_time:type_name -> google.protobuf.Timestamp
+	2,  // 4: shop.service.v1.OrderService.CreateOrder:input_type -> shop.service.v1.CreateOrderRequest
+	2,  // 5: shop.service.v1.OrderService.CreateOrderXA:input_type -> shop.service.v1.CreateOrderRequest
+	3,  // 6: shop.service.v1.OrderService.TryCreateOrder:input_type -> shop.service.v1.TryCreateOrderRequest
+	4,  // 7: shop.service.v1.OrderService.ConfirmCreateOrder:input_type -> shop.service.v1.ConfirmCreateOrderRequest
+	5,  // 8: shop.service.v1.OrderService.CancelCreateOrder:input_type -> shop.service.v1.CancelCreateOrderRequest
+	6,  // 9: shop.service.v1.OrderService.RefundOrder:input_type -> shop.service.v1.RefundOrderRequest
+	7,  // 10: shop.service.v1.OrderService.CreateOrder:output_type -> shop.service.v1.OrderResponse
+	7,  // 11: shop.service.v1.OrderService.CreateOrderXA:output_type -> shop.service.v1.OrderResponse
+	7,  // 12: shop.service.v1.OrderService.TryCreateOrder:output_type -> shop.service.v1.OrderResponse
+	7,  // 13: shop.service.v1.OrderService.ConfirmCreateOrder:output_type -> shop.service.v1.OrderResponse
+	7,  // 14: shop.service.v1.OrderService.CancelCreateOrder:output_type -> shop.service.v1.OrderResponse
+	7,  // 15: shop.service.v1.OrderService.RefundOrder:output_type -> shop.service.v1.OrderResponse
+	10, // [10:16] is the sub-list for method output_type
+	4,  // [4:10] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_shop_service_v1_order_proto_init() }

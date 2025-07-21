@@ -17,31 +17,38 @@ service OrderService {
     };
   }
 
+  rpc CreateOrderXA(CreateOrderRequest) returns (OrderResponse) {
+    option (gnostic.openapi.v3.operation) = {
+      summary: "创建订单",
+      description: "通过订单信息创建订单，使用 XA 事务"
+    };
+  }
+
   rpc TryCreateOrder(TryCreateOrderRequest) returns (OrderResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "尝试创建订单",
-      description: "预留订单资源，进入 Try 阶段"
+      description: "预留订单资源，TCC事务 进入 Try 阶段"
     };
   }
 
   rpc ConfirmCreateOrder(ConfirmCreateOrderRequest) returns (OrderResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "确认创建订单",
-      description: "确认订单，进入 Confirm 阶段"
+      description: "确认订单，TCC事务 进入 Confirm 阶段"
     };
   }
 
   rpc CancelCreateOrder(CancelCreateOrderRequest) returns (OrderResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "取消创建订单",
-      description: "释放订单资源，进入 Cancel 阶段"
+      description: "释放订单资源，TCC事务 进入 Cancel 阶段"
     };
   }
 
   rpc RefundOrder(RefundOrderRequest) returns (OrderResponse) {
     option (gnostic.openapi.v3.operation) = {
       summary: "取消订单",
-      description: "取消已创建的订单"
+      description: "SAGA事务 取消已创建的订单"
     };
   }
 }

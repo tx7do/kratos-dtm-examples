@@ -6,7 +6,7 @@ networks:
 
 services:
   postgres:
-    image: docker.io/citusdata/citus:latest
+    image: citusdata/citus:latest
     restart: always
     ports:
       - "5432:5432"
@@ -20,8 +20,27 @@ services:
       options:
         max-size: '500m'
 
+  redis:
+    image: bitnami/redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - app-tier
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - REDIS_PASSWORD=*Abcd123456
+      - REDIS_AOF_ENABLED=no
+      - REDIS_IO_THREADS_DO_READS=yes
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL,CONFIG
+    volumes:
+      - /root/app/redis/data:/bitnami/redis/data
+    logging:
+      options:
+        max-size: '500m'
+
   jaeger:
-    image: docker.io/jaegertracing/all-in-one:latest
+    image: jaegertracing/all-in-one:latest
     restart: always
     ports:
       - "6831:6831/udp"
@@ -44,6 +63,9 @@ services:
   etcd:
     image: "bitnami/etcd:latest"
     container_name: etcd
+    restart: always
+    networks:
+      - app-tier
     ports:
       - "4001:4001"
       - "2380:2380"
@@ -58,23 +80,28 @@ services:
       - ETCD_INITIAL_CLUSTER=etcd0=http://127.0.0.1:2380
       - ETCD_INITIAL_CLUSTER_STATE=new
       - ALLOW_NONE_AUTHENTICATION=yes
-    restart: always
+    logging:
+      options:
+        max-size: '500m'
 
   dtm:
-    image: "yedf/dtm"
+    image: "yedf/dtm:latest"
+    restart: always
     container_name: dtm
     networks:
-      - default
+      - app-tier
     environment:
-#      STORE_DRIVER: redis
-#      STORE_HOST: 127.0.0.1
-#      STORE_USER:
-#      STORE_PASSWORD:
-#      STORE_PORT: 6379
+      STORE_DRIVER: "redis"
+      STORE_HOST: "127.0.0.1"
+      STORE_USER:
+      STORE_PASSWORD: "*Abcd123456"
+      STORE_PORT: 6379
       MICRO_SERVICE_DRIVER: "dtm-driver-kratos"
-      MICRO_SERVICE_TARGET: "etcd://127.0.0.1:2379/dtmservice"
+      MICRO_SERVICE_TARGET: "etcd://127.0.0.1:2379/dtm-service"
       MICRO_SERVICE_END_POINT: "grpc://127.0.0.1:36790"
     ports:
       - '36789:36789'
       - '36790:36790'
-    restart: always
+    logging:
+      options:
+        max-size: '500m'

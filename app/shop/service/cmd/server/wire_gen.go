@@ -34,7 +34,7 @@ func initApp(logger log.Logger, registrar registry.Registrar, bootstrap *v1.Boot
 	orderService := service.NewOrderService(logger, orderRepo)
 	paymentService := service.NewPaymentService(logger)
 	grpcServer := server.NewGRPCServer(bootstrap, logger, stockService, orderService, paymentService)
-	shopService := service.NewShopService(logger)
+	shopService := service.NewShopService(logger, stockService, orderService, paymentService)
 	httpServer := server.NewRestServer(bootstrap, shopService)
 	app := newApp(logger, registrar, grpcServer, httpServer)
 	return app, func() {

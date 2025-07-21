@@ -19,12 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ShopService_Buy_FullMethodName          = "/shop.service.v1.ShopService/Buy"
-	ShopService_TestTP_FullMethodName       = "/shop.service.v1.ShopService/TestTP"
-	ShopService_TestTCC_FullMethodName      = "/shop.service.v1.ShopService/TestTCC"
-	ShopService_TestSAGA_FullMethodName     = "/shop.service.v1.ShopService/TestSAGA"
-	ShopService_TestXA_FullMethodName       = "/shop.service.v1.ShopService/TestXA"
-	ShopService_TestWorkFlow_FullMethodName = "/shop.service.v1.ShopService/TestWorkFlow"
+	ShopService_Buy_FullMethodName               = "/shop.service.v1.ShopService/Buy"
+	ShopService_TestTP_FullMethodName            = "/shop.service.v1.ShopService/TestTP"
+	ShopService_TestTCC_FullMethodName           = "/shop.service.v1.ShopService/TestTCC"
+	ShopService_TestSAGA_FullMethodName          = "/shop.service.v1.ShopService/TestSAGA"
+	ShopService_TestXA_FullMethodName            = "/shop.service.v1.ShopService/TestXA"
+	ShopService_TestWorkFlowSAGA_FullMethodName  = "/shop.service.v1.ShopService/TestWorkFlowSAGA"
+	ShopService_TestWorkFlowTCC_FullMethodName   = "/shop.service.v1.ShopService/TestWorkFlowTCC"
+	ShopService_TestWorkFlowXA_FullMethodName    = "/shop.service.v1.ShopService/TestWorkFlowXA"
+	ShopService_TestWorkFlowMixed_FullMethodName = "/shop.service.v1.ShopService/TestWorkFlowMixed"
 )
 
 // ShopServiceClient is the client API for ShopService service.
@@ -42,8 +45,14 @@ type ShopServiceClient interface {
 	TestSAGA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 	// XA
 	TestXA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
-	// 工作流事务(Workflow)
-	TestWorkFlow(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
+	// 工作流事务 - SAGA
+	TestWorkFlowSAGA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
+	// 工作流事务 - TCC
+	TestWorkFlowTCC(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
+	// 工作流事务 - XA
+	TestWorkFlowXA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
+	// 工作流事务 - 混合
+	TestWorkFlowMixed(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error)
 }
 
 type shopServiceClient struct {
@@ -104,10 +113,40 @@ func (c *shopServiceClient) TestXA(ctx context.Context, in *BuyRequest, opts ...
 	return out, nil
 }
 
-func (c *shopServiceClient) TestWorkFlow(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
+func (c *shopServiceClient) TestWorkFlowSAGA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(BuyResponse)
-	err := c.cc.Invoke(ctx, ShopService_TestWorkFlow_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, ShopService_TestWorkFlowSAGA_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopServiceClient) TestWorkFlowTCC(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BuyResponse)
+	err := c.cc.Invoke(ctx, ShopService_TestWorkFlowTCC_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopServiceClient) TestWorkFlowXA(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BuyResponse)
+	err := c.cc.Invoke(ctx, ShopService_TestWorkFlowXA_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *shopServiceClient) TestWorkFlowMixed(ctx context.Context, in *BuyRequest, opts ...grpc.CallOption) (*BuyResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BuyResponse)
+	err := c.cc.Invoke(ctx, ShopService_TestWorkFlowMixed_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -129,8 +168,14 @@ type ShopServiceServer interface {
 	TestSAGA(context.Context, *BuyRequest) (*BuyResponse, error)
 	// XA
 	TestXA(context.Context, *BuyRequest) (*BuyResponse, error)
-	// 工作流事务(Workflow)
-	TestWorkFlow(context.Context, *BuyRequest) (*BuyResponse, error)
+	// 工作流事务 - SAGA
+	TestWorkFlowSAGA(context.Context, *BuyRequest) (*BuyResponse, error)
+	// 工作流事务 - TCC
+	TestWorkFlowTCC(context.Context, *BuyRequest) (*BuyResponse, error)
+	// 工作流事务 - XA
+	TestWorkFlowXA(context.Context, *BuyRequest) (*BuyResponse, error)
+	// 工作流事务 - 混合
+	TestWorkFlowMixed(context.Context, *BuyRequest) (*BuyResponse, error)
 	mustEmbedUnimplementedShopServiceServer()
 }
 
@@ -156,8 +201,17 @@ func (UnimplementedShopServiceServer) TestSAGA(context.Context, *BuyRequest) (*B
 func (UnimplementedShopServiceServer) TestXA(context.Context, *BuyRequest) (*BuyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method TestXA not implemented")
 }
-func (UnimplementedShopServiceServer) TestWorkFlow(context.Context, *BuyRequest) (*BuyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method TestWorkFlow not implemented")
+func (UnimplementedShopServiceServer) TestWorkFlowSAGA(context.Context, *BuyRequest) (*BuyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestWorkFlowSAGA not implemented")
+}
+func (UnimplementedShopServiceServer) TestWorkFlowTCC(context.Context, *BuyRequest) (*BuyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestWorkFlowTCC not implemented")
+}
+func (UnimplementedShopServiceServer) TestWorkFlowXA(context.Context, *BuyRequest) (*BuyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestWorkFlowXA not implemented")
+}
+func (UnimplementedShopServiceServer) TestWorkFlowMixed(context.Context, *BuyRequest) (*BuyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TestWorkFlowMixed not implemented")
 }
 func (UnimplementedShopServiceServer) mustEmbedUnimplementedShopServiceServer() {}
 func (UnimplementedShopServiceServer) testEmbeddedByValue()                     {}
@@ -270,20 +324,74 @@ func _ShopService_TestXA_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ShopService_TestWorkFlow_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _ShopService_TestWorkFlowSAGA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(BuyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ShopServiceServer).TestWorkFlow(ctx, in)
+		return srv.(ShopServiceServer).TestWorkFlowSAGA(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ShopService_TestWorkFlow_FullMethodName,
+		FullMethod: ShopService_TestWorkFlowSAGA_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ShopServiceServer).TestWorkFlow(ctx, req.(*BuyRequest))
+		return srv.(ShopServiceServer).TestWorkFlowSAGA(ctx, req.(*BuyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShopService_TestWorkFlowTCC_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BuyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).TestWorkFlowTCC(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopService_TestWorkFlowTCC_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).TestWorkFlowTCC(ctx, req.(*BuyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShopService_TestWorkFlowXA_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BuyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).TestWorkFlowXA(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopService_TestWorkFlowXA_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).TestWorkFlowXA(ctx, req.(*BuyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ShopService_TestWorkFlowMixed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BuyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ShopServiceServer).TestWorkFlowMixed(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ShopService_TestWorkFlowMixed_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ShopServiceServer).TestWorkFlowMixed(ctx, req.(*BuyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -316,8 +424,20 @@ var ShopService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ShopService_TestXA_Handler,
 		},
 		{
-			MethodName: "TestWorkFlow",
-			Handler:    _ShopService_TestWorkFlow_Handler,
+			MethodName: "TestWorkFlowSAGA",
+			Handler:    _ShopService_TestWorkFlowSAGA_Handler,
+		},
+		{
+			MethodName: "TestWorkFlowTCC",
+			Handler:    _ShopService_TestWorkFlowTCC_Handler,
+		},
+		{
+			MethodName: "TestWorkFlowXA",
+			Handler:    _ShopService_TestWorkFlowXA_Handler,
+		},
+		{
+			MethodName: "TestWorkFlowMixed",
+			Handler:    _ShopService_TestWorkFlowMixed_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
