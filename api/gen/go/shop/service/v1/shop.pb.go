@@ -154,16 +154,16 @@ const file_shop_service_v1_shop_proto_rawDesc = "" +
 	"\vShopService\x12x\n" +
 	"\x03Buy\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"6\xbaG3\x12\f购买商品\x1a#通过商品ID和数量购买商品\x12U\n" +
 	"\x06TestTP\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
-	"\x12\b/test/tp\x12W\n" +
-	"\aTestTCC\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/test/tcc\x12Y\n" +
+	"\x12\b/shop/tp\x12W\n" +
+	"\aTestTCC\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x11\x82\xd3\xe4\x93\x02\v\x12\t/shop/tcc\x12Y\n" +
 	"\bTestSAGA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
-	"/test/saga\x12U\n" +
+	"/shop/saga\x12U\n" +
 	"\x06TestXA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x10\x82\xd3\xe4\x93\x02\n" +
-	"\x12\b/test/xa\x12j\n" +
-	"\x10TestWorkFlowSAGA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/test/workflow/saga\x12h\n" +
-	"\x0fTestWorkFlowTCC\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/test/workflow/tcc\x12f\n" +
-	"\x0eTestWorkFlowXA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/test/workflow/xa\x12l\n" +
-	"\x11TestWorkFlowMixed\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/test/workflow/mixedB\xb8\x01\n" +
+	"\x12\b/shop/xa\x12j\n" +
+	"\x10TestWorkFlowSAGA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1b\x82\xd3\xe4\x93\x02\x15\x12\x13/shop/workflow/saga\x12h\n" +
+	"\x0fTestWorkFlowTCC\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/shop/workflow/tcc\x12f\n" +
+	"\x0eTestWorkFlowXA\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x19\x82\xd3\xe4\x93\x02\x13\x12\x11/shop/workflow/xa\x12l\n" +
+	"\x11TestWorkFlowMixed\x12\x1b.shop.service.v1.BuyRequest\x1a\x1c.shop.service.v1.BuyResponse\"\x1c\x82\xd3\xe4\x93\x02\x16\x12\x14/shop/workflow/mixedB\xb8\x01\n" +
 	"\x13com.shop.service.v1B\tShopProtoP\x01Z8kratos-dtm-examples/api/gen/go/shop/service/v1;servicev1\xa2\x02\x03SSX\xaa\x02\x0fShop.Service.V1\xca\x02\x0fShop\\Service\\V1\xe2\x02\x1bShop\\Service\\V1\\GPBMetadata\xea\x02\x11Shop::Service::V1b\x06proto3"
 
 var (

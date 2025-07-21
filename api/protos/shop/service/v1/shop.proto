@@ -20,56 +20,56 @@ service ShopService {
   // 二阶段消息（Two-Phase Message）
   rpc TestTP(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/tp"
+      get: "/shop/tp"
     };
   }
 
   // TCC（Try-Confirm-Cancel）
   rpc TestTCC(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/tcc"
+      get: "/shop/tcc"
     };
   }
 
   // SAGA
   rpc TestSAGA(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/saga"
+      get: "/shop/saga"
     };
   }
 
   // XA
   rpc TestXA(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/xa"
+      get: "/shop/xa"
     };
   }
 
   // 工作流事务 - SAGA
   rpc TestWorkFlowSAGA(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/workflow/saga"
+      get: "/shop/workflow/saga"
     };
   }
 
   // 工作流事务 - TCC
   rpc TestWorkFlowTCC(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/workflow/tcc"
+      get: "/shop/workflow/tcc"
     };
   }
 
   // 工作流事务 - XA
   rpc TestWorkFlowXA(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/workflow/xa"
+      get: "/shop/workflow/xa"
     };
   }
 
   // 工作流事务 - 混合
   rpc TestWorkFlowMixed(BuyRequest) returns (BuyResponse) {
     option (google.api.http) = {
-      get: "/test/workflow/mixed"
+      get: "/shop/workflow/mixed"
     };
   }
 }

@@ -49,14 +49,14 @@ type ShopServiceHTTPServer interface {
 
 func RegisterShopServiceHTTPServer(s *http.Server, srv ShopServiceHTTPServer) {
 	r := s.Route("/")
-	r.GET("/test/tp", _ShopService_TestTP0_HTTP_Handler(srv))
-	r.GET("/test/tcc", _ShopService_TestTCC0_HTTP_Handler(srv))
-	r.GET("/test/saga", _ShopService_TestSAGA0_HTTP_Handler(srv))
-	r.GET("/test/xa", _ShopService_TestXA0_HTTP_Handler(srv))
-	r.GET("/test/workflow/saga", _ShopService_TestWorkFlowSAGA0_HTTP_Handler(srv))
-	r.GET("/test/workflow/tcc", _ShopService_TestWorkFlowTCC0_HTTP_Handler(srv))
-	r.GET("/test/workflow/xa", _ShopService_TestWorkFlowXA0_HTTP_Handler(srv))
-	r.GET("/test/workflow/mixed", _ShopService_TestWorkFlowMixed0_HTTP_Handler(srv))
+	r.GET("/shop/tp", _ShopService_TestTP0_HTTP_Handler(srv))
+	r.GET("/shop/tcc", _ShopService_TestTCC0_HTTP_Handler(srv))
+	r.GET("/shop/saga", _ShopService_TestSAGA0_HTTP_Handler(srv))
+	r.GET("/shop/xa", _ShopService_TestXA0_HTTP_Handler(srv))
+	r.GET("/shop/workflow/saga", _ShopService_TestWorkFlowSAGA0_HTTP_Handler(srv))
+	r.GET("/shop/workflow/tcc", _ShopService_TestWorkFlowTCC0_HTTP_Handler(srv))
+	r.GET("/shop/workflow/xa", _ShopService_TestWorkFlowXA0_HTTP_Handler(srv))
+	r.GET("/shop/workflow/mixed", _ShopService_TestWorkFlowMixed0_HTTP_Handler(srv))
 }
 
 func _ShopService_TestTP0_HTTP_Handler(srv ShopServiceHTTPServer) func(ctx http.Context) error {
@@ -232,7 +232,7 @@ func NewShopServiceHTTPClient(client *http.Client) ShopServiceHTTPClient {
 
 func (c *ShopServiceHTTPClientImpl) TestSAGA(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/saga"
+	pattern := "/shop/saga"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestSAGA))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -245,7 +245,7 @@ func (c *ShopServiceHTTPClientImpl) TestSAGA(ctx context.Context, in *BuyRequest
 
 func (c *ShopServiceHTTPClientImpl) TestTCC(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/tcc"
+	pattern := "/shop/tcc"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestTCC))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -258,7 +258,7 @@ func (c *ShopServiceHTTPClientImpl) TestTCC(ctx context.Context, in *BuyRequest,
 
 func (c *ShopServiceHTTPClientImpl) TestTP(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/tp"
+	pattern := "/shop/tp"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestTP))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -271,7 +271,7 @@ func (c *ShopServiceHTTPClientImpl) TestTP(ctx context.Context, in *BuyRequest, 
 
 func (c *ShopServiceHTTPClientImpl) TestWorkFlowMixed(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/workflow/mixed"
+	pattern := "/shop/workflow/mixed"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlowMixed))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -284,7 +284,7 @@ func (c *ShopServiceHTTPClientImpl) TestWorkFlowMixed(ctx context.Context, in *B
 
 func (c *ShopServiceHTTPClientImpl) TestWorkFlowSAGA(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/workflow/saga"
+	pattern := "/shop/workflow/saga"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlowSAGA))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -297,7 +297,7 @@ func (c *ShopServiceHTTPClientImpl) TestWorkFlowSAGA(ctx context.Context, in *Bu
 
 func (c *ShopServiceHTTPClientImpl) TestWorkFlowTCC(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/workflow/tcc"
+	pattern := "/shop/workflow/tcc"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlowTCC))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -310,7 +310,7 @@ func (c *ShopServiceHTTPClientImpl) TestWorkFlowTCC(ctx context.Context, in *Buy
 
 func (c *ShopServiceHTTPClientImpl) TestWorkFlowXA(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/workflow/xa"
+	pattern := "/shop/workflow/xa"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestWorkFlowXA))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -323,7 +323,7 @@ func (c *ShopServiceHTTPClientImpl) TestWorkFlowXA(ctx context.Context, in *BuyR
 
 func (c *ShopServiceHTTPClientImpl) TestXA(ctx context.Context, in *BuyRequest, opts ...http.CallOption) (*BuyResponse, error) {
 	var out BuyResponse
-	pattern := "/test/xa"
+	pattern := "/shop/xa"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationShopServiceTestXA))
 	opts = append(opts, http.PathTemplate(pattern))
