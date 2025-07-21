@@ -54,14 +54,14 @@ func NewShopService(
 func (s *ShopService) init() {
 	var err error
 
-	// 注册工作流步骤
+	// SAGA工作流注册
 	err = workflow.Register(WorkflowShopServiceOrderSAGA, func(wf *workflow.Workflow, data []byte) error {
 
 		var codec = encoding.GetCodec("proto")
 
-		var req1 shopV1.BuyRequest
+		var req shopV1.BuyRequest
 		if len(data) > 0 {
-			if err = codec.Unmarshal(data, &req1); err != nil {
+			if err = codec.Unmarshal(data, &req); err != nil {
 				s.log.Errorf("工作流数据反序列化失败: %v", err)
 				return shopV1.ErrorInternalServerError("工作流数据反序列化失败")
 			}
@@ -70,8 +70,8 @@ func (s *ShopService) init() {
 		// 扣减库存步骤
 		wf.NewBranch().OnRollback(func(bb *dtmcli.BranchBarrier) error {
 			if _, err = s.stockService.RefundStock(wf.Context, &shopV1.RefundStockRequest{
-				ProductId: req1.ProductId,
-				Quantity:  req1.Quantity,
+				ProductId: req.ProductId,
+				Quantity:  req.Quantity,
 			}); err != nil {
 				s.log.Errorf("工作流回滚扣减库存失败: %v", err)
 				return shopV1.ErrorInternalServerError("工作流回滚扣减库存失败")
@@ -80,8 +80,8 @@ func (s *ShopService) init() {
 			return nil
 		})
 		if _, err = s.stockService.DeductStock(wf.Context, &shopV1.DeductStockRequest{
-			ProductId: req1.ProductId,
-			Quantity:  req1.Quantity,
+			ProductId: req.ProductId,
+			Quantity:  req.Quantity,
 			RequestId: wf.Gid,
 		}); err != nil {
 			s.log.Errorf("工作流扣减库存失败: %v", err)
@@ -99,9 +99,9 @@ func (s *ShopService) init() {
 			return nil
 		})
 		if _, err = s.orderService.CreateOrder(wf.Context, &shopV1.CreateOrderRequest{
-			UserId:    req1.UserId,
-			ProductId: req1.ProductId,
-			Quantity:  req1.Quantity,
+			UserId:    req.UserId,
+			ProductId: req.ProductId,
+			Quantity:  req.Quantity,
 			RequestId: wf.Gid,
 			OrderNo:   wf.Gid,
 		}); err != nil {
@@ -111,9 +111,38 @@ func (s *ShopService) init() {
 
 		return nil
 	})
-
 	if err != nil {
 		s.log.Errorf("工作流[%s] 注册失败: %v", WorkflowShopServiceOrderSAGA, err)
+		return
+	}
+
+	// TCC工作流注册
+	err = workflow.Register(WorkflowShopServiceOrderTCC, func(wf *workflow.Workflow, data []byte) error {
+		// TODO TCC工作流注册
+		return nil
+	})
+	if err != nil {
+		s.log.Errorf("工作流[%s] 注册失败: %v", WorkflowShopServiceOrderTCC, err)
+		return
+	}
+
+	// XA工作流注册
+	err = workflow.Register(WorkflowShopServiceOrderXA, func(wf *workflow.Workflow, data []byte) error {
+		// TODO XA工作流注册
+		return nil
+	})
+	if err != nil {
+		s.log.Errorf("工作流[%s] 注册失败: %v", WorkflowShopServiceOrderXA, err)
+		return
+	}
+
+	// 混合工作流注册
+	err = workflow.Register(WorkflowShopServiceOrderMixed, func(wf *workflow.Workflow, data []byte) error {
+		// TODO 混合工作流注册
+		return nil
+	})
+	if err != nil {
+		s.log.Errorf("工作流[%s] 注册失败: %v", WorkflowShopServiceOrderMixed, err)
 		return
 	}
 }
