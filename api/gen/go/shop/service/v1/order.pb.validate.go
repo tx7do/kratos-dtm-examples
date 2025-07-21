@@ -494,6 +494,14 @@ func (m *ConfirmCreateOrderRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for UserId
+
+	// no validation rules for ProductId
+
+	// no validation rules for Quantity
+
+	// no validation rules for RequestId
+
 	// no validation rules for OrderNo
 
 	if len(errors) > 0 {
@@ -597,6 +605,14 @@ func (m *CancelCreateOrderRequest) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for UserId
+
+	// no validation rules for ProductId
+
+	// no validation rules for Quantity
+
+	// no validation rules for RequestId
 
 	// no validation rules for OrderNo
 

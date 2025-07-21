@@ -68,19 +68,19 @@ func (s *StockService) DeductStock(_ context.Context, req *shopV1.DeductStockReq
 }
 
 func (s *StockService) TryDeductStock(ctx context.Context, req *shopV1.TryDeductStockRequest) (*shopV1.StockResponse, error) {
-	s.log.Infof("TryDeductStock called with request: %+v", req)
+	s.log.Infof("尝试扣除库存: %+v", req.RequestId)
 
 	return s.stockRepo.TryDeductStock(ctx, req)
 }
 
 func (s *StockService) ConfirmDeductStock(ctx context.Context, req *shopV1.ConfirmDeductStockRequest) (*shopV1.StockResponse, error) {
-	s.log.Infof("ConfirmDeductStock called with request: %+v", req)
+	s.log.Infof("确认扣除库存: %+v", req.RequestId)
 
 	return s.stockRepo.ConfirmDeductStock(ctx, req)
 }
 
 func (s *StockService) CancelDeductStock(ctx context.Context, req *shopV1.CancelDeductStockRequest) (*shopV1.StockResponse, error) {
-	s.log.Infof("CancelDeductStock called with request: %+v", req)
+	s.log.Infof("取消扣除库存: %+v", req.RequestId)
 
 	return s.stockRepo.CancelDeductStock(ctx, req)
 }

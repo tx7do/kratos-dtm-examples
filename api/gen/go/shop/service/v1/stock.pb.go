@@ -249,6 +249,7 @@ type ConfirmDeductStockRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     uint32                 `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
 	Quantity      int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 确认减少的数量
+	RequestId     string                 `protobuf:"bytes,3,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -297,10 +298,18 @@ func (x *ConfirmDeductStockRequest) GetQuantity() int32 {
 	return 0
 }
 
+func (x *ConfirmDeductStockRequest) GetRequestId() string {
+	if x != nil {
+		return x.RequestId
+	}
+	return ""
+}
+
 type CancelDeductStockRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ProductId     uint32                 `protobuf:"varint,1,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
 	Quantity      int32                  `protobuf:"varint,2,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 取消减少的数量
+	RequestId     string                 `protobuf:"bytes,3,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -347,6 +356,13 @@ func (x *CancelDeductStockRequest) GetQuantity() int32 {
 		return x.Quantity
 	}
 	return 0
+}
+
+func (x *CancelDeductStockRequest) GetRequestId() string {
+	if x != nil {
+		return x.RequestId
+	}
+	return ""
 }
 
 type RefundStockRequest struct {
@@ -492,15 +508,19 @@ const file_shop_service_v1_stock_proto_rawDesc = "" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x127\n" +
 	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15尝试减少的数量R\bquantity\x12-\n" +
 	"\n" +
-	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\x83\x01\n" +
+	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\xb2\x01\n" +
 	"\x19ConfirmDeductStockRequest\x12-\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x127\n" +
-	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15确认减少的数量R\bquantity\"\x82\x01\n" +
+	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15确认减少的数量R\bquantity\x12-\n" +
+	"\n" +
+	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\xb1\x01\n" +
 	"\x18CancelDeductStockRequest\x12-\n" +
 	"\n" +
 	"product_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x127\n" +
-	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15取消减少的数量R\bquantity\"\xa1\x01\n" +
+	"\bquantity\x18\x02 \x01(\x05B\x1b\xbaG\x18\x92\x02\x15取消减少的数量R\bquantity\x12-\n" +
+	"\n" +
+	"request_id\x18\x03 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\"\xa1\x01\n" +
 	"\x12RefundStockRequest\x12)\n" +
 	"\border_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b订单IDR\aorderId\x12-\n" +
 	"\n" +

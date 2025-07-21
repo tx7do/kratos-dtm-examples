@@ -360,7 +360,11 @@ func (x *TryCreateOrderRequest) GetOrderNo() string {
 
 type ConfirmCreateOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderNo       string                 `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"` // 订单号
+	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`          // 用户ID
+	ProductId     uint32                 `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
+	Quantity      int32                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 商品数量
+	RequestId     string                 `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
+	OrderNo       string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`        // 订单号，预留订单资源时生成的唯一标识
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -395,6 +399,34 @@ func (*ConfirmCreateOrderRequest) Descriptor() ([]byte, []int) {
 	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{3}
 }
 
+func (x *ConfirmCreateOrderRequest) GetUserId() uint32 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *ConfirmCreateOrderRequest) GetProductId() uint32 {
+	if x != nil {
+		return x.ProductId
+	}
+	return 0
+}
+
+func (x *ConfirmCreateOrderRequest) GetQuantity() int32 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+func (x *ConfirmCreateOrderRequest) GetRequestId() string {
+	if x != nil {
+		return x.RequestId
+	}
+	return ""
+}
+
 func (x *ConfirmCreateOrderRequest) GetOrderNo() string {
 	if x != nil {
 		return x.OrderNo
@@ -404,7 +436,11 @@ func (x *ConfirmCreateOrderRequest) GetOrderNo() string {
 
 type CancelCreateOrderRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	OrderNo       string                 `protobuf:"bytes,1,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"` // 订单号
+	UserId        uint32                 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`          // 用户ID
+	ProductId     uint32                 `protobuf:"varint,2,opt,name=product_id,json=productId,proto3" json:"product_id,omitempty"` // 商品ID
+	Quantity      int32                  `protobuf:"varint,3,opt,name=quantity,proto3" json:"quantity,omitempty"`                    // 商品数量
+	RequestId     string                 `protobuf:"bytes,4,opt,name=request_id,json=requestId,proto3" json:"request_id,omitempty"`  // 请求ID，用于幂等性控制
+	OrderNo       string                 `protobuf:"bytes,5,opt,name=order_no,json=orderNo,proto3" json:"order_no,omitempty"`        // 订单号，预留订单资源时生成的唯一标识
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -437,6 +473,34 @@ func (x *CancelCreateOrderRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use CancelCreateOrderRequest.ProtoReflect.Descriptor instead.
 func (*CancelCreateOrderRequest) Descriptor() ([]byte, []int) {
 	return file_shop_service_v1_order_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CancelCreateOrderRequest) GetUserId() uint32 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *CancelCreateOrderRequest) GetProductId() uint32 {
+	if x != nil {
+		return x.ProductId
+	}
+	return 0
+}
+
+func (x *CancelCreateOrderRequest) GetQuantity() int32 {
+	if x != nil {
+		return x.Quantity
+	}
+	return 0
+}
+
+func (x *CancelCreateOrderRequest) GetRequestId() string {
+	if x != nil {
+		return x.RequestId
+	}
+	return ""
 }
 
 func (x *CancelCreateOrderRequest) GetOrderNo() string {
@@ -584,11 +648,23 @@ const file_shop_service_v1_order_proto_rawDesc = "" +
 	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
 	"\n" +
 	"request_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\x12*\n" +
-	"\border_no\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"G\n" +
-	"\x19ConfirmCreateOrderRequest\x12*\n" +
-	"\border_no\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"F\n" +
-	"\x18CancelCreateOrderRequest\x12*\n" +
-	"\border_no\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"@\n" +
+	"\border_no\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"\xfe\x01\n" +
+	"\x19ConfirmCreateOrderRequest\x12'\n" +
+	"\auser_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12-\n" +
+	"\n" +
+	"product_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x12.\n" +
+	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
+	"\n" +
+	"request_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\x12*\n" +
+	"\border_no\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"\xfd\x01\n" +
+	"\x18CancelCreateOrderRequest\x12'\n" +
+	"\auser_id\x18\x01 \x01(\rB\x0e\xbaG\v\x92\x02\b用户IDR\x06userId\x12-\n" +
+	"\n" +
+	"product_id\x18\x02 \x01(\rB\x0e\xbaG\v\x92\x02\b商品IDR\tproductId\x12.\n" +
+	"\bquantity\x18\x03 \x01(\x05B\x12\xbaG\x0f\x92\x02\f商品数量R\bquantity\x12-\n" +
+	"\n" +
+	"request_id\x18\x04 \x01(\tB\x0e\xbaG\v\x92\x02\b请求IDR\trequestId\x12*\n" +
+	"\border_no\x18\x05 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"@\n" +
 	"\x12RefundOrderRequest\x12*\n" +
 	"\border_no\x18\x01 \x01(\tB\x0f\xbaG\f\x92\x02\t订单号R\aorderNo\"w\n" +
 	"\rOrderResponse\x122\n" +

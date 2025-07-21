@@ -66,19 +66,19 @@ func (s *OrderService) CreateOrder(_ context.Context, req *shopV1.CreateOrderReq
 }
 
 func (s *OrderService) TryCreateOrder(ctx context.Context, req *shopV1.TryCreateOrderRequest) (*shopV1.OrderResponse, error) {
-	s.log.Infof("Trying to create order for user %d with product %d, quantity %d", req.UserId, req.ProductId, req.Quantity)
+	s.log.Infof("尝试创建订单： %s", req.OrderNo)
 
 	return s.repo.TryCreateOrder(ctx, req)
 }
 
 func (s *OrderService) ConfirmCreateOrder(ctx context.Context, req *shopV1.ConfirmCreateOrderRequest) (*shopV1.OrderResponse, error) {
-	s.log.Infof("Confirming order creation for order ID %s", req.OrderNo)
+	s.log.Infof("确认创建订单： %s", req.OrderNo)
 
 	return s.repo.ConfirmCreateOrder(ctx, req)
 }
 
 func (s *OrderService) CancelCreateOrder(ctx context.Context, req *shopV1.CancelCreateOrderRequest) (*shopV1.OrderResponse, error) {
-	s.log.Infof("Canceling order creation for order ID %s", req.OrderNo)
+	s.log.Infof("取消创建订单： %s", req.OrderNo)
 
 	return s.repo.CancelCreateOrder(ctx, req)
 }

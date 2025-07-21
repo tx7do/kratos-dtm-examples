@@ -70,7 +70,7 @@ func (r *StockRepo) TryDeductStock(ctx context.Context, req *shopV1.TryDeductSto
 	err = dtmgorm.BarrierGorm(ctx, r.data.db, func(tx *gorm.DB) error {
 		// 查询当前库存记录
 		var stock models.Stock
-		if err := tx.Model(&models.Stock{}).
+		if err = tx.Model(&models.Stock{}).
 			Where("product_id = ?", req.GetProductId()).
 			First(&stock).Error; err != nil {
 			return err

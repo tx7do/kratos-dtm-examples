@@ -484,6 +484,8 @@ func (m *ConfirmDeductStockRequest) validate(all bool) error {
 
 	// no validation rules for Quantity
 
+	// no validation rules for RequestId
+
 	if len(errors) > 0 {
 		return ConfirmDeductStockRequestMultiError(errors)
 	}
@@ -589,6 +591,8 @@ func (m *CancelDeductStockRequest) validate(all bool) error {
 	// no validation rules for ProductId
 
 	// no validation rules for Quantity
+
+	// no validation rules for RequestId
 
 	if len(errors) > 0 {
 		return CancelDeductStockRequestMultiError(errors)

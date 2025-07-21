@@ -158,17 +158,57 @@ message TryCreateOrderRequest {
 }
 
 message ConfirmCreateOrderRequest {
-  string order_no = 1 [
+  uint32 user_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "用户ID"},
+    json_name = "userId"
+  ]; // 用户ID
+
+  uint32 product_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "商品ID"},
+    json_name = "productId"
+  ]; // 商品ID
+
+  int32 quantity = 3 [
+    (gnostic.openapi.v3.property) = {description: "商品数量"},
+    json_name = "quantity"
+  ]; // 商品数量
+
+  string request_id = 4 [
+    (gnostic.openapi.v3.property) = {description: "请求ID"},
+    json_name = "requestId"
+  ]; // 请求ID，用于幂等性控制
+
+  string order_no = 5 [
     (gnostic.openapi.v3.property) = {description: "订单号"},
     json_name = "orderNo"
-  ]; // 订单号
+  ]; // 订单号，预留订单资源时生成的唯一标识
 }
 
 message CancelCreateOrderRequest {
-  string order_no = 1 [
+  uint32 user_id = 1 [
+    (gnostic.openapi.v3.property) = {description: "用户ID"},
+    json_name = "userId"
+  ]; // 用户ID
+
+  uint32 product_id = 2 [
+    (gnostic.openapi.v3.property) = {description: "商品ID"},
+    json_name = "productId"
+  ]; // 商品ID
+
+  int32 quantity = 3 [
+    (gnostic.openapi.v3.property) = {description: "商品数量"},
+    json_name = "quantity"
+  ]; // 商品数量
+
+  string request_id = 4 [
+    (gnostic.openapi.v3.property) = {description: "请求ID"},
+    json_name = "requestId"
+  ]; // 请求ID，用于幂等性控制
+
+  string order_no = 5 [
     (gnostic.openapi.v3.property) = {description: "订单号"},
     json_name = "orderNo"
-  ]; // 订单号
+  ]; // 订单号，预留订单资源时生成的唯一标识
 }
 
 message RefundOrderRequest {
