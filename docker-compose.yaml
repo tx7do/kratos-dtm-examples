@@ -15,7 +15,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=*Abcd123456
-      - POSTGRES_DB=loft
+      - POSTGRES_DB=dtm
     logging:
       options:
         max-size: '500m'
