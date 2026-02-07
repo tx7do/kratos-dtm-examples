@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/dtm-labs/client/dtmgrpc"
+	"github.com/dtm-labs/dtm/client/dtmgrpc"
 	"gorm.io/gorm"
 )
 

@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/dtm-labs/client/dtmgrpc/dtmgpb"
+	"github.com/dtm-labs/dtm/client/dtmgrpc/dtmgpb"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/go-kratos/kratos/v2/transport/grpc/resolver/discovery"
